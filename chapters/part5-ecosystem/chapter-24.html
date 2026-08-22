@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 24: Deployment — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="chapter-24.html" class="nav-link active">Ch.24 Deployment</a>
+        <a href="chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 24 · Phần 5: Thực chiến</div>
+        <h1 class="chapter-title">Deployment &amp; CI/CD</h1>
+        <p class="chapter-desc">Viết code xong chỉ là nửa công việc — deploy lên production mới là đích đến thực sự. Chương này hướng dẫn deploy React/Next.js lên Vercel, Netlify, và thiết lập CI/CD với GitHub Actions.</p>
+      </div>
+
+      <h2>24.1 Build và chuẩn bị Production</h2>
+      <pre><code># Vite React — build production
+npm run build
+# Output: dist/ folder
+# dist/index.html
+# dist/assets/index-[hash].js     ← minified, tree-shaken
+# dist/assets/index-[hash].css
+
+# Next.js — build production
+npm run build
+# Output: .next/ folder
+# + standalone build (for Docker)
+
+# Kiểm tra build locally
+npm run preview  # Vite: preview production build
+npx serve dist   # Hoặc dùng serve package
+
+# Phân tích bundle size
+npm install -D rollup-plugin-visualizer
+# Trong vite.config.ts:
+import { visualizer } from 'rollup-plugin-visualizer';
+plugins: [react(), visualizer({ open: true })]
+# Sau khi build: dist/stats.html → xem bundle treemap</code></pre>
+
+      <h2>24.2 Environment Variables</h2>
+      <pre><code># .env files (Vite)
+.env                  # Mọi môi trường
+.env.development      # Chỉ development (npm run dev)
+.env.production       # Chỉ production (npm run build)
+.env.local            # Override local (gitignored)
+
+# Vite: phải có prefix VITE_ để expose ra client
+VITE_API_URL=https://api.example.com
+VITE_APP_NAME=My App
+DATABASE_URL=postgres://...  # Không có VITE_ → chỉ server-side
+
+# Trong code (Vite)
+const apiUrl = import.meta.env.VITE_API_URL;
+const isProduction = import.meta.env.PROD;
+
+# Next.js
+NEXT_PUBLIC_API_URL=...     # NEXT_PUBLIC_ → expose ra client
+DATABASE_URL=...             # Server-only (không ra browser)
+
+# Trong code (Next.js)
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+// Server-only (API routes, Server Components):
+const dbUrl = process.env.DATABASE_URL;
+
+# QUAN TRỌNG: .env không commit vào git!
+# .gitignore:
+.env
+.env.local
+.env.*.local
+# Tạo .env.example với placeholder values (commit để team biết)</code></pre>
+
+      <h2>24.3 Deploy lên Vercel</h2>
+      <pre><code># Vercel — tốt nhất cho Next.js (cùng team)
+# Cách 1: Vercel CLI
+npm install -g vercel
+vercel login
+vercel           # Deploy preview
+vercel --prod    # Deploy production
+
+# Cách 2: GitHub integration (khuyến nghị)
+# 1. Push code lên GitHub
+# 2. vercel.com → Import Project → chọn repo
+# 3. Mỗi push vào main → tự động deploy production
+# 4. Mỗi PR → tự động deploy preview URL
+
+# vercel.json — config tùy chỉnh
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",      # Vite, nếu không phải Next.js
+  "installCommand": "npm install",
+  "framework": "nextjs",          # hoặc "vite"
+  "env": {
+    "DATABASE_URL": "@database-url"  # Reference từ Vercel secrets
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"       # SPA fallback cho client-side routing
+    }
+  ]
+}
+
+# Thêm environment variables:
+# Vercel Dashboard → Project → Settings → Environment Variables
+# Hoặc: vercel env add DATABASE_URL production</code></pre>
+
+      <h2>24.4 CI/CD với GitHub Actions</h2>
+      <pre><code># .github/workflows/ci.yml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci  # Nhanh hơn npm install, dùng package-lock.json
+
+      - name: TypeScript check
+        run: npm run type-check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Run tests
+        run: npm run test -- --run  # Vitest one-time run (không watch)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+
+  deploy-preview:
+    needs: test
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Vercel Preview
+        run: vercel --token ${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+  deploy-production:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Vercel Production
+        run: vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}</code></pre>
+
+      <h2>24.5 Docker (cho Self-hosting)</h2>
+      <pre><code># Dockerfile cho Next.js
+FROM node:20-alpine AS base
+
+# Dependencies
+FROM base AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Build
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npm run build
+
+# Production image
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV production
+
+# Next.js standalone output
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+
+EXPOSE 3000
+ENV PORT 3000
+CMD ["node", "server.js"]
+
+# next.config.js — bật standalone output
+const nextConfig = {
+  output: 'standalone',
+};
+
+# docker-compose.yml
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: myapp
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+
+volumes:
+  postgres_data:</code></pre>
+
+      <h2>24.6 Performance Monitoring</h2>
+      <pre><code>// Web Vitals — metrics quan trọng cho UX và SEO
+// LCP (Largest Contentful Paint): &lt; 2.5s
+// FID (First Input Delay): &lt; 100ms
+// CLS (Cumulative Layout Shift): &lt; 0.1
+// TTFB (Time to First Byte): &lt; 800ms
+
+// Next.js tự đo và report Web Vitals
+// app/layout.tsx
+export function reportWebVitals(metric) {
+  // Gửi về analytics
+  console.log(metric);
+  // analytics.send({ name: metric.name, value: metric.value });
+}
+
+// Sentry — Error tracking production
+// npm install @sentry/nextjs
+// npx @sentry/wizard@latest -i nextjs</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+        <h3>Bài tập 24.1: CI/CD Pipeline hoàn chỉnh</h3>
+        <pre><code># Thiết lập pipeline cho dự án React:
+# 1. Tạo repo GitHub
+# 2. Thiết lập branch protection trên main:
+#    - Require PR reviews
+#    - Require status checks (test, build)
+# 3. GitHub Actions workflow:
+#    - Lint (ESLint)
+#    - Type check (tsc --noEmit)
+#    - Test (Vitest)
+#    - Build
+#    - Deploy preview (Vercel) khi có PR
+#    - Deploy production khi merge vào main
+# 4. Thêm secrets vào GitHub:
+#    - VERCEL_TOKEN
+#    - VERCEL_ORG_ID, VERCEL_PROJECT_ID
+# 5. Tạo .env.example với tất cả env vars cần thiết</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Tại sao dùng <code>npm ci</code> trong CI/CD thay vì <code>npm install</code>?</p>
+          <ul>
+            <li>A. npm ci nhanh hơn trong mọi trường hợp</li>
+            <li>B. npm ci luôn dùng chính xác package-lock.json — deterministic, không update packages, xóa node_modules trước</li>
+            <li>C. npm install không hoạt động trên Linux</li>
+            <li>D. npm ci ít tốn memory hơn</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>npm install</code>: có thể update patch versions, tạo hoặc sửa package-lock.json. <code>npm ci</code>: install chính xác theo lock file, fail nếu lock file không khớp package.json. CI/CD cần reproducible builds.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Tại sao KHÔNG commit file <code>.env</code> vào git?</p>
+          <ul>
+            <li>A. File .env quá lớn</li>
+            <li>B. .env chứa secrets (API keys, DB passwords) — commit vào git = lộ vĩnh viễn trong git history, ngay cả khi xóa sau</li>
+            <li>C. git không hỗ trợ .env files</li>
+            <li>D. .env chỉ hoạt động locally</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Git history là vĩnh cửu. Một khi commit secrets, kẻ tấn công có thể đọc từ lịch sử ngay cả sau khi xóa file. Giải pháp: .gitignore, dùng secrets manager (GitHub Secrets, Vault), .env.example cho documentation.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Preview deployment trong Vercel/Netlify có mục đích gì?</p>
+          <ul>
+            <li>A. Để luyện tập deploy</li>
+            <li>B. Mỗi PR tự động có URL riêng để review thay đổi trực quan trước khi merge vào production</li>
+            <li>C. Backup của production</li>
+            <li>D. Deploy nhanh hơn production</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Preview URLs: team/stakeholders review UI trực tiếp mà không cần pull code về chạy local. Link tự động trong PR comments. Merge → production tự động cập nhật. Workflow hiệu quả, giảm "works on my machine".</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> Multi-stage Dockerfile giúp gì?</p>
+          <ul>
+            <li>A. Build nhanh hơn trên mọi máy</li>
+            <li>B. Giảm kích thước image production — build tools (node_modules dev) không vào final image</li>
+            <li>C. Bảo mật secrets tốt hơn</li>
+            <li>D. Cho phép build nhiều service cùng lúc</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Stage 1 (builder): install tất cả deps + build. Stage 2 (runner): chỉ copy output của build (standalone, static). Kết quả: image từ 1GB → 150MB. Nhỏ hơn = pull nhanh, ít surface tấn công.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> LCP (Largest Contentful Paint) là gì và ảnh hưởng thế nào?</p>
+          <ul>
+            <li>A. Lỗi lớn nhất trong code</li>
+            <li>B. Thời gian để phần tử lớn nhất (hero image, heading) hiển thị — ảnh hưởng trải nghiệm người dùng và SEO</li>
+            <li>C. Kích thước file JavaScript lớn nhất</li>
+            <li>D. Số lần render nhiều nhất</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — LCP &lt; 2.5s = Good. LCP 2.5-4s = Needs Improvement. LCP &gt; 4s = Poor. Google dùng Core Web Vitals (LCP, CLS, FID/INP) để rank search. Cải thiện: image optimization, preload hero image, SSG/SSR thay CSR.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-23.html">← Chương 23: Authentication</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-25.html">Chương 25: Dự án cuối khóa →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

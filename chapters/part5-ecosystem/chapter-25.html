@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 25: Dự án cuối khóa — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="chapter-25.html" class="nav-link active">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 25 · Phần 5: Thực chiến</div>
+        <h1 class="chapter-title">Dự án cuối khóa — Task Manager</h1>
+        <p class="chapter-desc">Tổng hợp toàn bộ kiến thức: xây dựng ứng dụng Task Manager đầy đủ tính năng với authentication, CRUD, real-time updates, dark mode, và deploy lên production.</p>
+      </div>
+
+      <h2>25.1 Tổng quan dự án</h2>
+      <div class="mermaid">
+graph LR
+    subgraph FE["🖥️ Frontend"]
+        NX["Next.js 14
+App Router"]
+        TS2["TypeScript"]
+        TW["Tailwind CSS"]
+        ZS["Zustand"]
+        TQ["TanStack Query"]
+    end
+    subgraph BE["⚙️ Backend"]
+        AR["Next.js
+API Routes"]
+        PR["Prisma ORM"]
+        JW["JWT Auth"]
+        SSE["SSE Real-time"]
+    end
+    subgraph INFRA["☁️ Infrastructure"]
+        PG[("PostgreSQL
+Supabase")]
+        VR["Vercel"]
+        GA["GitHub Actions
+CI/CD"]
+    end
+    FE -->|"fetch / SSE"| BE
+    BE -->|"SQL"| PG
+    GA -->|"Deploy"| VR
+    style FE fill:#1e2127,stroke:#61dafb
+    style BE fill:#1e2127,stroke:#98c379
+    style INFRA fill:#1e2127,stroke:#e5c07b
+</div>
+
+      <h2>25.2 Cấu trúc dự án</h2>
+      <pre><code>taskflow/
+├── app/
+│   ├── (auth)/                   # Route group — không ảnh hưởng URL
+│   │   ├── login/page.tsx
+│   │   └── register/page.tsx
+│   ├── (dashboard)/              # Layout riêng cho authenticated pages
+│   │   ├── layout.tsx            # Sidebar, Navbar
+│   │   ├── page.tsx              # Dashboard /
+│   │   ├── projects/
+│   │   │   ├── page.tsx          # /projects — danh sách
+│   │   │   └── [id]/
+│   │   │       ├── page.tsx      # /projects/[id] — board
+│   │   │       └── settings/page.tsx
+│   │   └── profile/page.tsx
+│   └── api/
+│       ├── auth/
+│       │   ├── login/route.ts
+│       │   ├── register/route.ts
+│       │   ├── logout/route.ts
+│       │   └── me/route.ts
+│       ├── projects/
+│       │   ├── route.ts          # GET list, POST create
+│       │   └── [id]/
+│       │       ├── route.ts      # GET, PATCH, DELETE
+│       │       └── tasks/route.ts
+│       ├── tasks/
+│       │   └── [id]/route.ts
+│       └── events/route.ts       # SSE endpoint
+├── components/
+│   ├── ui/                       # Button, Input, Modal, Badge...
+│   ├── tasks/                    # TaskCard, TaskForm, TaskList
+│   ├── board/                    # KanbanBoard, Column, DraggableTask
+│   └── layout/                   # Navbar, Sidebar, ThemeToggle
+├── lib/
+│   ├── db.ts                     # Prisma client
+│   ├── auth.ts                   # JWT helpers
+│   └── validations.ts            # Zod schemas
+├── stores/
+│   └── useAppStore.ts            # Zustand global state
+├── hooks/
+│   ├── useAuth.ts
+│   ├── useTasks.ts               # TanStack Query hooks
+│   └── useSSE.ts                 # Server-Sent Events hook
+└── prisma/
+    └── schema.prisma</code></pre>
+
+      <h2>25.3 Database Schema (Prisma)</h2>
+      <pre><code>// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  avatar       String?
+  createdAt    DateTime @default(now())
+
+  memberships  ProjectMember[]
+  assignedTasks Task[] @relation("AssignedTasks")
+  activities   Activity[]
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  color       String   @default("#6366f1")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members     ProjectMember[]
+  tasks       Task[]
+}
+
+model ProjectMember {
+  id        String   @id @default(cuid())
+  role      Role     @default(MEMBER)
+  joinedAt  DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId String
+
+  @@unique([userId, projectId])
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  status      TaskStatus @default(BACKLOG)
+  priority    Priority   @default(MEDIUM)
+  dueDate     DateTime?
+  position    Float      @default(0)  // Cho drag-and-drop ordering
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  project     Project    @relation(fields: [projectId], references: [id])
+  projectId   String
+  assignee    User?      @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  assigneeId  String?
+  labels      Label[]
+  activities  Activity[]
+}
+
+enum TaskStatus { BACKLOG TODO IN_PROGRESS DONE }
+enum Priority  { LOW MEDIUM HIGH URGENT }
+enum Role      { OWNER ADMIN MEMBER VIEWER }</code></pre>
+
+      <h2>25.4 Kanban Board với Drag and Drop</h2>
+      <pre><code>npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities</code></pre>
+
+      <pre><code>'use client';
+import {
+  DndContext, DragEndEvent, DragOverlay,
+  PointerSensor, useSensor, useSensors,
+} from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+
+const COLUMNS: TaskStatus[] = ['BACKLOG', 'TODO', 'IN_PROGRESS', 'DONE'];
+const COLUMN_LABELS = {
+  BACKLOG: 'Backlog',
+  TODO: 'Cần làm',
+  IN_PROGRESS: 'Đang làm',
+  DONE: 'Hoàn thành',
+};
+
+function KanbanBoard({ projectId }: { projectId: string }) {
+  const { data: tasks = [] } = useTasks(projectId);
+  const { mutate: updateTask } = useUpdateTask();
+  const [activeTask, setActiveTask] = useState&lt;Task | null&gt;(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+  );
+
+  const tasksByStatus = COLUMNS.reduce((acc, status) =&gt; {
+    acc[status] = tasks.filter(t =&gt; t.status === status)
+                       .sort((a, b) =&gt; a.position - b.position);
+    return acc;
+  }, {} as Record&lt;TaskStatus, Task[]&gt;);
+
+  const handleDragEnd = ({ active, over }: DragEndEvent) =&gt; {
+    if (!over || active.id === over.id) return;
+
+    const newStatus = over.data.current?.status as TaskStatus;
+    const taskId = active.id as string;
+
+    if (newStatus) {
+      updateTask({ id: taskId, status: newStatus });
+    }
+  };
+
+  return (
+    &lt;DndContext sensors={sensors} onDragEnd={handleDragEnd}
+                onDragStart={({ active }) =&gt; setActiveTask(
+                  tasks.find(t =&gt; t.id === active.id) || null
+                )}&gt;
+      &lt;div className="grid grid-cols-4 gap-4 h-full"&gt;
+        {COLUMNS.map(status =&gt; (
+          &lt;KanbanColumn
+            key={status}
+            status={status}
+            label={COLUMN_LABELS[status]}
+            tasks={tasksByStatus[status]}
+          /&gt;
+        ))}
+      &lt;/div&gt;
+      &lt;DragOverlay&gt;
+        {activeTask &amp;&amp; &lt;TaskCard task={activeTask} isDragging /&gt;}
+      &lt;/DragOverlay&gt;
+    &lt;/DndContext&gt;
+  );
+}</code></pre>
+
+      <h2>25.5 Real-time với Server-Sent Events</h2>
+      <pre><code">// app/api/events/route.ts
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const projectId = searchParams.get('projectId');
+
+  const stream = new ReadableStream({
+    start(controller) {
+      const encoder = new TextEncoder();
+
+      // Gửi heartbeat mỗi 30s để giữ connection
+      const heartbeat = setInterval(() =&gt; {
+        controller.enqueue(encoder.encode('data: heartbeat\n\n'));
+      }, 30000);
+
+      // Subscribe events từ event emitter hoặc Redis pub/sub
+      const handler = (event: TaskEvent) =&gt; {
+        if (event.projectId === projectId) {
+          const data = JSON.stringify(event);
+          controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+        }
+      };
+
+      eventEmitter.on('task-updated', handler);
+
+      // Cleanup khi client disconnect
+      request.signal.addEventListener('abort', () =&gt; {
+        clearInterval(heartbeat);
+        eventEmitter.off('task-updated', handler);
+        controller.close();
+      });
+    }
+  });
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+    }
+  });
+}
+
+// hooks/useSSE.ts
+'use client';
+export function useSSE(projectId: string) {
+  const queryClient = useQueryClient();
+
+  useEffect(() =&gt; {
+    const source = new EventSource(`/api/events?projectId=${projectId}`);
+
+    source.onmessage = (event) =&gt; {
+      if (event.data === 'heartbeat') return;
+      const data = JSON.parse(event.data);
+
+      // Invalidate queries để refetch data mới
+      queryClient.invalidateQueries({ queryKey: ['tasks', projectId] });
+    };
+
+    return () =&gt; source.close();
+  }, [projectId, queryClient]);
+}</code></pre>
+
+      <h2>25.6 Checklist hoàn thành dự án</h2>
+      <div class="callout info">
+        <strong>Hoàn thành dự án theo thứ tự này:</strong>
+        <ol>
+          <li>Setup: <code>create-next-app</code>, cài packages, config Prisma, push schema</li>
+          <li>Auth: Register/Login API, JWT middleware, AuthContext</li>
+          <li>Projects: CRUD API + UI (danh sách, tạo mới)</li>
+          <li>Tasks: CRUD API + TaskCard, TaskForm components</li>
+          <li>Kanban: DnD board với @dnd-kit</li>
+          <li>Dashboard: Thống kê với Recharts/Chart.js</li>
+          <li>Real-time: SSE integration</li>
+          <li>Dark mode: ThemeProvider + Tailwind dark:</li>
+          <li>Tests: Unit tests cho utils, Integration tests cho API</li>
+          <li>Deploy: Vercel + Supabase, GitHub Actions CI/CD</li>
+        </ol>
+      </div>
+
+      <!-- Quiz cuối sách -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài — Tổng kết khóa học</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Nhìn lại hành trình: từ HTML/CSS → JavaScript → React → TypeScript → Next.js. Tại sao học theo thứ tự này?</p>
+          <ul>
+            <li>A. Thứ tự tùy ý, không quan trọng</li>
+            <li>B. Mỗi layer xây dựng trên layer trước — hiểu nền tảng giúp debug và hiểu tại sao tool hoạt động thế này</li>
+            <li>C. Chỉ vì truyền thống</li>
+            <li>D. Next.js có thể học trực tiếp không cần React</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — React là JavaScript. TypeScript là JavaScript + types. Next.js là React + server. Không hiểu nền tảng → không debug được, không biết tại sao component re-render, không hiểu async/await, không tự sửa lỗi TypeScript. Foundation matters.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Khi gặp bug khó, thứ tự debug nên như thế nào?</p>
+          <ul>
+            <li>A. Google ngay → StackOverflow → copy code</li>
+            <li>B. Đọc error message kỹ → isolate vấn đề → console.log → React DevTools → tìm kiếm có chủ đích</li>
+            <li>C. Hỏi ChatGPT ngay</li>
+            <li>D. Restart server và hy vọng tự sửa</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Error message thường chỉ ra chính xác vấn đề. Isolate: comment code để thu hẹp nguyên nhân. console.log xem giá trị thực. React DevTools xem state/props. Chỉ search khi đã hiểu vấn đề là gì.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Senior developer khác junior ở điểm nào quan trọng nhất?</p>
+          <ul>
+            <li>A. Biết nhiều thư viện hơn</li>
+            <li>B. Biết khi nào KHÔNG dùng thư viện — hiểu trade-offs, ưu tiên đúng vấn đề, code đơn giản và maintain được</li>
+            <li>C. Gõ code nhanh hơn</li>
+            <li>D. Làm việc nhiều giờ hơn</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Junior: thêm Redux vì thấy mọi người dùng. Senior: dùng useState khi đủ, chỉ thêm Redux khi scale thực sự cần. Senior hiểu: YAGNI (You Aren't Gonna Need It), đọc code nhiều hơn viết, đơn giản là đỉnh cao của tinh tế.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> Sau khóa học, bước tiếp theo nên là gì?</p>
+          <ul>
+            <li>A. Học thêm nhiều framework khác (Vue, Angular, Svelte)</li>
+            <li>B. Xây dựng dự án thực tế, đăng lên GitHub, contribute open-source, apply intern/job</li>
+            <li>C. Làm lại tất cả bài tập từ đầu</li>
+            <li>D. Học thêm 5 khóa nữa trước khi apply job</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Lý thuyết không thay thế được kinh nghiệm thực tế. Build something real, kể cả nhỏ. GitHub portfolio quan trọng hơn certificate. Contribute OSS = học từ code thực. Apply job dù chưa "ready" — bạn sẽ không bao giờ 100% ready.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> Nguồn học tập đáng tin cậy nhất để tiếp tục phát triển?</p>
+          <ul>
+            <li>A. Tutorial YouTube đa số</li>
+            <li>B. Official docs (React, Next.js, TypeScript, MDN) + đọc source code của thư viện bạn dùng</li>
+            <li>C. Chỉ dùng ChatGPT</li>
+            <li>D. StackOverflow mọi câu hỏi</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Official docs: luôn cập nhật, chính xác, có examples. React docs (react.dev) là excellent. Next.js docs cực kỳ tốt. TypeScript handbook toàn diện. Đọc source code: hiểu cách thư viện hoạt động, học pattern từ expert, tự tự tin debug issue.</p>
+        </div>
+      </div>
+
+      <!-- Lời kết -->
+      <div class="callout info" style="margin-top: 3rem;">
+        <h3>Chúc mừng bạn đã hoàn thành khóa học!</h3>
+        <p>Bạn đã đi một hành trình dài — từ những dòng HTML đầu tiên đến xây dựng ứng dụng full-stack với React, TypeScript, Next.js và deploy lên production.</p>
+        <p>Nhớ rằng: <strong>code nhiều hơn đọc, build nhiều hơn học, share code của bạn</strong>. Cộng đồng React Việt Nam đang chờ bạn đóng góp.</p>
+        <p>Happy coding! 🚀</p>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-24.html">← Chương 24: Deployment</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="../../index.html">Về Trang chủ →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

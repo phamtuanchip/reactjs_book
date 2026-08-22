@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 12: useEffect và Vòng đời Component — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="chapter-12.html" class="nav-link active">Ch.12 useEffect</a>
+        <a href="chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="chapter-14.html" class="nav-link">Ch.14 React Router</a>
+
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 12 · Phần 3: React Cơ bản</div>
+        <h1 class="chapter-title">useEffect và Vòng đời Component</h1>
+        <p class="chapter-desc">useEffect là hook để xử lý các "side effects" — những việc nằm ngoài việc render UI thuần túy: gọi API, subscriptions, thao tác DOM, timers. Hiểu useEffect đúng cách là kỹ năng quan trọng nhất để tránh bug trong React.</p>
+      </div>
+
+      <h2>12.1 Vòng đời Component (Component Lifecycle)</h2>
+      <p>Mọi component React đều trải qua ba giai đoạn:</p>
+
+      <div class="mermaid">
+flowchart TD
+    A["🌱 Component được tạo"] --> B["🎨 Render JSX → Virtual DOM"]
+    B --> C["🔗 Commit to Real DOM"]
+    C --> D["✅ MOUNT
+useEffect() chạy lần đầu"]
+    D --> E{"Props / State
+thay đổi?"}
+    E -->|"Có"| F["🔄 Re-render"]
+    F --> G["🔗 Commit changes"]
+    G --> H["♻️ UPDATE
+useEffect cleanup + re-run"]
+    H --> E
+    E -->|"Component bị xóa"| I["🧹 UNMOUNT
+Cleanup function chạy"]
+    I --> J["❌ Removed from DOM"]
+    style D fill:#282c34,stroke:#98c379,color:#98c379
+    style H fill:#282c34,stroke:#e5c07b,color:#e5c07b
+    style I fill:#282c34,stroke:#e06c75,color:#e06c75
+</div>
+
+      <h2>12.2 useEffect cơ bản</h2>
+      <pre><code>import { useState, useEffect } from 'react';
+
+function Timer() {
+  const [seconds, setSeconds] = useState(0);
+
+  // useEffect nhận 2 tham số:
+  // 1. Effect function (callback)
+  // 2. Dependency array (tùy chọn)
+  useEffect(() =&gt; {
+    // Code này chạy SAU mỗi lần render
+    console.log("Component đã render, seconds:", seconds);
+  });
+
+  return &lt;p&gt;Giây: {seconds}&lt;/p&gt;;
+}</code></pre>
+
+      <h2>12.3 Dependency Array — Kiểm soát khi nào Effect chạy</h2>
+      <pre><code>// 1. Không có dependency array → chạy sau MỌI render
+useEffect(() =&gt; {
+  console.log("Chạy sau mỗi render");
+});
+
+// 2. Mảng rỗng [] → chỉ chạy một lần sau render ĐẦU TIÊN (mount)
+useEffect(() =&gt; {
+  console.log("Chạy 1 lần khi mount");
+  // Dùng để: fetch dữ liệu ban đầu, setup subscription, init library
+}, []);
+
+// 3. Có dependencies → chạy khi dependencies thay đổi
+useEffect(() =&gt; {
+  console.log("userId thay đổi:", userId);
+  // Fetch dữ liệu khi userId thay đổi
+}, [userId]); // Chỉ chạy khi userId thay đổi
+
+// 4. Nhiều dependencies
+useEffect(() =&gt; {
+  // Chạy khi page hoặc pageSize thay đổi
+}, [page, pageSize]);</code></pre>
+
+      <div class="callout warning">
+        <div class="callout-title">⚠️ Exhaustive deps — Luôn khai báo đủ dependencies</div>
+        <p>Nếu dùng biến nào trong effect, phải khai báo trong dependency array. Bỏ qua → stale closure bug. ESLint với rule <code>react-hooks/exhaustive-deps</code> sẽ cảnh báo. Đừng ignore cảnh báo đó!</p>
+      </div>
+
+      <h2>12.4 Cleanup Function</h2>
+      <p>Effect có thể trả về một hàm — đây là "cleanup function". Nó chạy khi component unmount hoặc trước khi effect chạy lại.</p>
+      <pre><code>// Cleanup timer
+function Timer() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() =&gt; {
+    const interval = setInterval(() =&gt; {
+      setCount(prev =&gt; prev + 1);
+    }, 1000);
+
+    // Cleanup: xóa interval khi unmount
+    return () =&gt; {
+      clearInterval(interval);
+      console.log("Timer đã dọn dẹp");
+    };
+  }, []); // Chỉ chạy 1 lần khi mount
+
+  return &lt;p&gt;Đếm: {count}&lt;/p&gt;;
+}
+
+// Cleanup event listener
+useEffect(() =&gt; {
+  const handleResize = () =&gt; {
+    setWindowWidth(window.innerWidth);
+  };
+
+  window.addEventListener('resize', handleResize);
+
+  return () =&gt; {
+    window.removeEventListener('resize', handleResize);
+  };
+}, []);
+
+// Cleanup WebSocket
+useEffect(() =&gt; {
+  const ws = new WebSocket('wss://example.com');
+  ws.onmessage = (event) =&gt; setMessages(prev =&gt; [...prev, event.data]);
+
+  return () =&gt; {
+    ws.close();
+  };
+}, []);</code></pre>
+
+      <h2>12.5 Fetch Data với useEffect</h2>
+      <pre><code>function UserProfile({ userId }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    let cancelled = false; // Flag để tránh set state sau unmount
+
+    async function fetchUser() {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await fetch(`/api/users/${userId}`);
+        if (!response.ok) throw new Error('Không tìm thấy người dùng');
+        const data = await response.json();
+        if (!cancelled) setUser(data); // Chỉ set state nếu chưa unmount
+      } catch (err) {
+        if (!cancelled) setError(err.message);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    fetchUser();
+
+    return () =&gt; {
+      cancelled = true; // Hủy khi component unmount hoặc userId thay đổi
+    };
+  }, [userId]); // Re-fetch khi userId thay đổi
+
+  if (loading) return &lt;p&gt;Đang tải...&lt;/p&gt;;
+  if (error) return &lt;p className="error"&gt;{error}&lt;/p&gt;;
+  if (!user) return null;
+
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;{user.name}&lt;/h2&gt;
+      &lt;p&gt;{user.email}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+      <h2>12.6 useEffect và Debounce</h2>
+      <pre><code>// Debounce search — gọi API sau khi user ngừng gõ 500ms
+function SearchBox() {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() =&gt; {
+    if (!query.trim()) {
+      setResults([]);
+      return;
+    }
+
+    setLoading(true);
+
+    // Đặt timer 500ms
+    const timer = setTimeout(async () =&gt; {
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        setResults(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }, 500);
+
+    // Cleanup: hủy timer nếu query thay đổi trước 500ms
+    return () =&gt; clearTimeout(timer);
+  }, [query]); // Re-run khi query thay đổi
+
+  return (
+    &lt;div&gt;
+      &lt;input
+        value={query}
+        onChange={e =&gt; setQuery(e.target.value)}
+        placeholder="Tìm kiếm..."
+      /&gt;
+      {loading &amp;&amp; &lt;p&gt;Đang tìm...&lt;/p&gt;}
+      &lt;ul&gt;
+        {results.map(r =&gt; (
+          &lt;li key={r.id}&gt;{r.name}&lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+      <h2>12.7 Các useEffect thường dùng</h2>
+      <pre><code>// Cập nhật document title
+useEffect(() =&gt; {
+  document.title = `${count} thông báo mới`;
+}, [count]);
+
+// Sync với localStorage
+useEffect(() =&gt; {
+  localStorage.setItem('theme', theme);
+}, [theme]);
+
+// Đọc từ localStorage khi mount
+const [theme, setTheme] = useState(() =&gt; {
+  // Lazy initial state — chạy 1 lần
+  return localStorage.getItem('theme') || 'light';
+});
+
+// Scroll to top khi navigate
+useEffect(() =&gt; {
+  window.scrollTo(0, 0);
+}, [pathname]);
+
+// Lock body scroll khi modal mở
+useEffect(() =&gt; {
+  if (isModalOpen) {
+    document.body.style.overflow = 'hidden';
+  }
+  return () =&gt; {
+    document.body.style.overflow = 'unset';
+  };
+}, [isModalOpen]);</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+
+        <h3>Bài tập 12.1: Trang tìm kiếm với debounce</h3>
+        <pre><code>// Xây dựng trang tìm kiếm người dùng từ API JSONPlaceholder
+// API: https://jsonplaceholder.typicode.com/users
+
+// Yêu cầu:
+// 1. Input tìm kiếm — debounce 400ms
+// 2. Hiển thị loading khi đang tìm
+// 3. Lọc users theo name (case-insensitive)
+// 4. Hiển thị kết quả: tên, email, thành phố
+// 5. Hiển thị "Không tìm thấy" khi không có kết quả
+// 6. Clear button để xóa search
+
+function UserSearch() {
+  // ...
+}</code></pre>
+
+        <h3>Bài tập 12.2: Đồng hồ đếm giờ</h3>
+        <pre><code>// Xây dựng Stopwatch (đồng hồ bấm giờ) với:
+// - Hiển thị: MM:SS.cs (phút:giây.centisecond)
+// - Nút Start / Pause
+// - Nút Reset
+// - Lưu laps (các mốc thời gian)
+// - Đảm bảo cleanup đúng cách
+
+function Stopwatch() {
+  const [time, setTime] = useState(0); // milliseconds
+  const [running, setRunning] = useState(false);
+  const [laps, setLaps] = useState([]);
+
+  // ...
+}</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> useEffect với dependency array rỗng <code>[]</code> sẽ chạy khi nào?</p>
+          <ul>
+            <li>A. Sau mỗi lần render</li>
+            <li>B. Chỉ một lần sau lần render đầu tiên (mount)</li>
+            <li>C. Không bao giờ chạy</li>
+            <li>D. Chỉ chạy khi component unmount</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>[]</code> nghĩa là không có dependency nào → effect không cần chạy lại khi dependencies thay đổi (vì không có) → chỉ chạy một lần sau mount.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Cleanup function trong useEffect là gì và khi nào nó chạy?</p>
+          <ul>
+            <li>A. Một hàm xóa state khi component re-render</li>
+            <li>B. Hàm được return từ effect, chạy khi component unmount hoặc trước khi effect chạy lại</li>
+            <li>C. Hàm tự động xóa event listeners</li>
+            <li>D. Hàm chạy trước khi effect bắt đầu</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Cleanup chạy: (1) Khi component unmount, (2) Trước khi effect chạy lại (do deps thay đổi). Dùng để: clearInterval, removeEventListener, hủy fetch, đóng WebSocket.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Tại sao cần dùng flag <code>cancelled</code> khi fetch dữ liệu trong useEffect?</p>
+          <ul>
+            <li>A. Để cancel request HTTP</li>
+            <li>B. Để tránh set state trên component đã unmount (memory leak và bug)</li>
+            <li>C. Để tăng tốc độ fetch</li>
+            <li>D. Không cần thiết, React tự xử lý</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Nếu component unmount trong khi fetch đang chạy, fetch vẫn hoàn thành và cố set state → React cảnh báo "Can't perform a React state update on an unmounted component". Flag cancelled ngăn điều này.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> Kỹ thuật debounce trong useEffect hoạt động như thế nào?</p>
+          <ul>
+            <li>A. Gọi API ngay lập tức mỗi lần user gõ</li>
+            <li>B. Dùng setTimeout và clearTimeout trong cleanup: chờ user ngừng gõ một khoảng thời gian rồi mới gọi API</li>
+            <li>C. Chặn input của user</li>
+            <li>D. Cache kết quả API</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — setTimeout tạo timer khi query thay đổi. Cleanup (return) hủy timer nếu query thay đổi tiếp. Kết quả: API chỉ được gọi sau khi user ngừng gõ N milliseconds.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> Điều gì xảy ra nếu bạn bỏ <code>userId</code> ra khỏi dependency array khi dùng nó trong effect?</p>
+          <ul>
+            <li>A. Effect vẫn chạy đúng</li>
+            <li>B. Stale closure bug: effect luôn dùng giá trị userId cũ khi mount</li>
+            <li>C. React tự động thêm userId vào deps</li>
+            <li>D. Effect không bao giờ chạy</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Đây là "stale closure" bug. Effect được tạo lần đầu với userId=1. Khi userId thay đổi sang 2, effect không chạy lại (vì deps rỗng) nhưng closure vẫn "nhớ" userId=1.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-11.html">← Chương 11: State &amp; Event</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-13.html">Chương 13: Styling trong React →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

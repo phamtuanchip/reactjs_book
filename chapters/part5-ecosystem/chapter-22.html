@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 22: Next.js — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="chapter-22.html" class="nav-link active">Ch.22 Next.js</a>
+        <a href="chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 22 · Phần 5: Thực chiến</div>
+        <h1 class="chapter-title">Next.js — React Framework</h1>
+        <p class="chapter-desc">Next.js là framework React phổ biến nhất, thêm SSR, file-based routing, API routes, image optimization và nhiều tính năng production-ready. App Router (Next.js 13+) là tương lai của Next.js.</p>
+      </div>
+
+      <h2>22.1 React vs Next.js</h2>
+      <div class="mermaid">
+flowchart TD
+    subgraph SSG["📄 SSG — Build time (cache: force-cache)"]
+        SG1["Build HTML once"] --> SG2["CDN cache"]
+        SG2 --> SG3["⚡ Tải tức thì"]
+    end
+    subgraph ISR["⚡ ISR — next: revalidate: N"]
+        IR1["Build HTML"] --> IR2{"Cache hết hạn?"}
+        IR2 -->|"Có"| IR3["Rebuild ngầm"]
+        IR2 -->|"Không"| IR4["Serve cache"]
+    end
+    subgraph SSR["🔄 SSR — cache: no-store"]
+        SR1["Request đến server"] --> SR2["Fetch data + Render HTML"]
+        SR2 --> SR3["Response mới mỗi lần"]
+    end
+    subgraph CSR["⚛️ CSR — Client Component"]
+        CR1["HTML rỗng"] --> CR2["Load JS bundle"]
+        CR2 --> CR3["Render trong browser"]
+    end
+    style SSG fill:#1e2127,stroke:#98c379
+    style ISR fill:#1e2127,stroke:#e5c07b
+    style SSR fill:#1e2127,stroke:#61dafb
+    style CSR fill:#1e2127,stroke:#56b6c2
+</div>
+
+      <h2>22.2 Tạo dự án và cấu trúc App Router</h2>
+      <pre><code>npx create-next-app@latest my-app --typescript --tailwind --app</code></pre>
+
+      <pre><code>my-app/
+├── app/                          # App Router (Next.js 13+)
+│   ├── layout.tsx                # Root layout (bọc tất cả pages)
+│   ├── page.tsx                  # Route: /
+│   ├── globals.css
+│   ├── blog/
+│   │   ├── page.tsx              # Route: /blog
+│   │   └── [slug]/
+│   │       └── page.tsx          # Route: /blog/hello-world
+│   ├── shop/
+│   │   ├── layout.tsx            # Nested layout cho /shop
+│   │   ├── page.tsx              # Route: /shop
+│   │   └── [id]/
+│   │       └── page.tsx          # Route: /shop/123
+│   └── api/
+│       └── users/
+│           └── route.ts          # API Route: /api/users
+├── components/                   # Shared components
+├── lib/                          # Utilities, DB connection
+└── public/                       # Static files</code></pre>
+
+      <h2>22.3 Server Components vs Client Components</h2>
+      <pre><code>// Server Component (mặc định trong App Router)
+// Chạy TRÊN SERVER — có thể access DB, file system trực tiếp
+// KHÔNG có: useState, useEffect, event handlers, browser APIs
+
+async function ProductPage({ params }: { params: { id: string } }) {
+  // Fetch thẳng từ DB (chạy server-side, không cần API!)
+  const product = await db.product.findUnique({
+    where: { id: params.id }
+  });
+
+  if (!product) notFound(); // Next.js notFound()
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;{product.name}&lt;/h1&gt;
+      &lt;p&gt;{product.description}&lt;/p&gt;
+      &lt;!-- AddToCart cần interactivity → Client Component --&gt;
+      &lt;AddToCart productId={product.id} price={product.price} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Client Component — thêm 'use client' ở đầu file
+'use client';
+import { useState } from 'react';
+
+interface AddToCartProps {
+  productId: string;
+  price: number;
+}
+
+function AddToCart({ productId, price }: AddToCartProps) {
+  const [quantity, setQuantity] = useState(1);
+  const [added, setAdded] = useState(false);
+
+  const handleAdd = async () =&gt; {
+    await addToCart(productId, quantity);
+    setAdded(true);
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;input type="number" value={quantity} onChange={e =&gt; setQuantity(+e.target.value)} /&gt;
+      &lt;button onClick={handleAdd}&gt;
+        {added ? 'Đã thêm ✓' : `Thêm vào giỏ — ${price * quantity}đ`}
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+      <h2>22.4 Data Fetching Strategies</h2>
+      <pre><code>// 1. Static Site Generation (SSG) — build time
+// fetch mặc định trong Next.js = cache forever (SSG)
+async function BlogPost({ params }) {
+  const post = await fetch(`https://api.example.com/posts/${params.slug}`, {
+    cache: 'force-cache' // mặc định
+  }).then(r =&gt; r.json());
+  return &lt;article&gt;{post.content}&lt;/article&gt;;
+}
+
+// 2. Server-Side Rendering (SSR) — mỗi request
+async function Dashboard() {
+  const data = await fetch('https://api/stats', {
+    cache: 'no-store' // Không cache → SSR
+  }).then(r =&gt; r.json());
+  return &lt;div&gt;{data.visitors} visitors hôm nay&lt;/div&gt;;
+}
+
+// 3. Incremental Static Regeneration (ISR) — cache có expiry
+async function ProductsPage() {
+  const products = await fetch('https://api/products', {
+    next: { revalidate: 3600 } // Stale sau 1 tiếng → rebuild
+  }).then(r =&gt; r.json());
+  return &lt;ul&gt;{products.map(p =&gt; &lt;li key={p.id}&gt;{p.name}&lt;/li&gt;)}&lt;/ul&gt;;
+}
+
+// 4. generateStaticParams — pre-generate dynamic routes
+export async function generateStaticParams() {
+  const posts = await fetch('https://api/posts').then(r =&gt; r.json());
+  return posts.map(post =&gt; ({ slug: post.slug }));
+  // Next.js sẽ build /blog/post-1, /blog/post-2... tại build time
+}</code></pre>
+
+      <h2>22.5 API Routes</h2>
+      <pre><code>// app/api/users/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+
+// GET /api/users
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const page = parseInt(searchParams.get('page') || '1');
+
+  const users = await db.user.findMany({
+    skip: (page - 1) * 10,
+    take: 10,
+  });
+
+  return NextResponse.json({ users, page });
+}
+
+// POST /api/users
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+
+  const user = await db.user.create({ data: body });
+
+  return NextResponse.json(user, { status: 201 });
+}
+
+// app/api/users/[id]/route.ts
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const user = await db.user.findUnique({ where: { id: params.id } });
+  if (!user) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  return NextResponse.json(user);
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  await db.user.delete({ where: { id: params.id } });
+  return new NextResponse(null, { status: 204 });
+}</code></pre>
+
+      <h2>22.6 Metadata và SEO</h2>
+      <pre><code">// app/layout.tsx — Metadata mặc định
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | My Shop',
+    default: 'My Shop — Mua sắm online',
+  },
+  description: 'Mua sắm trực tuyến với hàng nghìn sản phẩm',
+  openGraph: {
+    type: 'website',
+    locale: 'vi_VN',
+    siteName: 'My Shop',
+  },
+};
+
+// app/blog/[slug]/page.tsx — Dynamic metadata
+interface Props {
+  params: { slug: string };
+}
+
+export async function generateMetadata({ params }: Props): Promise&lt;Metadata&gt; {
+  const post = await fetchPost(params.slug);
+
+  return {
+    title: post.title,
+    description: post.excerpt,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      images: [{ url: post.coverImage }],
+    },
+  };
+}
+
+export default async function BlogPost({ params }: Props) {
+  const post = await fetchPost(params.slug);
+  return &lt;article&gt;{post.content}&lt;/article&gt;;
+}</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+        <h3>Bài tập 22.1: Blog với Next.js App Router</h3>
+        <pre><code>// Xây dựng blog đơn giản với:
+// - Trang chủ: danh sách bài viết (SSG, revalidate 1h)
+// - Trang bài viết: /blog/[slug] (ISR)
+// - Trang tác giả: /author/[id] (SSR)
+// - API: GET /api/posts, GET /api/posts/:slug
+// - Metadata động cho mỗi bài viết
+// - generateStaticParams cho các bài viết phổ biến
+// - Loading skeleton với Suspense
+// - Error boundary với error.tsx</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Khi nào một component trong App Router là Server Component?</p>
+          <ul>
+            <li>A. Khi có prop "server={true}"</li>
+            <li>B. Mặc định — tất cả component trong app/ là Server Component trừ khi có 'use client'</li>
+            <li>C. Khi file có đuôi .server.tsx</li>
+            <li>D. Khi import từ server package</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — App Router mặc định là Server Components. Thêm <code>'use client'</code> đầu file để chuyển sang Client Component. Chỉ thêm khi thực sự cần: useState, useEffect, event handlers, browser APIs.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> SSG, SSR, ISR khác nhau thế nào?</p>
+          <ul>
+            <li>A. Chỉ khác tên, hoạt động như nhau</li>
+            <li>B. SSG: build một lần; SSR: render mỗi request; ISR: build một lần, tự động cập nhật sau N giây</li>
+            <li>C. SSR nhanh nhất vì chạy trên server</li>
+            <li>D. ISR là viết tắt của Incremental Style Reloading</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Blog: SSG (ít thay đổi). Dashboard realtime: SSR. Product catalog: ISR (revalidate mỗi giờ). Chọn theo tần suất thay đổi data và yêu cầu freshness.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> File <code>layout.tsx</code> trong Next.js dùng để làm gì?</p>
+          <ul>
+            <li>A. Khai báo CSS layout</li>
+            <li>B. Bọc các pages trong cùng route segment — giữ state giữa navigations, tái sử dụng UI (header, sidebar)</li>
+            <li>C. Khai báo cấu trúc database</li>
+            <li>D. Chỉ dùng cho root layout</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Layout persist khi navigate giữa pages cùng segment — không unmount. Ví dụ: /dashboard/layout.tsx có sidebar → navigate từ /dashboard/profile sang /dashboard/settings giữ sidebar, không flash.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> Tại sao Server Components tốt cho performance?</p>
+          <ul>
+            <li>A. Chạy trên server nên nhanh hơn</li>
+            <li>B. Không gửi component code xuống browser — giảm bundle size; fetch data gần DB hơn; không waterfall network</li>
+            <li>C. Bỏ qua virtual DOM</li>
+            <li>D. Dùng bộ nhớ server</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Server Components: zero JS bundle (chỉ HTML/JSON gửi về). Data fetch từ server → DB latency ms (không phải 100ms+ qua internet). Parallel data fetching dễ dàng. Client chỉ tải JS của Client Components.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> <code>generateStaticParams</code> dùng để làm gì?</p>
+          <ul>
+            <li>A. Validate params từ URL</li>
+            <li>B. Pre-generate tất cả dynamic routes tại build time để tạo static HTML</li>
+            <li>C. Generate random params để test</li>
+            <li>D. Khai báo kiểu của params</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Thay vì SSR mỗi request cho /blog/[slug], <code>generateStaticParams</code> list tất cả slugs → Next.js build /blog/post-1, /blog/post-2... thành static HTML. Kết quả: tốc độ tải tức thì, CDN-cacheable.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-21.html">← Chương 21: TypeScript</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-23.html">Chương 23: Authentication →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

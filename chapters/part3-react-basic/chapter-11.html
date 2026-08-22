@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 11: State và Event — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="chapter-11.html" class="nav-link active">Ch.11 State &amp; Event</a>
+        <a href="chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="chapter-14.html" class="nav-link">Ch.14 React Router</a>
+
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 11 · Phần 3: React Cơ bản</div>
+        <h1 class="chapter-title">State và Event</h1>
+        <p class="chapter-desc">State là "bộ nhớ" của component — dữ liệu có thể thay đổi theo thời gian và kéo theo UI re-render. Kết hợp state với xử lý sự kiện, bạn có thể tạo ra ứng dụng interactive thực sự.</p>
+      </div>
+
+      <h2>11.1 State là gì?</h2>
+      <p>Trong React, có hai loại dữ liệu: <strong>Props</strong> (dữ liệu từ component cha, chỉ đọc) và <strong>State</strong> (dữ liệu nội bộ component, có thể thay đổi).</p>
+
+      <pre><code>// Props — dữ liệu từ ngoài vào (không thay đổi)
+function Greeting({ name }) {
+  return &lt;h1&gt;Xin chào, {name}!&lt;/h1&gt;;
+}
+
+// State — dữ liệu nội bộ (có thể thay đổi)
+function Counter() {
+  const [count, setCount] = useState(0);
+  // count thay đổi → component re-render → UI cập nhật
+  return &lt;button onClick={() =&gt; setCount(count + 1)}&gt;{count}&lt;/button&gt;;
+}</code></pre>
+
+      <p>State phù hợp cho: giá trị form, trạng thái loading, dữ liệu đã fetch, toggle hiển thị, v.v.</p>
+
+      <h2>11.2 useState Hook</h2>
+      <pre><code>import { useState } from 'react';
+
+function Counter() {
+  // useState trả về [giá trị hiện tại, hàm setter]
+  const [count, setCount] = useState(0); // 0 là giá trị khởi tạo
+
+  // Khi setCount được gọi:
+  // 1. React lưu giá trị mới vào state
+  // 2. Component re-render với giá trị mới
+  // 3. UI cập nhật
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Đếm: {count}&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;+1&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(count - 1)}&gt;-1&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(0)}&gt;Reset&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+      <h3>Updater function — khi state mới phụ thuộc state cũ</h3>
+      <pre><code>// SAI — có thể bị stale closure
+function handleClick() {
+  setCount(count + 1);
+  setCount(count + 1); // Cả hai đều dùng count cũ!
+  // Kết quả: chỉ tăng 1, không tăng 2
+}
+
+// ĐÚNG — dùng updater function
+function handleClick() {
+  setCount(prev =&gt; prev + 1);
+  setCount(prev =&gt; prev + 1); // Dùng giá trị mới nhất
+  // Kết quả: tăng 2
+}
+
+// Khi nào dùng updater function?
+// - Khi set state nhiều lần liên tiếp
+// - Khi state mới tính từ state cũ
+// - Trong async callbacks (setTimeout, fetch)</code></pre>
+
+      <h3>State với Object và Array</h3>
+      <pre><code>// Object state
+const [user, setUser] = useState({ name: "An", age: 25 });
+
+// Cập nhật một trường — phải spread toàn bộ!
+setUser({ ...user, age: 26 }); // { name: "An", age: 26 }
+setUser(prev =&gt; ({ ...prev, age: prev.age + 1 }));
+
+// Array state
+const [todos, setTodos] = useState([]);
+
+// Thêm
+setTodos(prev =&gt; [...prev, { id: Date.now(), text: "Mới", done: false }]);
+
+// Xóa
+setTodos(prev =&gt; prev.filter(t =&gt; t.id !== id));
+
+// Toggle done
+setTodos(prev =&gt; prev.map(t =&gt;
+  t.id === id ? { ...t, done: !t.done } : t
+));</code></pre>
+
+      <div class="callout warning">
+        <div class="callout-title">⚠️ Quy tắc vàng của State</div>
+        <p>KHÔNG bao giờ thay đổi state trực tiếp: <code>user.age = 26</code> hoặc <code>todos.push(item)</code>. Luôn tạo object/array mới. React so sánh tham chiếu để phát hiện thay đổi — nếu tham chiếu không đổi, UI không cập nhật!</p>
+      </div>
+
+      <h2>11.3 Xử lý sự kiện</h2>
+      <p>React sử dụng tên sự kiện dạng camelCase và truyền hàm (không phải chuỗi):</p>
+      <pre><code>// Sự kiện cơ bản
+&lt;button onClick={handleClick}&gt;Click&lt;/button&gt;
+&lt;input onChange={handleChange} /&gt;
+&lt;form onSubmit={handleSubmit}&gt;...&lt;/form&gt;
+&lt;div onMouseEnter={handleHover} onMouseLeave={handleLeave}&gt;...&lt;/div&gt;
+&lt;input onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} /&gt;
+
+// Event object
+function handleClick(event) {
+  event.preventDefault(); // Ngăn default behavior (form submit, link...)
+  event.stopPropagation(); // Ngăn bubble lên component cha
+  console.log(event.target); // Phần tử kích hoạt event
+  console.log(event.currentTarget); // Phần tử gắn handler
+}
+
+// Truyền thêm tham số — dùng arrow function wrapper
+{todos.map(todo =&gt; (
+  &lt;button onClick={() =&gt; deleteTodo(todo.id)}&gt;Xóa&lt;/button&gt;
+))}</code></pre>
+
+      <h2>11.4 Controlled Components — Form</h2>
+      <p>Trong React, form element nên là "controlled" — nghĩa là React kiểm soát giá trị hiển thị. State là "nguồn sự thật duy nhất" (single source of truth).</p>
+
+      <pre><code>function LoginForm() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e) =&gt; {
+    e.preventDefault(); // Ngăn form reload trang
+
+    if (!email || !password) {
+      setError('Vui lòng điền đầy đủ thông tin');
+      return;
+    }
+
+    // Gửi dữ liệu
+    console.log({ email, password });
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      {error &amp;&amp; &lt;p className="error"&gt;{error}&lt;/p&gt;}
+
+      &lt;label htmlFor="email"&gt;Email:&lt;/label&gt;
+      &lt;input
+        id="email"
+        type="email"
+        value={email}              {/* Giá trị từ state */}
+        onChange={e =&gt; setEmail(e.target.value)} {/* Cập nhật state */}
+        placeholder="example@email.com"
+      /&gt;
+
+      &lt;label htmlFor="password"&gt;Mật khẩu:&lt;/label&gt;
+      &lt;input
+        id="password"
+        type="password"
+        value={password}
+        onChange={e =&gt; setPassword(e.target.value)}
+      /&gt;
+
+      &lt;button type="submit"&gt;Đăng nhập&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+
+      <pre><code>// Form phức tạp — một state object cho nhiều trường
+function RegisterForm() {
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    gender: '',
+    agree: false
+  });
+
+  // Handler chung cho tất cả input
+  const handleChange = (e) =&gt; {
+    const { name, value, type, checked } = e.target;
+    setForm(prev =&gt; ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  return (
+    &lt;form&gt;
+      &lt;input name="name" value={form.name} onChange={handleChange} /&gt;
+      &lt;input name="email" type="email" value={form.email} onChange={handleChange} /&gt;
+      &lt;input name="password" type="password" value={form.password} onChange={handleChange} /&gt;
+
+      &lt;select name="gender" value={form.gender} onChange={handleChange}&gt;
+        &lt;option value=""&gt;Chọn giới tính&lt;/option&gt;
+        &lt;option value="male"&gt;Nam&lt;/option&gt;
+        &lt;option value="female"&gt;Nữ&lt;/option&gt;
+      &lt;/select&gt;
+
+      &lt;input
+        type="checkbox"
+        name="agree"
+        checked={form.agree}
+        onChange={handleChange}
+      /&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+
+      <h2>11.5 State Lifting — Chia sẻ State</h2>
+      <p>Khi hai component cần dùng chung state, đưa state lên component cha chung gần nhất (lift state up):</p>
+
+      <pre><code>// Hai component con cần chia sẻ state
+function TemperatureConverter() {
+  const [celsius, setCelsius] = useState(0);
+
+  const handleCelsiusChange = (value) =&gt; {
+    setCelsius(Number(value));
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;CelsiusInput value={celsius} onChange={handleCelsiusChange} /&gt;
+      &lt;FahrenheitDisplay celsius={celsius} /&gt;
+      &lt;KelvinDisplay celsius={celsius} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+function CelsiusInput({ value, onChange }) {
+  return (
+    &lt;label&gt;
+      Celsius:
+      &lt;input
+        type="number"
+        value={value}
+        onChange={e =&gt; onChange(e.target.value)}
+      /&gt;
+    &lt;/label&gt;
+  );
+}
+
+function FahrenheitDisplay({ celsius }) {
+  const fahrenheit = (celsius * 9/5 + 32).toFixed(2);
+  return &lt;p&gt;Fahrenheit: {fahrenheit}°F&lt;/p&gt;;
+}
+
+function KelvinDisplay({ celsius }) {
+  const kelvin = (celsius + 273.15).toFixed(2);
+  return &lt;p&gt;Kelvin: {kelvin}K&lt;/p&gt;;
+}</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+
+        <h3>Bài tập 11.1: Todo List đầy đủ</h3>
+        <p>Xây dựng ứng dụng Todo List với đầy đủ chức năng:</p>
+        <pre><code>// Yêu cầu chức năng:
+// 1. Thêm todo mới (input + button)
+// 2. Toggle done/undone (click vào todo)
+// 3. Xóa todo
+// 4. Đếm số todo chưa hoàn thành
+// 5. Nút "Xóa tất cả đã hoàn thành"
+// 6. Filter: All | Active | Completed
+// 7. Edit inline: double-click để sửa text
+
+// Gợi ý cấu trúc:
+function TodoApp() {
+  const [todos, setTodos] = useState([]);
+  const [input, setInput] = useState('');
+  const [filter, setFilter] = useState('all'); // all|active|completed
+
+  const filteredTodos = todos.filter(todo =&gt; {
+    if (filter === 'active') return !todo.done;
+    if (filter === 'completed') return todo.done;
+    return true;
+  });
+
+  // Implement: addTodo, toggleTodo, deleteTodo, clearCompleted
+}</code></pre>
+
+        <h3>Bài tập 11.2: Form đăng ký có validation</h3>
+        <pre><code>// Form với các trường:
+// - Họ tên (bắt buộc, tối thiểu 3 ký tự)
+// - Email (bắt buộc, đúng định dạng)
+// - Mật khẩu (tối thiểu 8 ký tự, có số và chữ hoa)
+// - Xác nhận mật khẩu (phải khớp với mật khẩu)
+// - Ngày sinh (phải đủ 18 tuổi)
+//
+// Validate realtime khi người dùng rời trường (onBlur)
+// Hiển thị error message ngay bên dưới trường lỗi
+// Disable nút Submit khi form chưa hợp lệ</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Khi nào nên dùng updater function <code>setState(prev =&gt; ...)</code> thay vì <code>setState(newValue)</code>?</p>
+          <ul>
+            <li>A. Luôn luôn dùng updater function</li>
+            <li>B. Khi state mới phụ thuộc vào state cũ, hoặc khi set state nhiều lần liên tiếp</li>
+            <li>C. Chỉ khi state là object hoặc array</li>
+            <li>D. Updater function và truyền giá trị trực tiếp là như nhau</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Updater function nhận giá trị state mới nhất, tránh stale closure bug. Đặc biệt quan trọng khi: set state nhiều lần trong cùng handler, hoặc trong async callbacks.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> "Controlled component" trong React là gì?</p>
+          <ul>
+            <li>A. Component được kiểm soát bởi CSS</li>
+            <li>B. Form element có giá trị được kiểm soát bởi React state (value + onChange)</li>
+            <li>C. Component không thể thay đổi sau khi render</li>
+            <li>D. Component chỉ nhận props, không có state</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Controlled: <code>value={state}</code> + <code>onChange={handler}</code>. React state là nguồn sự thật duy nhất. Uncontrolled: dùng ref để đọc giá trị DOM trực tiếp khi cần (ít phổ biến hơn).</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Tại sao cần gọi <code>e.preventDefault()</code> trong form submit handler?</p>
+          <ul>
+            <li>A. Để React có thể xử lý event</li>
+            <li>B. Để ngăn browser reload trang (hành vi mặc định của form submit)</li>
+            <li>C. Để ngăn event bubble lên component cha</li>
+            <li>D. Để validate form</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Mặc định, khi submit form HTML, browser gửi request và reload trang. <code>e.preventDefault()</code> ngăn hành vi đó, cho phép xử lý bằng JavaScript (AJAX, React state).</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> "Lifting state up" nghĩa là gì?</p>
+          <ul>
+            <li>A. Tối ưu hiệu năng của state</li>
+            <li>B. Đưa state từ component con lên component cha chung khi nhiều component cần dùng chung</li>
+            <li>C. Dùng global state thay vì local state</li>
+            <li>D. Convert state sang TypeScript type</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Khi component A và B (anh em) cần dùng chung state, đưa state lên component cha chung. Cha truyền state qua props và callback handler xuống cho con. Đây là pattern chuẩn trước khi dùng Context hay Redux.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> Đoạn code nào đúng để xóa item có <code>id === 3</code> khỏi state array?</p>
+          <ul>
+            <li>A. <code>items.splice(items.findIndex(i =&gt; i.id === 3), 1)</code></li>
+            <li>B. <code>delete items[2]</code></li>
+            <li>C. <code>setItems(items.filter(i =&gt; i.id !== 3))</code></li>
+            <li>D. <code>setItems(items.remove(3))</code></li>
+          </ul>
+          <p class="answer"><strong>Đáp án: C</strong> — <code>filter</code> tạo mảng mới không chứa item có id=3. A và B đều mutate mảng gốc (sai). D: <code>remove</code> không tồn tại trong JavaScript.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-10.html">← Chương 10: JSX &amp; Component</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-12.html">Chương 12: useEffect &amp; Vòng đời →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

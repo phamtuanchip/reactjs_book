@@ -1,0 +1,27 @@
+{
+  "name": "reactjs_book",
+  "version": "1.0.0",
+  "description": "> Sách tiếng Việt dành cho người mới bắt đầu, không yêu cầu kiến thức lập trình trước",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phamtuanchip/reactjs_book.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/phamtuanchip/reactjs_book/issues"
+  },
+  "homepage": "https://github.com/phamtuanchip/reactjs_book#readme",
+  "dependencies": {
+    "epub-gen-memory": "^1.1.2"
+  }
+}

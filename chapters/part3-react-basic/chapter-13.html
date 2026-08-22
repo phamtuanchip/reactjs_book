@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 13: Styling trong React — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+
+  <div class="book-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="chapter-13.html" class="nav-link active">Ch.13 Styling</a>
+        <a href="chapter-14.html" class="nav-link">Ch.14 React Router</a>
+
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- Chapter Header -->
+      <div class="chapter-header">
+        <span class="chapter-label">Phần 3 · Chương 13</span>
+        <h1 class="chapter-title">Styling trong React</h1>
+        <p class="chapter-intro">
+          Giao diện đẹp không tự nhiên mà có — cần công cụ đúng và chiến lược phù hợp.
+          Chương này khám phá đầy đủ các cách tạo kiểu trong React: từ CSS thuần túy, CSS Modules,
+          Styled Components, cho đến Tailwind CSS — công cụ đang thống trị các dự án React hiện đại.
+        </p>
+        <div class="chapter-meta">
+          <span>⏱ ~60 phút đọc</span>
+          <span>🎯 Beginner → Intermediate</span>
+          <span>💻 5 ví dụ code</span>
+        </div>
+      </div>
+
+      <!-- Section 1: Tổng quan -->
+      <h2>1. Các cách Styling trong React — Tổng quan</h2>
+
+      <p>
+        Khác với HTML tĩnh, React cho phép bạn lựa chọn nhiều cách tiếp cận styling khác nhau tùy theo
+        quy mô dự án và sở thích của nhóm. Không có một "đáp án đúng" duy nhất — mỗi phương pháp có
+        ưu và nhược điểm riêng.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Phương pháp</th>
+            <th>Scope</th>
+            <th>DX</th>
+            <th>Bundle size</th>
+            <th>Phù hợp với</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Plain CSS</strong></td>
+            <td>Global</td>
+            <td>Đơn giản</td>
+            <td>Nhỏ</td>
+            <td>Dự án nhỏ, prototype</td>
+          </tr>
+          <tr>
+            <td><strong>CSS Modules</strong></td>
+            <td>Local</td>
+            <td>Tốt</td>
+            <td>Nhỏ</td>
+            <td>Dự án vừa–lớn, teamwork</td>
+          </tr>
+          <tr>
+            <td><strong>Styled Components</strong></td>
+            <td>Local</td>
+            <td>Rất tốt</td>
+            <td>Trung bình</td>
+            <td>Design system, theming</td>
+          </tr>
+          <tr>
+            <td><strong>Emotion</strong></td>
+            <td>Local</td>
+            <td>Rất tốt</td>
+            <td>Trung bình</td>
+            <td>MUI, performant CSS-in-JS</td>
+          </tr>
+          <tr>
+            <td><strong>Tailwind CSS</strong></td>
+            <td>Utility</td>
+            <td>Rất tốt</td>
+            <td>Rất nhỏ (purge)</td>
+            <td>Hầu hết dự án React hiện đại</td>
+          </tr>
+          <tr>
+            <td><strong>Material UI</strong></td>
+            <td>Scoped</td>
+            <td>Tốt</td>
+            <td>Lớn</td>
+            <td>Enterprise, dashboard</td>
+          </tr>
+          <tr>
+            <td><strong>Ant Design</strong></td>
+            <td>Scoped</td>
+            <td>Tốt</td>
+            <td>Lớn</td>
+            <td>Admin panel, B2B</td>
+          </tr>
+          <tr>
+            <td><strong>Shadcn/ui</strong></td>
+            <td>Scoped</td>
+            <td>Xuất sắc</td>
+            <td>Nhỏ</td>
+            <td>Modern SaaS, customizable</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout info">
+        <div class="callout-title">💡 Gợi ý cho năm 2024</div>
+        <p>
+          Xu hướng hiện tại: <strong>Tailwind CSS + Shadcn/ui</strong> đang chiếm ưu thế tuyệt đối
+          trong cộng đồng React. Nếu bạn bắt đầu một dự án mới, đây là combo được khuyến nghị.
+          CSS Modules vẫn là lựa chọn an toàn cho team không muốn học Tailwind.
+        </p>
+      </div>
+
+      <!-- Section 2: Plain CSS -->
+      <h2>2. Plain CSS — Cách cổ điển</h2>
+
+      <p>
+        Cách đơn giản nhất: tạo file <code>.css</code> và import vào component. CSS được apply globally —
+        mọi component đều có thể bị ảnh hưởng.
+      </p>
+
+      <div class="code-block">
+        <div class="code-label">Button.css</div>
+        <pre><code><span class="cmt">/* CSS toàn cục — bất kỳ đâu trong app cũng áp dụng */</span>
+<span class="str">.button</span> {
+  <span class="attr">background-color</span>: <span class="val">#61dafb</span>;
+  <span class="attr">color</span>: <span class="val">#282c34</span>;
+  <span class="attr">padding</span>: <span class="val">10px 20px</span>;
+  <span class="attr">border</span>: <span class="val">none</span>;
+  <span class="attr">border-radius</span>: <span class="val">6px</span>;
+  <span class="attr">cursor</span>: <span class="val">pointer</span>;
+  <span class="attr">font-weight</span>: <span class="val">600</span>;
+}
+
+<span class="str">.button:hover</span> {
+  <span class="attr">background-color</span>: <span class="val">#21a1c4</span>;
+}</code></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label">Button.jsx</div>
+        <pre><code><span class="kw">import</span> <span class="str">'./Button.css'</span>; <span class="cmt">// Import CSS — không cần gán vào biến</span>
+
+<span class="kw">function</span> <span class="fn">Button</span>({ children, onClick }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;button</span> <span class="attr">className</span>=<span class="str">"button"</span> <span class="attr">onClick</span>={onClick}<span class="jsx">&gt;</span>
+      {children}
+    <span class="jsx">&lt;/button&gt;</span>
+  );
+}</code></pre>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-title">⚠️ Vấn đề của Plain CSS</div>
+        <p>
+          Nếu hai component khác nhau đều có class <code>.button</code>, chúng sẽ <strong>ghi đè lên nhau</strong>
+          tuỳ thuộc vào thứ tự import. Đây là lý do CSS Modules ra đời.
+        </p>
+      </div>
+
+      <!-- Section 3: CSS Modules -->
+      <h2>3. CSS Modules — Giải pháp scope local</h2>
+
+      <p>
+        CSS Modules giải quyết vấn đề xung đột tên class bằng cách tự động tạo tên class unique
+        cho mỗi component. Được hỗ trợ sẵn trong Vite và Create React App.
+      </p>
+
+      <h3>3.1 Tạo file CSS Module</h3>
+
+      <p>
+        Quy ước đặt tên: <code>TênComponent.module.css</code> — phần <code>.module</code> là bắt buộc
+        để Vite nhận biết đây là CSS Module.
+      </p>
+
+      <div class="code-block">
+        <div class="code-label">Button.module.css</div>
+        <pre><code><span class="cmt">/* Đây là CSS Module — class names sẽ được hash tự động */</span>
+<span class="str">.button</span> {
+  <span class="attr">background-color</span>: <span class="val">#61dafb</span>;
+  <span class="attr">color</span>: <span class="val">#282c34</span>;
+  <span class="attr">padding</span>: <span class="val">10px 20px</span>;
+  <span class="attr">border</span>: <span class="val">none</span>;
+  <span class="attr">border-radius</span>: <span class="val">6px</span>;
+  <span class="attr">cursor</span>: <span class="val">pointer</span>;
+  <span class="attr">font-weight</span>: <span class="val">600</span>;
+  <span class="attr">transition</span>: <span class="val">background-color 0.2s</span>;
+}
+
+<span class="str">.button:hover</span> {
+  <span class="attr">background-color</span>: <span class="val">#21a1c4</span>;
+}
+
+<span class="str">.primary</span> {
+  <span class="attr">background-color</span>: <span class="val">#61dafb</span>;
+}
+
+<span class="str">.secondary</span> {
+  <span class="attr">background-color</span>: <span class="val">transparent</span>;
+  <span class="attr">border</span>: <span class="val">2px solid #61dafb</span>;
+  <span class="attr">color</span>: <span class="val">#61dafb</span>;
+}
+
+<span class="str">.large</span> {
+  <span class="attr">padding</span>: <span class="val">14px 28px</span>;
+  <span class="attr">font-size</span>: <span class="val">1.1rem</span>;
+}
+
+<span class="str">.small</span> {
+  <span class="attr">padding</span>: <span class="val">6px 14px</span>;
+  <span class="attr">font-size</span>: <span class="val">0.85rem</span>;
+}</code></pre>
+      </div>
+
+      <h3>3.2 Import và sử dụng</h3>
+
+      <div class="code-block">
+        <div class="code-label">Button.jsx</div>
+        <pre><code><span class="kw">import</span> styles <span class="kw">from</span> <span class="str">'./Button.module.css'</span>;
+<span class="cmt">// styles là object: { button: 'Button_button__xKz9m', primary: '...', ... }</span>
+
+<span class="kw">function</span> <span class="fn">Button</span>({ children, variant = <span class="str">'primary'</span>, size = <span class="str">'medium'</span>, onClick }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;button</span>
+      <span class="attr">className</span>={`${styles.button} ${styles[variant]} ${size !== <span class="str">'medium'</span> ? styles[size] : <span class="str">''</span>}`}
+      <span class="attr">onClick</span>={onClick}
+    <span class="jsx">&gt;</span>
+      {children}
+    <span class="jsx">&lt;/button&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> Button;
+
+<span class="cmt">// Sử dụng:</span>
+<span class="cmt">// &lt;Button variant="primary" size="large"&gt;Xác nhận&lt;/Button&gt;</span>
+<span class="cmt">// &lt;Button variant="secondary"&gt;Huỷ&lt;/Button&gt;</span></code></pre>
+      </div>
+
+      <h3>3.3 Combining classes với thư viện classnames</h3>
+
+      <p>
+        Khi cần kết hợp nhiều class có điều kiện, template literal sẽ trở nên lộn xộn.
+        Thư viện <code>classnames</code> (hoặc <code>clsx</code>) giúp code gọn hơn nhiều.
+      </p>
+
+      <div class="code-block">
+        <div class="code-label">Terminal</div>
+        <pre><code>npm install classnames
+<span class="cmt"># hoặc clsx (nhẹ hơn)</span>
+npm install clsx</code></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label">Button.jsx — dùng clsx</div>
+        <pre><code><span class="kw">import</span> clsx <span class="kw">from</span> <span class="str">'clsx'</span>;
+<span class="kw">import</span> styles <span class="kw">from</span> <span class="str">'./Button.module.css'</span>;
+
+<span class="kw">function</span> <span class="fn">Button</span>({ children, variant = <span class="str">'primary'</span>, size, disabled, onClick }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;button</span>
+      <span class="attr">className</span>={<span class="fn">clsx</span>(
+        styles.button,
+        styles[variant],           <span class="cmt">// 'primary' | 'secondary'</span>
+        size &amp;&amp; styles[size],      <span class="cmt">// 'large' | 'small' | falsy</span>
+        disabled &amp;&amp; styles.disabled
+      )}
+      <span class="attr">disabled</span>={disabled}
+      <span class="attr">onClick</span>={onClick}
+    <span class="jsx">&gt;</span>
+      {children}
+    <span class="jsx">&lt;/button&gt;</span>
+  );
+}</code></pre>
+      </div>
+
+      <div class="callout success">
+        <div class="callout-title">✅ Tại sao CSS Modules tốt?</div>
+        <p>
+          Tên class được <strong>hash tự động</strong> (ví dụ: <code>Button_button__xKz9m</code>),
+          đảm bảo không bao giờ xung đột dù 100 component cùng dùng tên <code>.button</code>.
+          Bạn viết CSS thuần, không phải học syntax mới — chỉ thêm <code>.module</code> vào tên file.
+        </p>
+      </div>
+
+      <!-- Section 4: Styled Components -->
+      <h2>4. Styled Components — CSS-in-JS</h2>
+
+      <p>
+        Styled Components cho phép bạn viết CSS <em>bên trong</em> file JavaScript, gắn liền với
+        component. CSS sẽ tự động scoped và hỗ trợ dynamic styling dựa trên props.
+      </p>
+
+      <h3>4.1 Cài đặt</h3>
+
+      <div class="code-block">
+        <div class="code-label">Terminal</div>
+        <pre><code>npm install styled-components</code></pre>
+      </div>
+
+      <h3>4.2 Tạo styled component cơ bản</h3>
+
+      <div class="code-block">
+        <div class="code-label">Button.jsx</div>
+        <pre><code><span class="kw">import</span> styled <span class="kw">from</span> <span class="str">'styled-components'</span>;
+
+<span class="cmt">// Tạo component Button từ thẻ &lt;button&gt;</span>
+<span class="cmt">// Dùng template literal (backtick) để viết CSS</span>
+<span class="kw">const</span> <span class="type">StyledButton</span> = styled.button`
+  background-color: #61dafb;
+  color: #282c34;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s;
+
+  &amp;:hover {
+    background-color: #21a1c4;
+    transform: translateY(-1px);
+  }
+
+  &amp;:active {
+    transform: translateY(0);
+  }
+`;
+
+<span class="kw">function</span> <span class="fn">Button</span>({ children, onClick }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;StyledButton</span> <span class="attr">onClick</span>={onClick}<span class="jsx">&gt;</span>
+      {children}
+    <span class="jsx">&lt;/StyledButton&gt;</span>
+  );
+}</code></pre>
+      </div>
+
+      <h3>4.3 Dynamic styling với Props</h3>
+
+      <p>
+        Đây là điểm mạnh nhất của Styled Components: thay đổi style dựa trên props một cách
+        tự nhiên, không cần thêm class hay logic phức tạp.
+      </p>
+
+      <div class="code-block">
+        <div class="code-label">Button.jsx — dynamic với props</div>
+        <pre><code><span class="kw">import</span> styled <span class="kw">from</span> <span class="str">'styled-components'</span>;
+
+<span class="kw">const</span> <span class="type">Button</span> = styled.button`
+  padding: ${<span class="fn">props</span> => props.size === <span class="str">'large'</span> ? <span class="str">'14px 28px'</span> : <span class="str">'10px 20px'</span>};
+  font-size: ${<span class="fn">props</span> => props.size === <span class="str">'large'</span> ? <span class="str">'1.1rem'</span> : <span class="str">'1rem'</span>};
+  border-radius: 6px;
+  border: 2px solid #61dafb;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+
+  <span class="cmt">/* Conditional styling dựa trên prop 'variant' */</span>
+  background-color: ${<span class="fn">props</span> => props.variant === <span class="str">'primary'</span> ? <span class="str">'#61dafb'</span> : <span class="str">'transparent'</span>};
+  color: ${<span class="fn">props</span> => props.variant === <span class="str">'primary'</span> ? <span class="str">'#282c34'</span> : <span class="str">'#61dafb'</span>};
+
+  <span class="cmt">/* Disabled state */</span>
+  opacity: ${<span class="fn">props</span> => props.disabled ? <span class="str">'0.5'</span> : <span class="str">'1'</span>};
+  cursor: ${<span class="fn">props</span> => props.disabled ? <span class="str">'not-allowed'</span> : <span class="str">'pointer'</span>};
+
+  &amp;:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(97, 218, 251, 0.3);
+  }
+`;
+
+<span class="cmt">// Sử dụng:</span>
+<span class="cmt">// &lt;Button variant="primary" size="large"&gt;Đăng nhập&lt;/Button&gt;</span>
+<span class="cmt">// &lt;Button variant="outline"&gt;Huỷ&lt;/Button&gt;</span>
+<span class="cmt">// &lt;Button disabled&gt;Đang xử lý...&lt;/Button&gt;</span></code></pre>
+      </div>
+
+      <h3>4.4 Extend và thừa kế styles</h3>
+
+      <div class="code-block">
+        <div class="code-label">ExtendedButton.jsx</div>
+        <pre><code><span class="kw">import</span> styled <span class="kw">from</span> <span class="str">'styled-components'</span>;
+<span class="kw">import</span> { Button } <span class="kw">from</span> <span class="str">'./Button'</span>;
+
+<span class="cmt">// Tạo DangerButton kế thừa từ Button, ghi đè một số style</span>
+<span class="kw">const</span> <span class="type">DangerButton</span> = styled(Button)`
+  background-color: #e06c75;
+  border-color: #e06c75;
+  color: white;
+
+  &amp;:hover:not(:disabled) {
+    background-color: #c0505a;
+    box-shadow: 0 4px 12px rgba(224, 108, 117, 0.4);
+  }
+`;</code></pre>
+      </div>
+
+      <h3>4.5 ThemeProvider — Theming toàn cục</h3>
+
+      <div class="code-block">
+        <div class="code-label">App.jsx</div>
+        <pre><code><span class="kw">import</span> { ThemeProvider } <span class="kw">from</span> <span class="str">'styled-components'</span>;
+
+<span class="kw">const</span> theme = {
+  colors: {
+    primary: <span class="str">'#61dafb'</span>,
+    secondary: <span class="str">'#282c34'</span>,
+    danger: <span class="str">'#e06c75'</span>,
+    success: <span class="str">'#98c379'</span>,
+  },
+  fonts: {
+    body: <span class="str">'Inter, sans-serif'</span>,
+    mono: <span class="str">'Fira Code, monospace'</span>,
+  },
+  spacing: {
+    sm: <span class="str">'8px'</span>,
+    md: <span class="str">'16px'</span>,
+    lg: <span class="str">'32px'</span>,
+  }
+};
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;ThemeProvider</span> <span class="attr">theme</span>={theme}<span class="jsx">&gt;</span>
+      <span class="jsx">&lt;MyApp /&gt;</span>
+    <span class="jsx">&lt;/ThemeProvider&gt;</span>
+  );
+}
+
+<span class="cmt">// Dùng theme trong styled component:</span>
+<span class="kw">const</span> <span class="type">ThemedButton</span> = styled.button`
+  background: ${<span class="fn">props</span> => props.theme.colors.primary};
+  font-family: ${<span class="fn">props</span> => props.theme.fonts.body};
+  padding: ${<span class="fn">props</span> => props.theme.spacing.md};
+`;</code></pre>
+      </div>
+
+      <h3>4.6 Global styles</h3>
+
+      <div class="code-block">
+        <div class="code-label">GlobalStyle.jsx</div>
+        <pre><code><span class="kw">import</span> { createGlobalStyle } <span class="kw">from</span> <span class="str">'styled-components'</span>;
+
+<span class="kw">const</span> <span class="type">GlobalStyle</span> = createGlobalStyle`
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: ${<span class="fn">props</span> => props.theme.fonts.body};
+    background: ${<span class="fn">props</span> => props.theme.colors.secondary};
+    color: #abb2bf;
+    line-height: 1.8;
+  }
+
+  a {
+    color: ${<span class="fn">props</span> => props.theme.colors.primary};
+    text-decoration: none;
+  }
+`;
+
+<span class="cmt">// Đặt trong App.jsx, bên trong ThemeProvider:</span>
+<span class="cmt">// &lt;ThemeProvider theme={theme}&gt;</span>
+<span class="cmt">//   &lt;GlobalStyle /&gt;</span>
+<span class="cmt">//   &lt;MyApp /&gt;</span>
+<span class="cmt">// &lt;/ThemeProvider&gt;</span></code></pre>
+      </div>
+
+      <!-- Section 5: Tailwind CSS -->
+      <h2>5. Tailwind CSS — Utility-first</h2>
+
+      <p>
+        Tailwind CSS là framework CSS dựa trên utility classes — thay vì viết CSS, bạn dùng
+        các class có sẵn như <code>flex</code>, <code>p-4</code>, <code>text-blue-500</code>
+        trực tiếp trong JSX. Đây là cách tiếp cận được ưa chuộng nhất trong React ecosystem 2024.
+      </p>
+
+      <h3>5.1 Cài đặt Tailwind CSS với Vite</h3>
+
+      <div class="code-block">
+        <div class="code-label">Terminal</div>
+        <pre><code><span class="cmt"># Cài đặt Tailwind và các dependency</span>
+npm install tailwindcss @tailwindcss/vite
+
+<span class="cmt"># Hoặc với Tailwind v4 (mới nhất):</span>
+npm install tailwindcss @tailwindcss/vite</code></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label">vite.config.js</div>
+        <pre><code><span class="kw">import</span> { defineConfig } <span class="kw">from</span> <span class="str">'vite'</span>
+<span class="kw">import</span> react <span class="kw">from</span> <span class="str">'@vitejs/plugin-react'</span>
+<span class="kw">import</span> tailwindcss <span class="kw">from</span> <span class="str">'@tailwindcss/vite'</span>
+
+<span class="kw">export default</span> <span class="fn">defineConfig</span>({
+  plugins: [
+    <span class="fn">react</span>(),
+    <span class="fn">tailwindcss</span>(),  <span class="cmt">// Thêm plugin Tailwind</span>
+  ],
+})</code></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label">src/index.css</div>
+        <pre><code><span class="cmt">/* Tailwind v4 — chỉ cần một dòng này */</span>
+<span class="kw">@import</span> <span class="str">"tailwindcss"</span>;</code></pre>
+      </div>
+
+      <h3>5.2 Các utility class quan trọng</h3>
+
+      <h4>Spacing (margin &amp; padding)</h4>
+      <div class="code-block">
+        <div class="code-label">Spacing classes</div>
+        <pre><code><span class="cmt">// p-{n}: padding tất cả phía (p-4 = 1rem, p-8 = 2rem)</span>
+<span class="cmt">// px-{n}: padding trái phải | py-{n}: padding trên dưới</span>
+<span class="cmt">// pt-{n}: padding-top | pr-{n}: padding-right | ...</span>
+<span class="cmt">// m-{n}: margin | mx-{n}: margin trái phải | my-{n}: margin trên dưới</span>
+<span class="cmt">// mx-auto: margin auto (căn giữa block element)</span>
+
+<span class="jsx">&lt;div</span> <span class="attr">className</span>=<span class="str">"p-4 mx-auto my-8 px-6 py-3"</span><span class="jsx">&gt;</span>
+  Spacing ví dụ
+<span class="jsx">&lt;/div&gt;</span></code></pre>
+      </div>
+
+      <h4>Colors</h4>
+      <div class="code-block">
+        <div class="code-label">Color classes</div>
+        <pre><code><span class="cmt">// text-{color}-{shade}: màu chữ</span>
+<span class="cmt">// bg-{color}-{shade}: màu nền</span>
+<span class="cmt">// border-{color}-{shade}: màu viền</span>
+<span class="cmt">// Shade: 50, 100, 200, ..., 900, 950</span>
+
+<span class="jsx">&lt;button</span> <span class="attr">className</span>=<span class="str">"bg-blue-500 text-white hover:bg-blue-600 border border-blue-700"</span><span class="jsx">&gt;</span>
+  Click me
+<span class="jsx">&lt;/button&gt;</span>
+
+<span class="jsx">&lt;p</span> <span class="attr">className</span>=<span class="str">"text-gray-600 dark:text-gray-300"</span><span class="jsx">&gt;</span>
+  Text màu xám
+<span class="jsx">&lt;/p&gt;</span></code></pre>
+      </div>
+
+      <h4>Typography</h4>
+      <div class="code-block">
+        <div class="code-label">Typography classes</div>
+        <pre><code><span class="cmt">// text-{size}: font-size</span>
+<span class="cmt">// xs, sm, base, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl</span>
+<span class="cmt">// font-{weight}: font-weight</span>
+<span class="cmt">// thin, light, normal, medium, semibold, bold, extrabold, black</span>
+<span class="cmt">// leading-{n}: line-height | tracking-{n}: letter-spacing</span>
+
+<span class="jsx">&lt;h1</span> <span class="attr">className</span>=<span class="str">"text-4xl font-bold leading-tight tracking-tight"</span><span class="jsx">&gt;</span>
+  Tiêu đề lớn
+<span class="jsx">&lt;/h1&gt;</span>
+<span class="jsx">&lt;p</span> <span class="attr">className</span>=<span class="str">"text-base font-normal leading-relaxed text-gray-600"</span><span class="jsx">&gt;</span>
+  Đoạn văn bản thông thường
+<span class="jsx">&lt;/p&gt;</span></code></pre>
+      </div>
+
+      <h4>Flexbox</h4>
+      <div class="code-block">
+        <div class="code-label">Flexbox classes</div>
+        <pre><code><span class="cmt">// flex: display flex | inline-flex: display inline-flex</span>
+<span class="cmt">// flex-row | flex-col: flex-direction</span>
+<span class="cmt">// items-start | items-center | items-end: align-items</span>
+<span class="cmt">// justify-start | justify-center | justify-between | justify-end: justify-content</span>
+<span class="cmt">// gap-{n}: gap | flex-wrap: flex-wrap</span>
+<span class="cmt">// flex-1: flex: 1 | grow: flex-grow | shrink-0: flex-shrink: 0</span>
+
+<span class="jsx">&lt;div</span> <span class="attr">className</span>=<span class="str">"flex items-center justify-between gap-4 flex-wrap"</span><span class="jsx">&gt;</span>
+  <span class="jsx">&lt;span</span> <span class="attr">className</span>=<span class="str">"flex-1"</span><span class="jsx">&gt;</span>Bên trái<span class="jsx">&lt;/span&gt;</span>
+  <span class="jsx">&lt;span</span> <span class="attr">className</span>=<span class="str">"shrink-0"</span><span class="jsx">&gt;</span>Bên phải<span class="jsx">&lt;/span&gt;</span>
+<span class="jsx">&lt;/div&gt;</span></code></pre>
+      </div>
+
+      <h4>Grid</h4>
+      <div class="code-block">
+        <div class="code-label">Grid classes</div>
+        <pre><code><span class="cmt">// grid: display grid</span>
+<span class="cmt">// grid-cols-{n}: số cột (1-12)</span>
+<span class="cmt">// col-span-{n}: chiếm n cột</span>
+<span class="cmt">// gap-{n}: khoảng cách</span>
+
+<span class="jsx">&lt;div</span> <span class="attr">className</span>=<span class="str">"grid grid-cols-3 gap-6"</span><span class="jsx">&gt;</span>
+  <span class="jsx">&lt;div</span> <span class="attr">className</span>=<span class="str">"col-span-2"</span><span class="jsx">&gt;</span>Chiếm 2 cột<span class="jsx">&lt;/div&gt;</span>
+  <span class="jsx">&lt;div&gt;</span>Chiếm 1 cột<span class="jsx">&lt;/div&gt;</span>
+<span class="jsx">&lt;/div&gt;</span></code></pre>
+      </div>
+
+      <h3>5.3 Responsive Design</h3>
+
+      <p>
+        Tailwind dùng mobile-first approach: class không có prefix áp dụng cho mọi kích thước,
+        prefix <code>sm:</code>, <code>md:</code>, <code>lg:</code>, <code>xl:</code>, <code>2xl:</code>
+        áp dụng từ breakpoint đó trở lên.
+      </p>
+
+      <div class="code-block">
+        <div class="code-label">Responsive example</div>
+        <pre><code><span class="cmt">// Breakpoints: sm=640px, md=768px, lg=1024px, xl=1280px, 2xl=1536px</span>
+
+<span class="jsx">&lt;div</span> <span class="attr">className</span>=<span class="str">"
+  grid grid-cols-1
+  sm:grid-cols-2
+  lg:grid-cols-3
+  gap-4
+"</span><span class="jsx">&gt;</span>
+  <span class="jsx">&lt;div</span> <span class="attr">className</span>=<span class="str">"
+    p-4
+    text-sm sm:text-base lg:text-lg
+    w-full sm:w-auto
+  "</span><span class="jsx">&gt;</span>
+    Responsive card
+  <span class="jsx">&lt;/div&gt;</span>
+<span class="jsx">&lt;/div&gt;</span>
+
+<span class="cmt">// Navigation: ẩn/hiện menu</span>
+<span class="jsx">&lt;nav</span> <span class="attr">className</span>=<span class="str">"hidden md:flex gap-6"</span><span class="jsx">&gt;</span>
+  <span class="jsx">&lt;a</span> <span class="attr">href</span>=<span class="str">"#"</span><span class="jsx">&gt;</span>Home<span class="jsx">&lt;/a&gt;</span>
+<span class="jsx">&lt;/nav&gt;</span>
+<span class="jsx">&lt;button</span> <span class="attr">className</span>=<span class="str">"md:hidden"</span><span class="jsx">&gt;</span>Menu<span class="jsx">&lt;/button&gt;</span></code></pre>
+      </div>
+
+      <h3>5.4 Pseudo-classes: hover, focus, active</h3>
+
+      <div class="code-block">
+        <div class="code-label">Pseudo-class prefixes</div>
+        <pre><code><span class="jsx">&lt;button</span> <span class="attr">className</span>=<span class="str">"
+  bg-blue-500
+  hover:bg-blue-600
+  active:bg-blue-700
+  focus:outline-none focus:ring-2 focus:ring-blue-300
+  disabled:opacity-50 disabled:cursor-not-allowed
+  transition-colors duration-200
+"</span><span class="jsx">&gt;</span>
+  Interactive Button
+<span class="jsx">&lt;/button&gt;</span>
+
+<span class="jsx">&lt;a</span> <span class="attr">className</span>=<span class="str">"
+  text-blue-500
+  hover:text-blue-700
+  hover:underline
+  visited:text-purple-500
+"</span><span class="jsx">&gt;</span>
+  Link
+<span class="jsx">&lt;/a&gt;</span>
+
+<span class="cmt">// Group hover: khi hover parent, thay đổi child</span>
+<span class="jsx">&lt;div</span> <span class="attr">className</span>=<span class="str">"group cursor-pointer"</span><span class="jsx">&gt;</span>
+  <span class="jsx">&lt;h3</span> <span class="attr">className</span>=<span class="str">"group-hover:text-blue-500"</span><span class="jsx">&gt;</span>Tiêu đề<span class="jsx">&lt;/h3&gt;</span>
+  <span class="jsx">&lt;p</span> <span class="attr">className</span>=<span class="str">"group-hover:opacity-75"</span><span class="jsx">&gt;</span>Mô tả<span class="jsx">&lt;/p&gt;</span>
+<span class="jsx">&lt;/div&gt;</span></code></pre>
+      </div>
+
+      <h3>5.5 Dark Mode</h3>
+
+      <div class="code-block">
+        <div class="code-label">Dark mode classes</div>
+        <pre><code><span class="cmt">// dark: prefix — áp dụng khi có class 'dark' ở html element</span>
+<span class="jsx">&lt;div</span> <span class="attr">className</span>=<span class="str">"bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"</span><span class="jsx">&gt;</span>
+  <span class="jsx">&lt;h1</span> <span class="attr">className</span>=<span class="str">"text-2xl font-bold text-gray-800 dark:text-white"</span><span class="jsx">&gt;</span>
+    Tiêu đề
+  <span class="jsx">&lt;/h1&gt;</span>
+  <span class="jsx">&lt;p</span> <span class="attr">className</span>=<span class="str">"text-gray-600 dark:text-gray-400"</span><span class="jsx">&gt;</span>
+    Đoạn văn
+  <span class="jsx">&lt;/p&gt;</span>
+<span class="jsx">&lt;/div&gt;</span>
+
+<span class="cmt">// Toggle dark mode:</span>
+<span class="kw">function</span> <span class="fn">toggleDark</span>() {
+  document.documentElement.classList.toggle(<span class="str">'dark'</span>);
+}</code></pre>
+      </div>
+
+      <h3>5.6 Utility cn() với clsx và tailwind-merge</h3>
+
+      <p>
+        Trong React, bạn thường cần kết hợp class Tailwind có điều kiện. Vấn đề là Tailwind có thể
+        có class conflict (ví dụ: <code>p-4</code> và <code>p-6</code>). Combo <code>clsx</code> +
+        <code>tailwind-merge</code> giải quyết vấn đề này.
+      </p>
+
+      <div class="code-block">
+        <div class="code-label">Terminal</div>
+        <pre><code>npm install clsx tailwind-merge</code></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label">lib/utils.ts</div>
+        <pre><code><span class="kw">import</span> { clsx, <span class="type">ClassValue</span> } <span class="kw">from</span> <span class="str">'clsx'</span>;
+<span class="kw">import</span> { twMerge } <span class="kw">from</span> <span class="str">'tailwind-merge'</span>;
+
+<span class="cmt">// Hàm cn() — chuẩn trong mọi dự án dùng Tailwind + Shadcn</span>
+<span class="kw">export function</span> <span class="fn">cn</span>(...inputs: <span class="type">ClassValue</span>[]) {
+  <span class="kw">return</span> <span class="fn">twMerge</span>(<span class="fn">clsx</span>(inputs));
+}</code></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label">Button.jsx — dùng cn()</div>
+        <pre><code><span class="kw">import</span> { cn } <span class="kw">from</span> <span class="str">'../lib/utils'</span>;
+
+<span class="kw">function</span> <span class="fn">Button</span>({ children, className, variant = <span class="str">'primary'</span>, size = <span class="str">'md'</span>, disabled }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;button</span>
+      <span class="attr">className</span>={<span class="fn">cn</span>(
+        <span class="cmt">// Base classes</span>
+        <span class="str">'inline-flex items-center justify-center rounded-md font-medium transition-colors'</span>,
+        <span class="str">'focus:outline-none focus:ring-2 focus:ring-offset-2'</span>,
+        <span class="cmt">// Variant classes</span>
+        variant === <span class="str">'primary'</span> &amp;&amp; <span class="str">'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500'</span>,
+        variant === <span class="str">'outline'</span> &amp;&amp; <span class="str">'border border-blue-500 text-blue-500 hover:bg-blue-50'</span>,
+        variant === <span class="str">'ghost'</span>   &amp;&amp; <span class="str">'text-gray-700 hover:bg-gray-100'</span>,
+        <span class="cmt">// Size classes</span>
+        size === <span class="str">'sm'</span> &amp;&amp; <span class="str">'px-3 py-1.5 text-sm'</span>,
+        size === <span class="str">'md'</span> &amp;&amp; <span class="str">'px-4 py-2 text-sm'</span>,
+        size === <span class="str">'lg'</span> &amp;&amp; <span class="str">'px-6 py-3 text-base'</span>,
+        <span class="cmt">// Disabled</span>
+        disabled &amp;&amp; <span class="str">'opacity-50 cursor-not-allowed pointer-events-none'</span>,
+        <span class="cmt">// Custom classes từ bên ngoài (override nếu cần)</span>
+        className
+      )}
+      <span class="attr">disabled</span>={disabled}
+    <span class="jsx">&gt;</span>
+      {children}
+    <span class="jsx">&lt;/button&gt;</span>
+  );
+}</code></pre>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-title">💡 Tại sao Tailwind phổ biến trong React?</div>
+        <p>
+          Tailwind CSS bùng nổ trong cộng đồng React vì nhiều lý do: (1) <strong>Không cần đặt tên</strong>
+          — một trong những việc khó nhất trong lập trình; (2) <strong>Colocation</strong> — style và markup
+          ở cùng một chỗ; (3) <strong>Bundle size nhỏ</strong> — Tailwind chỉ include CSS của class bạn dùng;
+          (4) <strong>Design system sẵn có</strong> — hệ thống spacing, color, typography nhất quán ngay từ đầu;
+          (5) <strong>Ecosystem mạnh</strong> — Shadcn/ui, Headless UI, Radix UI đều built on Tailwind.
+        </p>
+      </div>
+
+      <!-- Section 6: Inline Styles -->
+      <h2>6. Inline Styles — Khi nào dùng?</h2>
+
+      <p>
+        Inline styles trong React nhận một <em>object JavaScript</em> thay vì string CSS.
+        Tên property dùng camelCase: <code>backgroundColor</code> thay vì <code>background-color</code>.
+      </p>
+
+      <div class="code-block">
+        <div class="code-label">Inline styles</div>
+        <pre><code><span class="cmt">// Style object — tên property là camelCase</span>
+<span class="kw">const</span> boxStyle = {
+  backgroundColor: <span class="str">'#282c34'</span>,
+  padding: <span class="str">'16px'</span>,
+  borderRadius: <span class="str">'8px'</span>,
+  boxShadow: <span class="str">'0 4px 20px rgba(0,0,0,0.3)'</span>,
+};
+
+<span class="jsx">&lt;div</span> <span class="attr">style</span>={boxStyle}<span class="jsx">&gt;</span>Nội dung<span class="jsx">&lt;/div&gt;</span>
+
+<span class="cmt">// Inline trực tiếp (ít dùng cho nhiều property)</span>
+<span class="jsx">&lt;div</span> <span class="attr">style</span>={{ color: <span class="str">'red'</span>, fontSize: <span class="str">'1.2rem'</span> }<span class="jsx">&gt;</span>Text<span class="jsx">&lt;/div&gt;</span>
+
+<span class="cmt">// ✅ Dùng inline khi: giá trị dynamic không thể biết trước</span>
+<span class="kw">function</span> <span class="fn">ProgressBar</span>({ percent }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div</span> <span class="attr">style</span>={{ width: <span class="str">`${percent}%`</span> }} <span class="attr">className</span>=<span class="str">"bg-blue-500 h-2 rounded"</span> <span class="jsx">/&gt;</span>
+  );
+}
+
+<span class="cmt">// ✅ Dùng inline cho CSS custom properties (variables)</span>
+<span class="jsx">&lt;div</span> <span class="attr">style</span>={{ <span class="str">'--rotation'</span>: <span class="str">`${rotation}deg`</span> }} <span class="attr">className</span>=<span class="str">"rotate-[var(--rotation)]"</span> <span class="jsx">/&gt;</span></code></pre>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-title">⚠️ Khi nào KHÔNG dùng inline styles?</div>
+        <p>
+          Tránh dùng inline styles cho mọi thứ — chúng không hỗ trợ pseudo-classes (<code>:hover</code>),
+          media queries, và khó bảo trì. Chỉ dùng khi giá trị thực sự cần tính toán động tại runtime.
+        </p>
+      </div>
+
+      <!-- Section 7: CSS Animations -->
+      <h2>7. CSS Animations trong React</h2>
+
+      <h3>7.1 CSS Transitions</h3>
+
+      <div class="code-block">
+        <div class="code-label">AnimatedCard.module.css</div>
+        <pre><code><span class="str">.card</span> {
+  <span class="attr">background</span>: <span class="val">#282c34</span>;
+  <span class="attr">padding</span>: <span class="val">24px</span>;
+  <span class="attr">border-radius</span>: <span class="val">8px</span>;
+  <span class="attr">border</span>: <span class="val">1px solid #3e4451</span>;
+
+  <span class="cmt">/* Transition: áp dụng cho tất cả property có thể animate */</span>
+  <span class="attr">transition</span>: <span class="val">transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease</span>;
+}
+
+<span class="str">.card:hover</span> {
+  <span class="attr">transform</span>: <span class="val">translateY(-4px)</span>;
+  <span class="attr">box-shadow</span>: <span class="val">0 8px 32px rgba(97,218,251,0.2)</span>;
+  <span class="attr">border-color</span>: <span class="val">#61dafb</span>;
+}</code></pre>
+      </div>
+
+      <h3>7.2 CSS Keyframe Animations</h3>
+
+      <div class="code-block">
+        <div class="code-label">Animations.module.css</div>
+        <pre><code><span class="cmt">/* Keyframe: spin vòng tròn */</span>
+<span class="kw">@keyframes</span> spin {
+  <span class="str">from</span> { <span class="attr">transform</span>: <span class="val">rotate(0deg)</span>; }
+  <span class="str">to</span>   { <span class="attr">transform</span>: <span class="val">rotate(360deg)</span>; }
+}
+
+<span class="cmt">/* Keyframe: fade in */</span>
+<span class="kw">@keyframes</span> fadeIn {
+  <span class="str">from</span> { <span class="attr">opacity</span>: <span class="val">0</span>; <span class="attr">transform</span>: <span class="val">translateY(12px)</span>; }
+  <span class="str">to</span>   { <span class="attr">opacity</span>: <span class="val">1</span>; <span class="attr">transform</span>: <span class="val">translateY(0)</span>; }
+}
+
+<span class="cmt">/* Keyframe: pulse */</span>
+<span class="kw">@keyframes</span> pulse {
+  <span class="str">0%, 100%</span> { <span class="attr">opacity</span>: <span class="val">1</span>; }
+  <span class="str">50%</span>       { <span class="attr">opacity</span>: <span class="val">0.5</span>; }
+}
+
+<span class="str">.spinner</span> {
+  <span class="attr">width</span>: <span class="val">32px</span>;
+  <span class="attr">height</span>: <span class="val">32px</span>;
+  <span class="attr">border</span>: <span class="val">3px solid #3e4451</span>;
+  <span class="attr">border-top-color</span>: <span class="val">#61dafb</span>;
+  <span class="attr">border-radius</span>: <span class="val">50%</span>;
+  <span class="attr">animation</span>: <span class="val">spin 0.8s linear infinite</span>;
+}
+
+<span class="str">.fadeIn</span> {
+  <span class="attr">animation</span>: <span class="val">fadeIn 0.4s ease-out forwards</span>;
+}
+
+<span class="str">.skeleton</span> {
+  <span class="attr">background</span>: <span class="val">linear-gradient(90deg, #282c34 25%, #3e4451 50%, #282c34 75%)</span>;
+  <span class="attr">background-size</span>: <span class="val">200% 100%</span>;
+  <span class="attr">animation</span>: <span class="val">shimmer 1.5s infinite</span>;
+}
+
+<span class="kw">@keyframes</span> shimmer {
+  <span class="str">0%</span>   { <span class="attr">background-position</span>: <span class="val">200% 0</span>; }
+  <span class="str">100%</span> { <span class="attr">background-position</span>: <span class="val">-200% 0</span>; }
+}</code></pre>
+      </div>
+
+      <!-- Section 8: Bài tập -->
+      <h2>8. Bài tập thực hành</h2>
+
+      <div class="exercise">
+        <div class="exercise-header">
+          <div class="exercise-icon">💪</div>
+          <div class="exercise-title">Bài tập: Thiết kế lại Todo List với Tailwind CSS</div>
+        </div>
+        <p>Xây dựng ứng dụng Todo List hoàn chỉnh sử dụng Tailwind CSS, với giao diện đẹp và responsive.</p>
+        <ul>
+          <li>Dark theme với màu sắc nhất quán</li>
+          <li>Thêm, xoá, đánh dấu hoàn thành task</li>
+          <li>Filter: All / Active / Completed</li>
+          <li>Counter hiển thị số task còn lại</li>
+          <li>Responsive: mobile và desktop</li>
+          <li>Animations: fade in khi thêm task mới</li>
+        </ul>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label">TodoApp.jsx — Tailwind CSS hoàn chỉnh</div>
+        <pre><code><span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { cn } <span class="kw">from</span> <span class="str">'./lib/utils'</span>;
+
+<span class="kw">const</span> <span class="fn">FILTERS</span> = [<span class="str">'all'</span>, <span class="str">'active'</span>, <span class="str">'completed'</span>];
+
+<span class="kw">function</span> <span class="fn">TodoApp</span>() {
+  <span class="kw">const</span> [todos, setTodos] = useState([
+    { id: 1, text: <span class="str">'Học Tailwind CSS'</span>, done: <span class="kw">true</span> },
+    { id: 2, text: <span class="str">'Xây dựng component Button'</span>, done: <span class="kw">false</span> },
+    { id: 3, text: <span class="str">'Deploy lên Vercel'</span>, done: <span class="kw">false</span> },
+  ]);
+  <span class="kw">const</span> [input, setInput] = useState(<span class="str">''</span>);
+  <span class="kw">const</span> [filter, setFilter] = useState(<span class="str">'all'</span>);
+
+  <span class="kw">const</span> <span class="fn">addTodo</span> = (e) => {
+    e.preventDefault();
+    <span class="kw">if</span> (!input.trim()) <span class="kw">return</span>;
+    setTodos(prev => [...prev, { id: Date.now(), text: input.trim(), done: <span class="kw">false</span> }]);
+    setInput(<span class="str">''</span>);
+  };
+
+  <span class="kw">const</span> <span class="fn">toggleTodo</span> = (id) =>
+    setTodos(prev => prev.map(t => t.id === id ? { ...t, done: !t.done } : t));
+
+  <span class="kw">const</span> <span class="fn">deleteTodo</span> = (id) =>
+    setTodos(prev => prev.filter(t => t.id !== id));
+
+  <span class="kw">const</span> filtered = todos.filter(t => {
+    <span class="kw">if</span> (filter === <span class="str">'active'</span>) <span class="kw">return</span> !t.done;
+    <span class="kw">if</span> (filter === <span class="str">'completed'</span>) <span class="kw">return</span> t.done;
+    <span class="kw">return true</span>;
+  });
+
+  <span class="kw">const</span> remaining = todos.filter(t => !t.done).length;
+
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div</span> <span class="attr">className</span>=<span class="str">"min-h-screen bg-gray-950 flex items-start justify-center pt-16 px-4"</span><span class="jsx">&gt;</span>
+      <span class="jsx">&lt;div</span> <span class="attr">className</span>=<span class="str">"w-full max-w-md"</span><span class="jsx">&gt;</span>
+
+        {<span class="cmt">/* Header */</span>}
+        <span class="jsx">&lt;div</span> <span class="attr">className</span>=<span class="str">"mb-8 text-center"</span><span class="jsx">&gt;</span>
+          <span class="jsx">&lt;h1</span> <span class="attr">className</span>=<span class="str">"text-4xl font-bold text-cyan-400 tracking-tight"</span><span class="jsx">&gt;</span>
+            Todo App
+          <span class="jsx">&lt;/h1&gt;</span>
+          <span class="jsx">&lt;p</span> <span class="attr">className</span>=<span class="str">"text-gray-500 mt-2 text-sm"</span><span class="jsx">&gt;</span>
+            {remaining} việc chưa hoàn thành
+          <span class="jsx">&lt;/p&gt;</span>
+        <span class="jsx">&lt;/div&gt;</span>
+
+        {<span class="cmt">/* Input Form */</span>}
+        <span class="jsx">&lt;form</span> <span class="attr">onSubmit</span>={addTodo} <span class="attr">className</span>=<span class="str">"flex gap-2 mb-4"</span><span class="jsx">&gt;</span>
+          <span class="jsx">&lt;input</span>
+            <span class="attr">value</span>={input}
+            <span class="attr">onChange</span>={e => setInput(e.target.value)}
+            <span class="attr">placeholder</span>=<span class="str">"Thêm việc cần làm..."</span>
+            <span class="attr">className</span>=<span class="str">"flex-1 bg-gray-800 text-white border border-gray-700
+              rounded-lg px-4 py-2.5 text-sm placeholder-gray-500
+              focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500
+              transition-colors"</span>
+          <span class="jsx">/&gt;</span>
+          <span class="jsx">&lt;button</span>
+            <span class="attr">type</span>=<span class="str">"submit"</span>
+            <span class="attr">className</span>=<span class="str">"bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-semibold
+              px-4 py-2.5 rounded-lg text-sm transition-colors
+              active:scale-95"</span>
+          <span class="jsx">&gt;</span>
+            Thêm
+          <span class="jsx">&lt;/button&gt;</span>
+        <span class="jsx">&lt;/form&gt;</span>
+
+        {<span class="cmt">/* Filter Tabs */</span>}
+        <span class="jsx">&lt;div</span> <span class="attr">className</span>=<span class="str">"flex gap-1 mb-4 bg-gray-800 p-1 rounded-lg"</span><span class="jsx">&gt;</span>
+          {FILTERS.map(f => (
+            <span class="jsx">&lt;button</span>
+              <span class="attr">key</span>={f}
+              <span class="attr">onClick</span>={() => setFilter(f)}
+              <span class="attr">className</span>={<span class="fn">cn</span>(
+                <span class="str">'flex-1 py-1.5 rounded-md text-xs font-medium capitalize transition-all'</span>,
+                filter === f
+                  ? <span class="str">'bg-cyan-500 text-gray-900'</span>
+                  : <span class="str">'text-gray-400 hover:text-white'</span>
+              )}
+            <span class="jsx">&gt;</span>
+              {f === <span class="str">'all'</span> ? <span class="str">'Tất cả'</span> : f === <span class="str">'active'</span> ? <span class="str">'Chưa xong'</span> : <span class="str">'Đã xong'</span>}
+            <span class="jsx">&lt;/button&gt;</span>
+          ))}
+        <span class="jsx">&lt;/div&gt;</span>
+
+        {<span class="cmt">/* Todo List */</span>}
+        <span class="jsx">&lt;div</span> <span class="attr">className</span>=<span class="str">"space-y-2"</span><span class="jsx">&gt;</span>
+          {filtered.length === 0 &amp;&amp; (
+            <span class="jsx">&lt;p</span> <span class="attr">className</span>=<span class="str">"text-center text-gray-600 py-8 text-sm"</span><span class="jsx">&gt;</span>
+              Không có việc nào
+            <span class="jsx">&lt;/p&gt;</span>
+          )}
+          {filtered.map(todo => (
+            <span class="jsx">&lt;div</span>
+              <span class="attr">key</span>={todo.id}
+              <span class="attr">className</span>=<span class="str">"flex items-center gap-3 bg-gray-800 border border-gray-700
+                rounded-lg px-4 py-3 group hover:border-gray-600 transition-colors"</span>
+            <span class="jsx">&gt;</span>
+              {<span class="cmt">/* Checkbox */</span>}
+              <span class="jsx">&lt;button</span>
+                <span class="attr">onClick</span>={() => toggleTodo(todo.id)}
+                <span class="attr">className</span>={<span class="fn">cn</span>(
+                  <span class="str">'w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all'</span>,
+                  todo.done
+                    ? <span class="str">'bg-cyan-500 border-cyan-500'</span>
+                    : <span class="str">'border-gray-600 hover:border-cyan-500'</span>
+                )}
+              <span class="jsx">&gt;</span>
+                {todo.done &amp;&amp; <span class="jsx">&lt;span</span> <span class="attr">className</span>=<span class="str">"text-gray-900 text-xs font-bold"</span><span class="jsx">&gt;</span>✓<span class="jsx">&lt;/span&gt;</span>}
+              <span class="jsx">&lt;/button&gt;</span>
+
+              {<span class="cmt">/* Text */</span>}
+              <span class="jsx">&lt;span</span> <span class="attr">className</span>={<span class="fn">cn</span>(
+                <span class="str">'flex-1 text-sm'</span>,
+                todo.done ? <span class="str">'line-through text-gray-600'</span> : <span class="str">'text-gray-200'</span>
+              )}<span class="jsx">&gt;</span>
+                {todo.text}
+              <span class="jsx">&lt;/span&gt;</span>
+
+              {<span class="cmt">/* Delete */</span>}
+              <span class="jsx">&lt;button</span>
+                <span class="attr">onClick</span>={() => deleteTodo(todo.id)}
+                <span class="attr">className</span>=<span class="str">"opacity-0 group-hover:opacity-100 text-gray-600
+                  hover:text-red-400 transition-all text-lg leading-none"</span>
+              <span class="jsx">&gt;</span>
+                ×
+              <span class="jsx">&lt;/button&gt;</span>
+            <span class="jsx">&lt;/div&gt;</span>
+          ))}
+        <span class="jsx">&lt;/div&gt;</span>
+
+        {<span class="cmt">/* Footer */</span>}
+        {todos.some(t => t.done) &amp;&amp; (
+          <span class="jsx">&lt;button</span>
+            <span class="attr">onClick</span>={() => setTodos(prev => prev.filter(t => !t.done))}
+            <span class="attr">className</span>=<span class="str">"mt-4 w-full text-xs text-gray-600 hover:text-red-400
+              transition-colors py-2"</span>
+          <span class="jsx">&gt;</span>
+            Xoá tất cả đã hoàn thành
+          <span class="jsx">&lt;/button&gt;</span>
+        )}
+
+      <span class="jsx">&lt;/div&gt;</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> TodoApp;</code></pre>
+      </div>
+
+      <!-- Section 9: Quiz -->
+      <h2>9. Câu hỏi ôn tập</h2>
+
+      <div class="quiz">
+        <h3>🧠 Kiểm tra kiến thức — Chương 13</h3>
+        <ol>
+          <li>
+            <strong>CSS Modules khác Plain CSS ở điểm gì?</strong> Tại sao CSS Modules
+            giải quyết được vấn đề conflict class name?
+          </li>
+          <li>
+            <strong>Trong Styled Components</strong>, làm thế nào để thay đổi màu nền của button
+            dựa trên prop <code>variant</code>? Viết ví dụ minh hoạ.
+          </li>
+          <li>
+            <strong>Giải thích</strong> ý nghĩa của class Tailwind sau:
+            <code>md:grid-cols-3 hover:shadow-lg dark:bg-gray-900 focus:ring-2</code>
+          </li>
+          <li>
+            <strong>Tại sao</strong> cần kết hợp <code>clsx</code> và <code>tailwind-merge</code>
+            khi làm việc với Tailwind trong React? Chúng giải quyết vấn đề gì khác nhau?
+          </li>
+          <li>
+            <strong>Khi nào</strong> nên dùng inline styles thay vì Tailwind CSS hay CSS Modules?
+            Cho ví dụ cụ thể về trường hợp inline styles là lựa chọn tốt nhất.
+          </li>
+        </ol>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <a href="chapter-12.html">
+          <span class="nav-dir">← Chương trước</span>
+          <span class="nav-title">Ch.12 useEffect và Vòng đời</span>
+        </a>
+        <a href="chapter-14.html" class="next">
+          <span class="nav-dir">Chương tiếp theo →</span>
+          <span class="nav-title">Ch.14 React Router</span>
+        </a>
+      </div>
+
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+
+  <script>
+    // Scroll progress bar
+    const bar = document.getElementById('progressBar');
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY;
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (scrolled / total) * 100 : 0) + '%';
+    });
+
+    // Active nav link
+    const links = document.querySelectorAll('.nav-link');
+    const current = window.location.href;
+    links.forEach(l => {
+      if (l.href === current) l.classList.add('active');
+    });
+  </script>
+</body>
+</html>

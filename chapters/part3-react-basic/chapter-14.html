@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 14: React Router — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="chapter-14.html" class="nav-link active">Ch.14 React Router</a>
+
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 14 · Phần 3: React Cơ bản</div>
+        <h1 class="chapter-title">React Router — Điều hướng trang</h1>
+        <p class="chapter-desc">React Router là thư viện routing tiêu chuẩn cho React SPA. Nó cho phép tạo nhiều "trang" trong ứng dụng SPA mà không cần tải lại trình duyệt, tạo trải nghiệm người dùng mượt mà như app native.</p>
+      </div>
+
+      <h2>14.1 Routing trong SPA hoạt động như thế nào?</h2>
+      <p>Trong SPA, chỉ có một file HTML. React Router lắng nghe thay đổi URL (dùng History API của trình duyệt) và render component phù hợp.</p>
+
+      <div class="mermaid">
+flowchart TD
+    URL["🌐 URL thay đổi"] --> R{"React Router
+khớp route?"}
+    R -->|"/"| HOME["&lt;Home /&gt;"]
+    R -->|"/about"| ABOUT["&lt;About /&gt;"]
+    R -->|"/products"| PROD["&lt;Products /&gt;"]
+    R -->|"/products/:id"| DETAIL["&lt;ProductDetail /&gt;"]
+    R -->|"/dashboard"| AUTH{"Đã đăng nhập?"}
+    R -->|"Không khớp"| NF["&lt;NotFound /&gt; 404"]
+    AUTH -->|"Có"| DASH["&lt;Dashboard /&gt;"]
+    AUTH -->|"Không"| LOGIN["Redirect → /login"]
+    DETAIL -->|"useParams()"| ID["params.id = '42'"]
+    style AUTH fill:#282c34,stroke:#e5c07b
+    style LOGIN fill:#282c34,stroke:#e06c75,color:#e06c75
+    style DASH fill:#282c34,stroke:#98c379,color:#98c379
+</div>
+
+      <h2>14.2 Cài đặt và cấu hình cơ bản</h2>
+      <pre><code># Cài đặt React Router v6
+npm install react-router-dom</code></pre>
+
+      <pre><code>// src/main.jsx — Bọc app với BrowserRouter
+import { BrowserRouter } from 'react-router-dom';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  &lt;React.StrictMode&gt;
+    &lt;BrowserRouter&gt;
+      &lt;App /&gt;
+    &lt;/BrowserRouter&gt;
+  &lt;/React.StrictMode&gt;
+);</code></pre>
+
+      <pre><code>// src/App.jsx — Định nghĩa routes
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Layout from './components/Layout';
+import Home from './pages/Home';
+import About from './pages/About';
+import Products from './pages/Products';
+import ProductDetail from './pages/ProductDetail';
+import NotFound from './pages/NotFound';
+
+function App() {
+  return (
+    &lt;Routes&gt;
+      &lt;Route path="/" element={&lt;Layout /&gt;}&gt;
+        {/* Nested routes — render bên trong Layout */}
+        &lt;Route index element={&lt;Home /&gt;} /&gt;
+        &lt;Route path="about" element={&lt;About /&gt;} /&gt;
+        &lt;Route path="products" element={&lt;Products /&gt;} /&gt;
+        &lt;Route path="products/:id" element={&lt;ProductDetail /&gt;} /&gt;
+      &lt;/Route&gt;
+      &lt;Route path="*" element={&lt;NotFound /&gt;} /&gt; {/* 404 */}
+    &lt;/Routes&gt;
+  );
+}</code></pre>
+
+      <h2>14.3 Link, NavLink và useNavigate</h2>
+      <pre><code>import { Link, NavLink, useNavigate } from 'react-router-dom';
+
+// Link — điều hướng không reload trang
+function Navbar() {
+  return (
+    &lt;nav&gt;
+      &lt;Link to="/"&gt;Trang chủ&lt;/Link&gt;
+      &lt;Link to="/products"&gt;Sản phẩm&lt;/Link&gt;
+      &lt;Link to="/about"&gt;Về chúng tôi&lt;/Link&gt;
+    &lt;/nav&gt;
+  );
+}
+
+// NavLink — tự động thêm class "active" khi URL khớp
+function Navbar() {
+  return (
+    &lt;nav&gt;
+      &lt;NavLink
+        to="/"
+        className={({ isActive }) =&gt; isActive ? 'nav-link active' : 'nav-link'}
+        end {/* Chỉ active khi URL chính xác là "/" */}
+      &gt;
+        Trang chủ
+      &lt;/NavLink&gt;
+      &lt;NavLink to="/products" className={({ isActive }) =&gt;
+        isActive ? 'nav-link active' : 'nav-link'
+      }&gt;
+        Sản phẩm
+      &lt;/NavLink&gt;
+    &lt;/nav&gt;
+  );
+}
+
+// useNavigate — điều hướng bằng JavaScript (không phải click)
+function LoginForm() {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) =&gt; {
+    e.preventDefault();
+    const success = await login(email, password);
+    if (success) {
+      navigate('/dashboard');                 // Đến trang dashboard
+      navigate('/dashboard', { replace: true }); // Thay thế (không thể back)
+      navigate(-1);                           // Back
+      navigate(-2);                           // Back 2 lần
+      navigate(1);                            // Forward
+    }
+  };
+}</code></pre>
+
+      <h2>14.4 Route Parameters và useParams</h2>
+      <pre><code>// Định nghĩa route với parameter
+&lt;Route path="products/:id" element={&lt;ProductDetail /&gt;} /&gt;
+&lt;Route path="users/:userId/posts/:postId" element={&lt;Post /&gt;} /&gt;
+
+// Đọc parameter trong component
+import { useParams } from 'react-router-dom';
+
+function ProductDetail() {
+  const { id } = useParams(); // "42" (luôn là string!)
+
+  const [product, setProduct] = useState(null);
+
+  useEffect(() =&gt; {
+    fetch(`/api/products/${id}`)
+      .then(r =&gt; r.json())
+      .then(setProduct);
+  }, [id]);
+
+  return &lt;div&gt;...&lt;/div&gt;;
+}
+
+// Query string — useSearchParams
+import { useSearchParams } from 'react-router-dom';
+
+function ProductList() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get('page')) || 1;
+  const category = searchParams.get('category') || 'all';
+
+  const handlePageChange = (newPage) =&gt; {
+    setSearchParams({ page: newPage, category });
+  };
+
+  // URL: /products?page=2&amp;category=tech
+}</code></pre>
+
+      <h2>14.5 Nested Routes và Layout</h2>
+      <pre><code>// Layout component — dùng Outlet
+import { Outlet } from 'react-router-dom';
+
+function Layout() {
+  return (
+    &lt;div className="app"&gt;
+      &lt;Navbar /&gt;        {/* Header cố định */}
+      &lt;main&gt;
+        &lt;Outlet /&gt;      {/* Child routes render ở đây */}
+      &lt;/main&gt;
+      &lt;Footer /&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Dashboard với nested layout
+function App() {
+  return (
+    &lt;Routes&gt;
+      &lt;Route path="/" element={&lt;Layout /&gt;}&gt;
+        &lt;Route index element={&lt;Home /&gt;} /&gt;
+
+        {/* Dashboard với sub-routes */}
+        &lt;Route path="dashboard" element={&lt;DashboardLayout /&gt;}&gt;
+          &lt;Route index element={&lt;DashboardHome /&gt;} /&gt;
+          &lt;Route path="analytics" element={&lt;Analytics /&gt;} /&gt;
+          &lt;Route path="settings" element={&lt;Settings /&gt;} /&gt;
+        &lt;/Route&gt;
+      &lt;/Route&gt;
+    &lt;/Routes&gt;
+  );
+}</code></pre>
+
+      <h2>14.6 Protected Routes</h2>
+      <p>Protected routes chỉ cho phép người dùng đã đăng nhập truy cập:</p>
+      <pre><code>// ProtectedRoute component
+import { Navigate, useLocation } from 'react-router-dom';
+
+function ProtectedRoute({ children }) {
+  const { isAuthenticated } = useAuth(); // Custom hook lấy auth state
+  const location = useLocation();
+
+  if (!isAuthenticated) {
+    // Chuyển đến login, lưu lại URL hiện tại để redirect sau khi login
+    return &lt;Navigate to="/login" state={{ from: location }} replace /&gt;;
+  }
+
+  return children;
+}
+
+// Dùng trong Routes
+&lt;Route
+  path="dashboard"
+  element={
+    &lt;ProtectedRoute&gt;
+      &lt;Dashboard /&gt;
+    &lt;/ProtectedRoute&gt;
+  }
+/&gt;
+
+// Login form — redirect về trang cũ sau khi login
+function Login() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
+
+  const handleLogin = async () =&gt; {
+    await login(email, password);
+    navigate(from, { replace: true }); // Về trang đã định vào
+  };
+}</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+
+        <h3>Bài tập 14.1: Ứng dụng Blog nhiều trang</h3>
+        <p>Xây dựng ứng dụng blog với các trang:</p>
+        <pre><code>// Cấu trúc routes:
+// /                 → Trang chủ (danh sách bài viết mới nhất)
+// /posts            → Tất cả bài viết (có phân trang)
+// /posts/:id        → Chi tiết bài viết
+// /categories       → Danh mục
+// /categories/:slug → Bài viết theo danh mục
+// /search?q=...     → Kết quả tìm kiếm
+// /about            → Về tôi
+
+// API: https://jsonplaceholder.typicode.com/posts
+
+// Yêu cầu:
+// - Navbar với NavLink (active state)
+// - Layout chung với header và footer
+// - Breadcrumb trên trang chi tiết
+// - Nút "Back" trên trang chi tiết
+// - 404 page cho route không tồn tại</code></pre>
+
+        <h3>Bài tập 14.2: Dashboard với Protected Routes</h3>
+        <pre><code>// Trang dashboard chỉ cho user đã login
+// - /login          → Form đăng nhập (mock: admin/password123)
+// - /dashboard      → Tổng quan (protected)
+// - /dashboard/profile → Hồ sơ (protected)
+// - /dashboard/settings → Cài đặt (protected)
+//
+// Khi chưa login → redirect /login
+// Sau khi login → redirect về trang đã định vào
+// Có nút Logout trong dashboard navbar</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Sự khác biệt giữa <code>&lt;Link&gt;</code> và thẻ <code>&lt;a&gt;</code> thông thường trong React Router?</p>
+          <ul>
+            <li>A. Không có sự khác biệt</li>
+            <li>B. <code>&lt;Link&gt;</code> điều hướng không reload trang (SPA navigation), <code>&lt;a&gt;</code> reload toàn bộ trang</li>
+            <li>C. <code>&lt;Link&gt;</code> chỉ dùng được trong React</li>
+            <li>D. <code>&lt;a&gt;</code> nhanh hơn <code>&lt;Link&gt;</code></li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>&lt;Link&gt;</code> dùng History API để thay đổi URL mà không gửi request mới → SPA không reload. <code>&lt;a href&gt;</code> gửi request mới đến server → trang reload.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> <code>useParams()</code> trả về giá trị kiểu dữ liệu gì?</p>
+          <ul>
+            <li>A. Number</li>
+            <li>B. String (luôn là string)</li>
+            <li>C. Tùy thuộc vào giá trị trong URL</li>
+            <li>D. Object với kiểu mixed</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — URL params luôn là string. Nếu cần number, phải convert: <code>const id = Number(params.id)</code> hoặc <code>parseInt(params.id, 10)</code>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> <code>&lt;Outlet /&gt;</code> trong React Router dùng để làm gì?</p>
+          <ul>
+            <li>A. Thoát khỏi trang hiện tại</li>
+            <li>B. Là nơi render child routes trong nested routing</li>
+            <li>C. Hiển thị loading indicator</li>
+            <li>D. Kết thúc route definition</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>&lt;Outlet /&gt;</code> là placeholder cho child routes. Khi URL match child route, component đó render tại vị trí của <code>&lt;Outlet /&gt;</code> trong layout cha.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> Trong protected route, tại sao nên dùng <code>&lt;Navigate replace /&gt;</code> thay vì không có <code>replace</code>?</p>
+          <ul>
+            <li>A. Để trang nhanh hơn</li>
+            <li>B. Để người dùng không thể nhấn "Back" quay lại trang yêu cầu đăng nhập</li>
+            <li>C. Bắt buộc phải có replace</li>
+            <li>D. Không có sự khác biệt</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Không có <code>replace</code>: user vào /dashboard → redirect /login → nhấn Back → lại vào /dashboard → lại redirect /login (loop). Với <code>replace</code>: /login thay thế /dashboard trong history, Back sẽ về trang trước /dashboard.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> Route <code>path="*"</code> có ý nghĩa gì?</p>
+          <ul>
+            <li>A. Match tất cả routes (luôn render)</li>
+            <li>B. Wildcard — match bất kỳ URL nào không được match bởi routes khác (dùng cho 404)</li>
+            <li>C. Route không có URL</li>
+            <li>D. Match URL có dấu * trong đó</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>path="*"</code> là catch-all: nếu không có route nào match URL hiện tại → route này được render. Đặt cuối cùng trong Routes list để làm trang 404.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-13.html">← Chương 13: Styling trong React</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="../part4-react-advanced/chapter-15.html">Chương 15: Hooks Nâng cao →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

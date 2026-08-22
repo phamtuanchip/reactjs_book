@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 21: TypeScript với React — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="chapter-21.html" class="nav-link active">Ch.21 TypeScript</a>
+        <a href="chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 21 · Phần 5: Thực chiến</div>
+        <h1 class="chapter-title">TypeScript với React</h1>
+        <p class="chapter-desc">TypeScript biến React từ ngôn ngữ dynamic thành statically typed — bắt lỗi trước khi chạy, autocomplete thông minh, refactor an toàn. Ngành tuyển dụng hiện nay gần như bắt buộc TypeScript.</p>
+      </div>
+
+      <h2>21.1 Tại sao TypeScript?</h2>
+      <div class="mermaid">
+flowchart LR
+    subgraph JS["🟡 JavaScript"]
+        J1["❌ Bug chỉ thấy khi runtime"]
+        J2["❌ Autocomplete đoán mò"]
+        J3["❌ Refactor nguy hiểm"]
+        J4["❌ Dễ typo không ai báo"]
+    end
+    subgraph TS["🔵 TypeScript"]
+        T1["✅ Bắt lỗi lúc viết code"]
+        T2["✅ Autocomplete chính xác"]
+        T3["✅ Refactor an toàn"]
+        T4["✅ Type như documentation"]
+    end
+    TSF["📄 .ts / .tsx"] -->|"tsc compile"| JSF["📄 .js"]
+    style JS fill:#1e2127,stroke:#e5c07b
+    style TS fill:#1e2127,stroke:#61dafb
+    style TSF fill:#282c34,stroke:#61dafb,color:#61dafb
+    style JSF fill:#282c34,stroke:#e5c07b,color:#e5c07b
+</div>
+
+      <h2>21.2 Tạo project React với TypeScript</h2>
+      <pre><code># Vite + React + TypeScript
+npm create vite@latest my-app -- --template react-ts
+
+# Thêm TS vào project hiện tại
+npm install -D typescript @types/react @types/react-dom
+npx tsc --init</code></pre>
+
+      <pre><code>// tsconfig.json — config quan trọng
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM"],
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,        // Bật tất cả strict checks
+    "noImplicitAny": true, // Cần khai báo type rõ ràng
+    "strictNullChecks": true, // null/undefined phải được handle
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]     // Alias import
+    }
+  }
+}</code></pre>
+
+      <h2>21.3 Typing Props</h2>
+      <pre><code>// 1. Interface (khuyến nghị cho props)
+interface ButtonProps {
+  label: string;
+  variant?: 'primary' | 'secondary' | 'danger'; // Optional union type
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  onClick?: (event: React.MouseEvent&lt;HTMLButtonElement&gt;) =&gt; void;
+  children?: React.ReactNode; // Bất kỳ JSX nào
+  className?: string;
+}
+
+function Button({ label, variant = 'primary', size = 'md', onClick, disabled }: ButtonProps) {
+  return (
+    &lt;button
+      className={`btn btn-${variant} btn-${size}`}
+      onClick={onClick}
+      disabled={disabled}
+    &gt;
+      {label}
+    &lt;/button&gt;
+  );
+}
+
+// 2. Extending HTML element props
+interface InputProps extends React.InputHTMLAttributes&lt;HTMLInputElement&gt; {
+  label: string;
+  error?: string;
+}
+
+function Input({ label, error, ...rest }: InputProps) {
+  return (
+    &lt;div&gt;
+      &lt;label&gt;{label}&lt;/label&gt;
+      &lt;input {...rest} /&gt;
+      {error &amp;&amp; &lt;span className="error"&gt;{error}&lt;/span&gt;}
+    &lt;/div&gt;
+  );
+}
+// Giờ Input nhận tất cả props của &lt;input&gt; (type, placeholder, value...) + label + error
+
+// 3. Generic component
+interface ListProps&lt;T&gt; {
+  items: T[];
+  renderItem: (item: T, index: number) =&gt; React.ReactNode;
+  keyExtractor: (item: T) =&gt; string;
+  emptyMessage?: string;
+}
+
+function List&lt;T&gt;({ items, renderItem, keyExtractor, emptyMessage = 'Không có dữ liệu' }: ListProps&lt;T&gt;) {
+  if (items.length === 0) return &lt;p&gt;{emptyMessage}&lt;/p&gt;;
+  return &lt;ul&gt;{items.map((item, i) =&gt; &lt;li key={keyExtractor(item)}&gt;{renderItem(item, i)}&lt;/li&gt;)}&lt;/ul&gt;;
+}
+
+// Dùng với bất kỳ type nào
+&lt;List
+  items={users}          // User[]
+  keyExtractor={u =&gt; u.id.toString()}
+  renderItem={u =&gt; &lt;span&gt;{u.name}&lt;/span&gt;}
+/&gt;</code></pre>
+
+      <h2>21.4 Typing Hooks</h2>
+      <pre><code>// useState — tự infer từ initial value
+const [count, setCount] = useState(0);           // number
+const [name, setName] = useState('');             // string
+const [user, setUser] = useState&lt;User | null&gt;(null); // User | null (cần explicit)
+
+// Khi có Union type phức tạp
+type Status = 'idle' | 'loading' | 'success' | 'error';
+const [status, setStatus] = useState&lt;Status&gt;('idle');
+
+// useRef
+const inputRef = useRef&lt;HTMLInputElement&gt;(null);
+const timerRef = useRef&lt;ReturnType&lt;typeof setTimeout&gt;&gt;(null);
+const countRef = useRef&lt;number&gt;(0);
+
+// useReducer
+type TodoAction =
+  | { type: 'ADD'; payload: string }
+  | { type: 'TOGGLE'; payload: number }
+  | { type: 'DELETE'; payload: number };
+
+interface Todo {
+  id: number;
+  text: string;
+  done: boolean;
+}
+
+function todoReducer(state: Todo[], action: TodoAction): Todo[] {
+  switch (action.type) {
+    case 'ADD': return [...state, { id: Date.now(), text: action.payload, done: false }];
+    case 'TOGGLE': return state.map(t =&gt; t.id === action.payload ? { ...t, done: !t.done } : t);
+    case 'DELETE': return state.filter(t =&gt; t.id !== action.payload);
+    default: return state; // TS biết action.type là never ở đây
+  }
+}
+
+const [todos, dispatch] = useReducer(todoReducer, []);
+
+// useContext
+interface ThemeContextType {
+  theme: 'light' | 'dark';
+  toggleTheme: () =&gt; void;
+}
+
+const ThemeContext = createContext&lt;ThemeContextType | null&gt;(null);
+
+function useTheme(): ThemeContextType {
+  const ctx = useContext(ThemeContext);
+  if (!ctx) throw new Error('useTheme phải được dùng trong ThemeProvider');
+  return ctx; // Giờ ctx KHÔNG còn null
+}</code></pre>
+
+      <h2>21.5 Typing Events</h2>
+      <pre><code>// Event handlers
+function handleClick(e: React.MouseEvent&lt;HTMLButtonElement&gt;) {}
+function handleChange(e: React.ChangeEvent&lt;HTMLInputElement&gt;) {
+  const value = e.target.value; // string
+}
+function handleSubmit(e: React.FormEvent&lt;HTMLFormElement&gt;) {
+  e.preventDefault();
+}
+function handleKeyDown(e: React.KeyboardEvent&lt;HTMLInputElement&gt;) {
+  if (e.key === 'Enter') {}
+}
+
+// Drag events
+function handleDrop(e: React.DragEvent&lt;HTMLDivElement&gt;) {
+  const files = e.dataTransfer.files; // FileList
+}
+
+// Textarea
+function handleTextChange(e: React.ChangeEvent&lt;HTMLTextAreaElement&gt;) {
+  const text = e.target.value;
+}
+
+// Select
+function handleSelect(e: React.ChangeEvent&lt;HTMLSelectElement&gt;) {
+  const selected = e.target.value;
+}</code></pre>
+
+      <h2>21.6 Utility Types hữu dụng</h2>
+      <pre><code>interface User {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  role: 'admin' | 'user';
+  createdAt: Date;
+}
+
+// Partial — tất cả fields thành optional
+type UserUpdate = Partial&lt;User&gt;;
+// { id?: number; name?: string; email?: string; ... }
+
+// Required — tất cả fields thành required
+type RequiredUser = Required&lt;User&gt;;
+
+// Pick — chọn một số fields
+type UserPreview = Pick&lt;User, 'id' | 'name' | 'role'&gt;;
+// { id: number; name: string; role: 'admin' | 'user' }
+
+// Omit — bỏ bớt fields
+type PublicUser = Omit&lt;User, 'password'&gt;;
+// Không có password
+
+// Record — map type
+type RolePermissions = Record&lt;User['role'], string[]&gt;;
+// { admin: string[]; user: string[] }
+
+// ReturnType — type của giá trị trả về
+function createUser(data: Partial&lt;User&gt;): User {
+  return { id: 1, ...data } as User;
+}
+type NewUser = ReturnType&lt;typeof createUser&gt;; // User
+
+// Readonly — không thể mutate
+type ImmutableUser = Readonly&lt;User&gt;;
+
+// Thực tế: API response types
+type ApiResponse&lt;T&gt; = {
+  data: T;
+  status: number;
+  message: string;
+};
+
+type UsersResponse = ApiResponse&lt;User[]&gt;;
+// { data: User[]; status: number; message: string }</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+        <h3>Bài tập 21.1: Type hoàn chỉnh cho Todo App</h3>
+        <pre><code>// Migrate Todo App sang TypeScript:
+
+// 1. Định nghĩa types/interfaces
+interface Todo {
+  id: string;
+  text: string;
+  completed: boolean;
+  priority: 'low' | 'medium' | 'high';
+  dueDate?: Date;
+  tags: string[];
+}
+
+type FilterType = 'all' | 'active' | 'completed';
+type SortType = 'created' | 'priority' | 'alphabetical';
+
+// 2. Type TodoAction với discriminated union
+// 3. Type tất cả event handlers
+// 4. Tạo custom hook useTodos() với return type rõ ràng
+// 5. Generic component SortableList&lt;T&gt;
+// 6. Không được có 'any' trong code!</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> <code>interface</code> và <code>type</code> trong TypeScript khác nhau thế nào?</p>
+          <ul>
+            <li>A. Hoàn toàn giống nhau</li>
+            <li>B. interface có thể extend và được merge (declaration merging); type có thể dùng union/intersection và conditional types phức tạp hơn</li>
+            <li>C. type chỉ dùng cho primitives</li>
+            <li>D. interface chỉ dùng trong class</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Convention: dùng <code>interface</code> cho props, objects, class contracts (có thể extend). Dùng <code>type</code> cho union types, computed types, và type aliases phức tạp. Trong React: Props dùng interface.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Discriminated union là gì?</p>
+          <ul>
+            <li>A. Union của primitive types</li>
+            <li>B. Union type trong đó mỗi member có một literal field chung để phân biệt (như trường type trong action)</li>
+            <li>C. Union chỉ có 2 members</li>
+            <li>D. Union của class types</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>type Action = | &#123; type: 'ADD'; payload: string &#125; | &#123; type: 'DELETE'; id: number &#125;</code> — <code>type</code> là discriminant. Trong switch/if (type === 'ADD'), TS biết payload có kiểu string. Pattern này rất phổ biến cho reducer actions.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> <code>strictNullChecks: true</code> có tác dụng gì?</p>
+          <ul>
+            <li>A. Cấm dùng null trong code</li>
+            <li>B. null và undefined phải được xử lý tường minh — không thể assign null vào string mà không check</li>
+            <li>C. Tự động throw error khi gặp null</li>
+            <li>D. Không có tác dụng thực tế</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Không có strict: <code>const name: string = null</code> — OK. Với strict: Error! Phải dùng <code>string | null</code>. Buộc lập trình viên xử lý null case, tránh runtime error "Cannot read property of null".</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> <code>React.ReactNode</code> khác <code>React.ReactElement</code> ở điểm gì?</p>
+          <ul>
+            <li>A. Giống nhau</li>
+            <li>B. ReactNode bao gồm string, number, null, boolean và ReactElement — dùng cho children. ReactElement chỉ là JSX element</li>
+            <li>C. ReactElement bao gồm nhiều hơn</li>
+            <li>D. ReactNode chỉ dùng trong class component</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Props children nên type là <code>React.ReactNode</code> vì children có thể là JSX, string, number, null, undefined, fragment... <code>ReactElement</code> chỉ là result của JSX (React.createElement).</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> Tại sao nên dùng <code>Omit&lt;User, 'password'&gt;</code> thay vì tạo interface mới?</p>
+          <ul>
+            <li>A. Omit nhanh hơn</li>
+            <li>B. Đảm bảo tính nhất quán — khi thêm field vào User, PublicUser tự động cập nhật (trừ password)</li>
+            <li>C. Interface mới không hoạt động</li>
+            <li>D. Không có lý do, chỉ là convention</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Single source of truth: User là "nguồn sự thật". Thêm field <code>avatar</code> vào User → PublicUser tự có avatar. Nếu tạo interface riêng phải cập nhật 2 nơi → dễ mismatch. Utility types giữ code DRY.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="../part4-react-advanced/chapter-20.html">← Chương 20: Testing</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-22.html">Chương 22: Next.js →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

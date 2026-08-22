@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 4: JavaScript Nhập môn | Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <div class="book-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="chapter-04.html" class="nav-link active">Ch.4 JavaScript Nhập môn</a>
+        <a href="chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 4 · Phần 2 — JavaScript</div>
+        <h1 class="chapter-title">JavaScript Nhập môn</h1>
+        <p class="chapter-subtitle">Làm quen với ngôn ngữ lập trình của web: từ biến, kiểu dữ liệu, toán tử đến điều kiện và vòng lặp.</p>
+      </div>
+
+      <!-- 4.1 JavaScript là gì? -->
+      <h2 id="js-la-gi">4.1 JavaScript là gì?</h2>
+      <p>
+        Nếu HTML là bộ xương và CSS là bộ da của một trang web, thì <strong>JavaScript</strong> chính là "bộ não" — thứ làm cho trang web biết suy nghĩ, phản ứng và tương tác với người dùng.
+      </p>
+      <p>
+        JavaScript ra đời năm 1995, được <strong>Brendan Eich</strong> tạo ra trong vòng chỉ 10 ngày tại Netscape. Cái tên "JavaScript" thực ra là chiêu marketing — muốn bám vào sức hút của Java thời đó, dù hai ngôn ngữ này gần như không liên quan gì đến nhau. Tên chính thức theo tiêu chuẩn là <strong>ECMAScript</strong> (ES). Khi bạn nghe ES5, ES6, ES2020... đó đều là các phiên bản của JavaScript.
+      </p>
+
+      <h3>JavaScript chạy ở đâu?</h3>
+      <div class="mermaid">
+graph LR
+    subgraph ENG["⚡ JavaScript Engine — V8"]
+        CS[["📚 Call Stack
+Thực thi code"]]
+        HP[("💾 Memory Heap
+Lưu objects & variables")]
+    end
+    subgraph WAPI["🌐 Browser / Node.js APIs"]
+        DOM["DOM API"]
+        TM["setTimeout / setInterval"]
+        FT["Fetch / XHR"]
+    end
+    CS <--> HP
+    CS -->|"Async call"| WAPI
+    WAPI -->|"Callback done"| CQ[["📬 Callback Queue"]]
+    CQ -->|"Event Loop
+(stack empty?)"| CS
+    style ENG fill:#1e2127,stroke:#61dafb
+    style WAPI fill:#1e2127,stroke:#98c379
+</div>
+
+      <p>
+        <strong>V8 engine</strong> là "trái tim" chạy JavaScript, được phát triển bởi Google. V8 biên dịch JavaScript thành mã máy (machine code) ngay lập tức thay vì thực thi từng dòng một — đây là lý do JavaScript ngày nay rất nhanh. Node.js cũng dùng chính V8 này, giúp JavaScript có thể chạy ngoài trình duyệt.
+      </p>
+
+      <div class="callout callout-info">
+        <strong>Ghi nhớ:</strong> Trong sách này, chúng ta học JavaScript để dùng trong trình duyệt và sau đó là React. Nhưng kiến thức nền tảng hoàn toàn áp dụng được cho Node.js sau này.
+      </div>
+
+      <!-- 4.2 Nhúng JS vào HTML -->
+      <h2 id="nhung-js">4.2 Cách nhúng JavaScript vào HTML</h2>
+      <p>Có 3 cách để đưa JavaScript vào trang HTML. Mỗi cách có ưu và nhược điểm riêng.</p>
+
+      <h3>Cách 1: Inline JavaScript (Viết trực tiếp trong thẻ HTML)</h3>
+      <pre><code class="language-html">&lt;!-- Inline JS trong attribute của thẻ --&gt;
+&lt;button onclick="alert('Xin chào!')"&gt;Bấm vào đây&lt;/button&gt;
+
+&lt;!-- Hoặc trong href --&gt;
+&lt;a href="javascript:void(0)" onclick="doSomething()"&gt;Link&lt;/a&gt;</code></pre>
+
+      <div class="callout callout-warning">
+        <strong>Không khuyến khích!</strong> Inline JS trộn lẫn HTML và JavaScript, khó bảo trì và bảo mật kém. Chỉ dùng trong các ví dụ rất nhỏ.
+      </div>
+
+      <h3>Cách 2: Internal JavaScript (Thẻ &lt;script&gt; trong file HTML)</h3>
+      <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="vi"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Trang web của tôi&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Xin chào!&lt;/h1&gt;
+
+  &lt;!-- Đặt script ở cuối body để HTML tải trước --&gt;
+  &lt;script&gt;
+    console.log("JavaScript đang chạy!");
+    alert("Chào mừng đến trang web của tôi!");
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <h3>Cách 3: External JavaScript (File .js riêng biệt) — Khuyến khích nhất</h3>
+      <pre><code class="language-html">&lt;!-- Trong file HTML --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="vi"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Trang web của tôi&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Xin chào!&lt;/h1&gt;
+
+  &lt;!-- defer: tải JS song song nhưng chạy sau khi HTML xong --&gt;
+  &lt;script src="script.js" defer&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <pre><code class="language-javascript">// Trong file script.js
+console.log("File JS bên ngoài đang chạy!");
+document.querySelector('h1').textContent = "Đã được thay đổi bởi JS!";</code></pre>
+
+      <div class="callout callout-success">
+        <strong>Tại sao dùng external file?</strong><br>
+        Tái sử dụng được (nhiều trang HTML dùng chung 1 file JS), trình duyệt cache file JS nên load nhanh hơn, code sạch hơn và dễ bảo trì hơn.
+      </div>
+
+      <div class="callout callout-info">
+        <strong>Thuộc tính <code>defer</code> và <code>async</code>:</strong><br>
+        — <code>defer</code>: Tải JS song song với HTML, nhưng chạy sau khi HTML parse xong. Thứ tự thực thi giữ nguyên.<br>
+        — <code>async</code>: Tải và chạy ngay khi tải xong, không quan tâm thứ tự. Dùng cho script độc lập (Google Analytics...).<br>
+        — Không có attribute: Tải và chạy ngay lập tức, chặn việc render HTML. Tránh dùng!
+      </div>
+
+      <!-- 4.3 Console -->
+      <h2 id="console">4.3 Console — Công cụ debug số một</h2>
+      <p>
+        Console là cửa sổ giao tiếp giữa bạn và JavaScript. Nhấn <kbd>F12</kbd> trong trình duyệt, chọn tab <strong>Console</strong> để xem.
+      </p>
+
+      <pre><code class="language-javascript">// console.log — In thông tin thông thường
+console.log("Xin chào, thế giới!");
+console.log(42);
+console.log(true);
+console.log([1, 2, 3]);
+console.log({ ten: "An", tuoi: 20 });
+
+// In nhiều giá trị cùng lúc
+let x = 10;
+let y = 20;
+console.log("x =", x, "và y =", y);  // x = 10 và y = 20
+
+// console.error — In lỗi (màu đỏ trong Console)
+console.error("Đã có lỗi xảy ra!");
+console.error("Lỗi:", new Error("Something went wrong"));
+
+// console.warn — In cảnh báo (màu vàng/cam)
+console.warn("Cảnh báo: Biến này sắp bị deprecated!");
+
+// console.table — Hiển thị mảng/object dạng bảng — Rất tiện!
+const hocSinh = [
+  { ten: "An", diem: 8.5 },
+  { ten: "Bình", diem: 9.0 },
+  { ten: "Chi", diem: 7.5 },
+];
+console.table(hocSinh);
+// Kết quả:
+// ┌─────────┬──────────┬───────┐
+// │ (index) │   ten    │ diem  │
+// ├─────────┼──────────┼───────┤
+// │    0    │   'An'   │  8.5  │
+// │    1    │  'Bình'  │  9.0  │
+// │    2    │  'Chi'   │  7.5  │
+// └─────────┴──────────┴───────┘
+
+// console.time — Đo thời gian thực thi
+console.time("vong-lap");
+for (let i = 0; i < 1000000; i++) {}
+console.timeEnd("vong-lap");  // vong-lap: 2.5ms
+
+// console.group — Nhóm các log lại
+console.group("Thông tin người dùng");
+console.log("Tên: An");
+console.log("Tuổi: 20");
+console.groupEnd();</code></pre>
+
+      <div class="callout callout-info">
+        <strong>Mẹo:</strong> Dùng <code>console.log("%c Text", "color: red; font-size: 20px")</code> để format text trong console. Hữu ích để đánh dấu các log quan trọng.
+      </div>
+
+      <!-- 4.4 Biến -->
+      <h2 id="bien">4.4 Biến — Hộp chứa dữ liệu</h2>
+      <p>
+        Biến là "cái hộp" dùng để lưu trữ dữ liệu. JavaScript có 3 từ khóa để khai báo biến: <code>var</code>, <code>let</code>, và <code>const</code>.
+      </p>
+
+      <h3>var — Cách cũ (tránh dùng)</h3>
+      <pre><code class="language-javascript">// var có function scope, không phải block scope
+// var bị hoisting (đẩy lên đầu hàm)
+
+function vidu() {
+  if (true) {
+    var x = 10;  // khai báo bên trong block
+  }
+  console.log(x);  // 10 — var "thoát" ra khỏi block!
+}
+
+// var cho phép khai báo lại (dễ gây bug)
+var name = "An";
+var name = "Bình";  // Không báo lỗi — nguy hiểm!
+console.log(name);  // "Bình"
+
+// Hoisting với var
+console.log(y);  // undefined (không báo lỗi!)
+var y = 5;
+// Thực ra JS đã "hiểu" như thế này:
+// var y;           // được đưa lên đầu (hoisted)
+// console.log(y);  // undefined
+// y = 5;</code></pre>
+
+      <h3>let — Khai báo biến có thể thay đổi</h3>
+      <pre><code class="language-javascript">// let có block scope
+if (true) {
+  let a = 10;
+  console.log(a);  // 10 — OK
+}
+// console.log(a);  // ReferenceError: a is not defined
+
+// let không cho phép khai báo lại trong cùng scope
+let name = "An";
+// let name = "Bình";  // SyntaxError!
+
+// Nhưng có thể reassign (gán lại giá trị)
+let score = 8.5;
+score = 9.0;  // OK
+console.log(score);  // 9.0
+
+// let KHÔNG bị hoisting như var
+// console.log(b);  // ReferenceError
+let b = 5;</code></pre>
+
+      <h3>const — Khai báo hằng số (không thể gán lại)</h3>
+      <pre><code class="language-javascript">// const không thể gán lại sau khi khởi tạo
+const PI = 3.14159;
+// PI = 3;  // TypeError: Assignment to constant variable
+
+// const phải được khởi tạo ngay lúc khai báo
+// const MAX;  // SyntaxError!
+const MAX = 100;  // OK
+
+// QUAN TRỌNG: const với object/array chỉ khóa "reference"
+// Không khóa nội dung bên trong!
+const nguoi = { ten: "An", tuoi: 20 };
+nguoi.tuoi = 21;       // OK — thay đổi property bên trong
+console.log(nguoi);    // { ten: "An", tuoi: 21 }
+
+const mang = [1, 2, 3];
+mang.push(4);          // OK — thêm phần tử
+console.log(mang);     // [1, 2, 3, 4]
+
+// Nhưng không thể gán lại cả object/array
+// nguoi = { ten: "Bình" };  // TypeError!</code></pre>
+
+      <h3>So sánh tổng hợp</h3>
+      <div class="mermaid">
+graph LR
+    subgraph VAR["var — Function Scope ⚠️"]
+        V1["Có thể re-declare"]
+        V2["Hoisting lên đầu function"]
+        V3["Không có block scope"]
+    end
+    subgraph LT["let — Block Scope ✅"]
+        L1["Không re-declare"]
+        L2["Temporal dead zone"]
+        L3["Phạm vi block { }"]
+    end
+    subgraph CT["const — Block Scope ✅"]
+        C1["Không re-assign primitive"]
+        C2["Phải khởi tạo ngay"]
+        C3["Object/Array vẫn mutate được"]
+    end
+    style VAR fill:#21252b,stroke:#e06c75,color:#e06c75
+    style LT fill:#21252b,stroke:#98c379,color:#98c379
+    style CT fill:#21252b,stroke:#61dafb,color:#61dafb
+</div>
+
+      <div class="callout callout-success">
+        <strong>Quy tắc vàng:</strong> Mặc định dùng <code>const</code>. Chỉ đổi sang <code>let</code> khi bạn biết rằng biến cần được gán lại. Không bao giờ dùng <code>var</code> trong code mới.
+      </div>
+
+      <!-- 4.5 Kiểu dữ liệu -->
+      <h2 id="kieu-du-lieu">4.5 Kiểu dữ liệu</h2>
+      <p>JavaScript có <strong>7 kiểu dữ liệu primitive</strong> và <strong>2 kiểu phức hợp</strong> (object, array).</p>
+
+      <h3>Kiểu dữ liệu Primitive (Nguyên thủy)</h3>
+
+      <h4>1. String (Chuỗi ký tự)</h4>
+      <pre><code class="language-javascript">const ten = "Nguyễn Văn An";     // Dùng dấu nháy đôi
+const diaChi = 'Hà Nội';          // Dấu nháy đơn — cũng được
+const loi_chao = `Xin chào, ${ten}!`;  // Template literal (ES6) — khuyến khích
+
+console.log(typeof ten);  // "string"
+console.log(loi_chao);   // "Xin chào, Nguyễn Văn An!"</code></pre>
+
+      <h4>2. Number (Số)</h4>
+      <pre><code class="language-javascript">const tuoi = 25;           // Số nguyên
+const chieu_cao = 1.75;    // Số thực
+const am = -10;            // Số âm
+const lon = 1e6;           // 1,000,000 (ký hiệu khoa học)
+
+// Các giá trị đặc biệt
+console.log(1 / 0);        // Infinity
+console.log(-1 / 0);       // -Infinity
+console.log(0 / 0);        // NaN (Not a Number)
+console.log("abc" * 2);    // NaN
+
+console.log(typeof tuoi);  // "number"
+console.log(typeof NaN);   // "number" — ngạc nhiên chưa!</code></pre>
+
+      <h4>3. Boolean (Đúng/Sai)</h4>
+      <pre><code class="language-javascript">const daDangNhap = true;
+const laNguoiLon = false;
+
+console.log(typeof daDangNhap);  // "boolean"
+
+// Boolean thường xuất hiện trong các phép so sánh
+console.log(5 > 3);   // true
+console.log(5 < 3);   // false
+console.log(5 === 5); // true</code></pre>
+
+      <h4>4. null — Có chủ đích không có giá trị</h4>
+      <pre><code class="language-javascript">// null nghĩa là "không có giá trị" — được đặt CỐ TÌNH
+let thongTinNguoiDung = null;  // Chưa có dữ liệu
+
+console.log(thongTinNguoiDung);     // null
+console.log(typeof null);            // "object" — đây là bug nổi tiếng của JS!
+                                     // Thực ra null là primitive, không phải object</code></pre>
+
+      <h4>5. undefined — Chưa được khởi tạo</h4>
+      <pre><code class="language-javascript">// undefined là giá trị mặc định của biến chưa được gán
+let diemThi;
+console.log(diemThi);  // undefined
+
+// Hàm không có return cũng trả về undefined
+function khongTraVe() {}
+console.log(khongTraVe());  // undefined
+
+// Sự khác biệt giữa null và undefined:
+// null   = "Tôi biết biến này, nhưng nó đang trống"
+// undefined = "Biến này chưa được gán giá trị bao giờ"
+
+console.log(null == undefined);   // true  (dùng == thì bằng nhau)
+console.log(null === undefined);  // false (dùng === thì khác nhau)</code></pre>
+
+      <h4>6. Symbol (ES6) — Giá trị duy nhất</h4>
+      <pre><code class="language-javascript">// Symbol tạo ra một giá trị duy nhất, không bao giờ trùng
+const id1 = Symbol("id");
+const id2 = Symbol("id");
+
+console.log(id1 === id2);  // false — Dù cùng mô tả nhưng khác nhau!
+console.log(typeof id1);   // "symbol"
+
+// Symbol thường dùng làm key của object để tránh xung đột tên
+const KEY = Symbol("secretKey");
+const obj = { [KEY]: "giá trị bí mật" };
+
+// Ít dùng cho người mới, sẽ gặp khi học nâng cao</code></pre>
+
+      <h4>7. BigInt (ES2020) — Số nguyên rất lớn</h4>
+      <pre><code class="language-javascript">// Number thông thường chỉ chính xác đến 2^53 - 1
+console.log(Number.MAX_SAFE_INTEGER);  // 9007199254740991
+
+// BigInt cho số nguyên lớn hơn
+const soLon = 9007199254740991n;  // Thêm "n" ở cuối
+const soKhac = BigInt("12345678901234567890");
+
+console.log(typeof soLon);  // "bigint"
+// BigInt không trộn lẫn với Number thông thường
+// console.log(soLon + 1);  // TypeError!</code></pre>
+
+      <h3>Kiểu dữ liệu phức hợp</h3>
+
+      <h4>Object — Tập hợp cặp key:value</h4>
+      <pre><code class="language-javascript">// Object là tập hợp các thuộc tính (property)
+const hocSinh = {
+  ten: "Nguyễn Văn An",
+  tuoi: 20,
+  laNguoiLon: true,
+  diaChi: {        // Object lồng nhau
+    tinh: "Hà Nội",
+    quan: "Đống Đa"
+  }
+};
+
+// Truy cập property
+console.log(hocSinh.ten);        // "Nguyễn Văn An"
+console.log(hocSinh["tuoi"]);    // 20
+console.log(hocSinh.diaChi.tinh); // "Hà Nội"
+
+console.log(typeof hocSinh);  // "object"</code></pre>
+
+      <h4>Array — Danh sách có thứ tự</h4>
+      <pre><code class="language-javascript">// Array là danh sách (index bắt đầu từ 0)
+const monHoc = ["Toán", "Lý", "Hóa", "Anh văn"];
+const diem = [8.5, 7.0, 9.0, 8.0];
+const hon_hop = [1, "hai", true, null, { ten: "An" }];  // Trộn kiểu được
+
+// Truy cập phần tử
+console.log(monHoc[0]);   // "Toán" (phần tử đầu tiên)
+console.log(monHoc[3]);   // "Anh văn" (phần tử cuối)
+console.log(monHoc.length); // 4 (số phần tử)
+
+console.log(typeof monHoc);  // "object" — array cũng là object!</code></pre>
+
+      <!-- 4.6 typeof -->
+      <h2 id="typeof">4.6 typeof — Kiểm tra kiểu dữ liệu</h2>
+      <pre><code class="language-javascript">console.log(typeof "xin chào");   // "string"
+console.log(typeof 42);            // "number"
+console.log(typeof 3.14);          // "number"
+console.log(typeof true);          // "boolean"
+console.log(typeof undefined);     // "undefined"
+console.log(typeof null);          // "object" ← Bug lịch sử của JS!
+console.log(typeof {});            // "object"
+console.log(typeof []);            // "object" ← Array cũng là object!
+console.log(typeof function(){}); // "function"
+console.log(typeof Symbol());      // "symbol"
+console.log(typeof 42n);           // "bigint"
+
+// Cách kiểm tra array chính xác
+console.log(Array.isArray([]));    // true
+console.log(Array.isArray({}));    // false</code></pre>
+
+      <!-- 4.7 Toán tử -->
+      <h2 id="toan-tu">4.7 Toán tử</h2>
+
+      <h3>Toán tử số học</h3>
+      <pre><code class="language-javascript">let a = 10;
+let b = 3;
+
+console.log(a + b);   // 13  — Cộng
+console.log(a - b);   // 7   — Trừ
+console.log(a * b);   // 30  — Nhân
+console.log(a / b);   // 3.3333...  — Chia
+console.log(a % b);   // 1   — Chia lấy dư (modulo)
+console.log(a ** b);  // 1000 — Lũy thừa (10^3)
+
+// Tăng / Giảm
+let x = 5;
+x++;   // x = 6 (tương đương x = x + 1)
+x--;   // x = 5
+++x;   // x = 6 (khác biệt với x++ khi dùng trong expression)
+
+// Cộng chuỗi — Cẩn thận!
+console.log("5" + 3);    // "53" — Nối chuỗi, không phải cộng số!
+console.log(5 + 3);      // 8
+console.log("5" - 3);    // 2   — Trừ ép kiểu về number
+console.log("5" * "2");  // 10  — Nhân ép kiểu về number</code></pre>
+
+      <h3>Toán tử so sánh</h3>
+      <pre><code class="language-javascript">console.log(5 > 3);    // true  — Lớn hơn
+console.log(5 < 3);    // false — Nhỏ hơn
+console.log(5 >= 5);   // true  — Lớn hơn hoặc bằng
+console.log(5 <= 4);   // false — Nhỏ hơn hoặc bằng
+console.log(5 == "5"); // true  — Bằng (KHÔNG kiểm tra kiểu — ép kiểu)
+console.log(5 === "5");// false — Bằng nghiêm ngặt (kiểm tra cả kiểu)
+console.log(5 != "5"); // false — Khác (không kiểm tra kiểu)
+console.log(5 !== "5");// true  — Khác nghiêm ngặt</code></pre>
+
+      <h3>Tại sao nên dùng === thay vì ==?</h3>
+      <p>
+        <strong>Type coercion</strong> (ép kiểu ngầm) là khi JavaScript tự động chuyển đổi kiểu dữ liệu để so sánh. Điều này gây ra nhiều bug khó tìm:
+      </p>
+      <pre><code class="language-javascript">// == gây ra những kết quả khó đoán
+console.log(0 == false);     // true  ← Sao lại thế?
+console.log("" == false);    // true  ← ???
+console.log(null == undefined); // true
+console.log(1 == "1");       // true
+console.log(1 == true);      // true
+console.log(0 == "");        // true
+
+// === không ép kiểu — luôn an toàn và rõ ràng
+console.log(0 === false);    // false — khác kiểu nên false
+console.log("" === false);   // false
+console.log(null === undefined); // false
+console.log(1 === "1");      // false
+
+// Quy tắc: LUÔN dùng === và !==
+// Chỉ dùng == khi cố tình muốn kiểm tra cả null và undefined cùng lúc:
+function kiemTraNull(value) {
+  if (value == null) {  // true nếu value là null HOẶC undefined
+    console.log("Không có giá trị");
+  }
+}</code></pre>
+
+      <h3>Toán tử logic</h3>
+      <pre><code class="language-javascript">// && (AND) — Cả hai đều phải true
+console.log(true && true);   // true
+console.log(true && false);  // false
+console.log(false && true);  // false
+
+// || (OR) — Ít nhất một phải true
+console.log(true || false);  // true
+console.log(false || false); // false
+
+// ! (NOT) — Phủ định
+console.log(!true);   // false
+console.log(!false);  // true
+
+// Short-circuit evaluation — Rất quan trọng!
+// && dừng khi gặp false đầu tiên
+let a = null;
+let result = a && a.ten;  // "null" — an toàn, không bị lỗi "Cannot read property"
+
+// || dừng khi gặp true đầu tiên — dùng để đặt giá trị mặc định
+let tenNguoiDung = null;
+let tenHienThi = tenNguoiDung || "Khách";
+console.log(tenHienThi);  // "Khách"
+
+// Nullish coalescing ?? (ES2020) — Chỉ null/undefined mới dùng default
+let diem = 0;
+console.log(diem || 10);   // 10 ← Sai! 0 bị coi là falsy
+console.log(diem ?? 10);   // 0  ← Đúng! Chỉ thay khi là null/undefined</code></pre>
+
+      <h3>Toán tử 3 ngôi (Ternary)</h3>
+      <pre><code class="language-javascript">// Cú pháp: điều_kiện ? giá_trị_nếu_đúng : giá_trị_nếu_sai
+const tuoi = 20;
+const tinhTrang = tuoi >= 18 ? "Người lớn" : "Trẻ vị thành niên";
+console.log(tinhTrang);  // "Người lớn"
+
+// Tương đương với:
+let tinhTrang2;
+if (tuoi >= 18) {
+  tinhTrang2 = "Người lớn";
+} else {
+  tinhTrang2 = "Trẻ vị thành niên";
+}
+
+// Có thể lồng nhau (nhưng tránh lạm dụng)
+const diem = 8.5;
+const xepLoai = diem >= 9 ? "Xuất sắc"
+              : diem >= 8 ? "Giỏi"
+              : diem >= 6.5 ? "Khá"
+              : diem >= 5 ? "Trung bình"
+              : "Yếu";</code></pre>
+
+      <!-- 4.8 Chuỗi -->
+      <h2 id="chuoi">4.8 Xử lý Chuỗi (String)</h2>
+
+      <h3>Template Literal — Cách hiện đại</h3>
+      <pre><code class="language-javascript">const ten = "An";
+const tuoi = 20;
+
+// Cách cũ — nối chuỗi bằng +
+console.log("Tôi là " + ten + ", " + tuoi + " tuổi.");
+
+// Cách mới — template literal (dùng backtick `)
+console.log(`Tôi là ${ten}, ${tuoi} tuổi.`);
+
+// Template literal cho phép biểu thức phức tạp
+console.log(`2 + 2 = ${2 + 2}`);
+console.log(`Tên viết hoa: ${ten.toUpperCase()}`);
+
+// Multi-line string
+const tho = `Đây là dòng 1
+Đây là dòng 2
+Đây là dòng 3`;
+console.log(tho);</code></pre>
+
+      <h3>Các phương thức String thường dùng</h3>
+      <pre><code class="language-javascript">const str = "  Xin chào, JavaScript!  ";
+
+// Độ dài chuỗi
+console.log(str.length);              // 26
+
+// Chuyển đổi chữ hoa/thường
+console.log(str.toUpperCase());       // "  XIN CHÀO, JAVASCRIPT!  "
+console.log(str.toLowerCase());       // "  xin chào, javascript!  "
+
+// Loại bỏ khoảng trắng
+console.log(str.trim());              // "Xin chào, JavaScript!"
+console.log(str.trimStart());         // "Xin chào, JavaScript!  "
+console.log(str.trimEnd());           // "  Xin chào, JavaScript!"
+
+const chuoi = "Xin chào, JavaScript!";
+
+// Tìm kiếm
+console.log(chuoi.includes("JavaScript"));    // true
+console.log(chuoi.includes("Python"));        // false
+console.log(chuoi.startsWith("Xin"));         // true
+console.log(chuoi.endsWith("!"));             // true
+console.log(chuoi.indexOf("JavaScript"));     // 10 (vị trí bắt đầu)
+console.log(chuoi.indexOf("Python"));         // -1 (không tìm thấy)
+
+// Cắt chuỗi
+console.log(chuoi.slice(0, 9));       // "Xin chào"
+console.log(chuoi.slice(11));         // "JavaScript!"
+console.log(chuoi.slice(-10));        // "avaScript!" (từ cuối)
+
+// Tách chuỗi thành mảng
+console.log(chuoi.split(", "));       // ["Xin chào", "JavaScript!"]
+console.log("a,b,c".split(","));      // ["a", "b", "c"]
+
+// Thay thế
+console.log(chuoi.replace("JavaScript", "React"));  // "Xin chào, React!"
+// Thay tất cả (dùng regex hoặc replaceAll)
+const str2 = "a-b-c-d";
+console.log(str2.replaceAll("-", "_")); // "a_b_c_d"
+
+// Lặp lại
+console.log("ha".repeat(3));  // "hahaha"
+
+// Đệm chuỗi
+console.log("5".padStart(3, "0"));  // "005"
+console.log("hi".padEnd(5, "."));   // "hi..."</code></pre>
+
+      <!-- 4.9 Số -->
+      <h2 id="so">4.9 Xử lý Số (Number)</h2>
+      <pre><code class="language-javascript">// Math object — các hàm toán học
+console.log(Math.round(4.5));   // 5  — Làm tròn
+console.log(Math.round(4.4));   // 4
+console.log(Math.floor(4.9));   // 4  — Làm tròn xuống
+console.log(Math.ceil(4.1));    // 5  — Làm tròn lên
+console.log(Math.abs(-10));     // 10 — Giá trị tuyệt đối
+console.log(Math.sqrt(16));     // 4  — Căn bậc 2
+console.log(Math.pow(2, 10));   // 1024 — Lũy thừa (tương đương 2**10)
+console.log(Math.max(1, 5, 3, 9, 2)); // 9  — Giá trị lớn nhất
+console.log(Math.min(1, 5, 3, 9, 2)); // 1  — Giá trị nhỏ nhất
+console.log(Math.PI);           // 3.141592653589793
+
+// Số ngẫu nhiên
+console.log(Math.random());     // Số thực ngẫu nhiên từ 0 đến < 1
+
+// Số nguyên ngẫu nhiên từ min đến max (bao gồm cả hai đầu)
+function soNgauNhien(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+console.log(soNgauNhien(1, 6));  // Gieo xúc xắc: 1-6
+
+// Chuyển đổi kiểu
+console.log(parseInt("42px"));    // 42  — Lấy phần nguyên từ chuỗi
+console.log(parseInt("3.99"));    // 3   — Cắt bỏ phần thập phân
+console.log(parseInt("abc"));     // NaN — Không phải số
+console.log(parseFloat("3.14abc")); // 3.14
+console.log(Number("42"));        // 42  — Chuyển chuỗi về số
+console.log(Number("42px"));      // NaN — Không chuyển được
+console.log(Number(""));          // 0
+console.log(Number(true));        // 1
+console.log(Number(false));       // 0
+
+// Kiểm tra NaN
+console.log(isNaN(NaN));         // true
+console.log(isNaN("abc"));       // true (ép kiểu trước khi check)
+console.log(Number.isNaN(NaN));  // true
+console.log(Number.isNaN("abc")); // false (chính xác hơn)
+
+// Định dạng số
+const gia = 1234567.89;
+console.log(gia.toFixed(2));      // "1234567.89" (2 chữ số thập phân)
+console.log(gia.toLocaleString("vi-VN")); // "1.234.567,89"</code></pre>
+
+      <!-- 4.10 Điều kiện -->
+      <h2 id="dieu-kien">4.10 Cấu trúc điều kiện</h2>
+
+      <h3>if / else if / else</h3>
+      <pre><code class="language-javascript">const nhietDo = 35;
+
+if (nhietDo > 40) {
+  console.log("Nóng cực độ — Ở nhà đi!");
+} else if (nhietDo > 30) {
+  console.log("Nóng — Uống nhiều nước!");
+} else if (nhietDo > 20) {
+  console.log("Ấm áp — Thời tiết đẹp!");
+} else if (nhietDo > 10) {
+  console.log("Mát mẻ — Mặc thêm áo!");
+} else {
+  console.log("Lạnh — Mặc ấm vào!");
+}
+// Output: "Nóng — Uống nhiều nước!"
+
+// Bỏ qua {} khi chỉ có 1 lệnh (không khuyến khích)
+if (nhietDo > 30) console.log("Nóng!");  // OK nhưng dễ gây lỗi khi mở rộng</code></pre>
+
+      <h3>Giá trị Truthy và Falsy</h3>
+      <pre><code class="language-javascript">// JavaScript tự động ép kiểu khi kiểm tra điều kiện
+
+// Falsy values (được coi là false):
+if (false)     { /* không chạy */ }
+if (0)         { /* không chạy */ }
+if (-0)        { /* không chạy */ }
+if ("")        { /* không chạy */ }
+if (null)      { /* không chạy */ }
+if (undefined) { /* không chạy */ }
+if (NaN)       { /* không chạy */ }
+
+// Mọi thứ khác đều là Truthy:
+if (1)         { console.log("1 là truthy"); }    // chạy
+if (-1)        { console.log("-1 là truthy"); }   // chạy
+if ("0")       { console.log('"0" là truthy'); }  // chạy! Chuỗi không rỗng
+if ([])        { console.log("[] là truthy"); }   // chạy! Mảng rỗng vẫn truthy
+if ({})        { console.log("{} là truthy"); }   // chạy! Object rỗng vẫn truthy</code></pre>
+
+      <h3>switch / case</h3>
+      <pre><code class="language-javascript">const thu = "Thu Ba";
+
+switch (thu) {
+  case "Thứ Hai":
+    console.log("Đầu tuần, hãy bắt đầu tích cực!");
+    break;  // break để thoát ra, không fall-through
+  case "Thứ Ba":
+  case "Thứ Tư":
+  case "Thứ Năm":
+    console.log("Giữa tuần, duy trì nào!");
+    break;
+  case "Thứ Sáu":
+    console.log("Sắp cuối tuần rồi!");
+    break;
+  case "Thứ Bảy":
+  case "Chủ Nhật":
+    console.log("Cuối tuần — nghỉ ngơi thôi!");
+    break;
+  default:
+    console.log("Không nhận ra ngày này");
+}
+
+// Lưu ý: switch dùng === để so sánh
+// Quên break sẽ "fall-through" xuống case tiếp theo!</code></pre>
+
+      <!-- 4.11 Vòng lặp -->
+      <h2 id="vong-lap">4.11 Vòng lặp</h2>
+
+      <h3>for — Vòng lặp cổ điển</h3>
+      <pre><code class="language-javascript">// for (khởi_tạo; điều_kiện; cập_nhật)
+for (let i = 0; i < 5; i++) {
+  console.log(`Lần ${i + 1}: Xin chào!`);
+}
+// Lần 1: Xin chào!
+// Lần 2: Xin chào!
+// ...
+// Lần 5: Xin chào!
+
+// Duyệt qua mảng
+const fruits = ["Táo", "Chuối", "Xoài", "Dưa hấu"];
+for (let i = 0; i < fruits.length; i++) {
+  console.log(`${i}: ${fruits[i]}`);
+}
+
+// Đếm ngược
+for (let i = 10; i >= 1; i--) {
+  console.log(i);
+}
+console.log("Phóng!");</code></pre>
+
+      <h3>while — Lặp khi điều kiện còn đúng</h3>
+      <pre><code class="language-javascript">// Dùng while khi không biết trước số lần lặp
+let diem = 0;
+let luot = 0;
+
+while (diem < 100) {
+  diem += Math.floor(Math.random() * 20) + 1;  // Cộng ngẫu nhiên 1-20
+  luot++;
+}
+console.log(`Đạt 100 điểm sau ${luot} lượt`);
+
+// Cẩn thận vòng lặp vô tận!
+// while (true) { }  // Đừng làm thế này nếu không có break</code></pre>
+
+      <h3>do...while — Chạy ít nhất một lần</h3>
+      <pre><code class="language-javascript">// do...while chạy block trước, kiểm tra sau
+let soLanNhap = 0;
+let matKhau;
+
+do {
+  // Trong thực tế đây sẽ là prompt() hoặc input từ người dùng
+  matKhau = "123456";  // giả lập
+  soLanNhap++;
+  console.log(`Lần nhập thứ ${soLanNhap}`);
+} while (matKhau !== "correct" && soLanNhap < 3);
+
+// do...while đảm bảo block chạy ít nhất 1 lần
+// kể cả khi điều kiện sai ngay từ đầu</code></pre>
+
+      <h3>for...of — Duyệt qua iterable (Khuyến khích cho mảng)</h3>
+      <pre><code class="language-javascript">const monHoc = ["Toán", "Lý", "Hóa", "Anh văn"];
+
+// for...of — lấy giá trị trực tiếp
+for (const mon of monHoc) {
+  console.log(mon);
+}
+// Toán, Lý, Hóa, Anh văn
+
+// Dùng với entries() để lấy cả index
+for (const [index, mon] of monHoc.entries()) {
+  console.log(`${index + 1}. ${mon}`);
+}
+
+// Dùng với chuỗi
+for (const ky_tu of "Hello") {
+  console.log(ky_tu);  // H, e, l, l, o
+}
+
+// Dùng với Map và Set
+const map = new Map([["a", 1], ["b", 2]]);
+for (const [key, value] of map) {
+  console.log(`${key}: ${value}`);
+}</code></pre>
+
+      <h3>for...in — Duyệt qua keys của object</h3>
+      <pre><code class="language-javascript">const hocSinh = { ten: "An", tuoi: 20, diem: 8.5 };
+
+// for...in — lấy key (tên thuộc tính)
+for (const key in hocSinh) {
+  console.log(`${key}: ${hocSinh[key]}`);
+}
+// ten: An
+// tuoi: 20
+// diem: 8.5
+
+// Lưu ý: for...in KHÔNG nên dùng với array
+// (sẽ duyệt cả các thuộc tính thêm vào prototype)
+// Với array, dùng for...of hoặc forEach</code></pre>
+
+      <h3>break và continue</h3>
+      <pre><code class="language-javascript">// break — Thoát khỏi vòng lặp hoàn toàn
+for (let i = 0; i < 10; i++) {
+  if (i === 5) break;
+  console.log(i);  // In: 0, 1, 2, 3, 4
+}
+
+// continue — Bỏ qua iteration hiện tại, tiếp tục với cái tiếp theo
+for (let i = 0; i < 10; i++) {
+  if (i % 2 === 0) continue;  // Bỏ qua số chẵn
+  console.log(i);  // In: 1, 3, 5, 7, 9
+}
+
+// Label — Thoát khỏi vòng lặp lồng nhau
+vongNgoai: for (let i = 0; i < 3; i++) {
+  for (let j = 0; j < 3; j++) {
+    if (i === 1 && j === 1) break vongNgoai;  // Thoát khỏi cả hai vòng
+    console.log(`i=${i}, j=${j}`);
+  }
+}</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập chương 4: Tính điểm và xếp loại học lực</h2>
+        <p>
+          Viết chương trình JavaScript nhận vào danh sách điểm của 5 môn học, tính điểm trung bình và xếp loại học lực theo thang điểm Bộ GD&ĐT Việt Nam.
+        </p>
+
+        <h3>Yêu cầu:</h3>
+        <ul>
+          <li>Tính điểm trung bình (làm tròn 2 chữ số thập phân)</li>
+          <li>Xếp loại: Xuất sắc (≥9.0), Giỏi (≥8.0), Khá (≥6.5), Trung bình (≥5.0), Yếu (&lt;5.0)</li>
+          <li>Hiển thị điểm từng môn, điểm trung bình và xếp loại</li>
+          <li>Kiểm tra điểm liệt (môn nào &lt; 3.5 thì không đạt dù TB cao)</li>
+        </ul>
+
+        <h3>Code tham khảo:</h3>
+        <pre><code class="language-javascript">// ===== BÀI TẬP CHƯƠNG 4 =====
+// Tính điểm trung bình và xếp loại học lực
+
+// Dữ liệu điểm
+const danhSachDiem = [
+  { monHoc: "Toán",      diem: 8.5 },
+  { monHoc: "Ngữ văn",   diem: 7.5 },
+  { monHoc: "Tiếng Anh", diem: 9.0 },
+  { monHoc: "Vật lý",    diem: 8.0 },
+  { monHoc: "Hóa học",   diem: 6.5 },
+];
+
+// Hằng số xếp loại
+const XEP_LOAI = {
+  XUAT_SAC: { nguong: 9.0, nhan: "Xuất sắc",    ky_hieu: "A+" },
+  GIOI:     { nguong: 8.0, nhan: "Giỏi",         ky_hieu: "A"  },
+  KHA:      { nguong: 6.5, nhan: "Khá",           ky_hieu: "B"  },
+  TRUNG_BINH: { nguong: 5.0, nhan: "Trung bình", ky_hieu: "C"  },
+  YEU:      { nguong: 0,   nhan: "Yếu",           ky_hieu: "D"  },
+};
+
+const DIEM_LIET = 3.5;  // Dưới 3.5 là điểm liệt
+
+// --- Bước 1: Tính tổng điểm ---
+let tongDiem = 0;
+let coMonLiet = false;
+let monLiet = null;
+
+for (const item of danhSachDiem) {
+  tongDiem += item.diem;
+  if (item.diem < DIEM_LIET) {
+    coMonLiet = true;
+    monLiet = item;
+  }
+}
+
+// --- Bước 2: Tính điểm trung bình ---
+const diemTB = Math.round((tongDiem / danhSachDiem.length) * 100) / 100;
+
+// --- Bước 3: Xếp loại ---
+function xepLoai(diemTrungBinh, biDiemLiet) {
+  if (biDiemLiet) return "Không đạt (có môn điểm liệt)";
+
+  if (diemTrungBinh >= XEP_LOAI.XUAT_SAC.nguong) return XEP_LOAI.XUAT_SAC.nhan;
+  if (diemTrungBinh >= XEP_LOAI.GIOI.nguong)     return XEP_LOAI.GIOI.nhan;
+  if (diemTrungBinh >= XEP_LOAI.KHA.nguong)       return XEP_LOAI.KHA.nhan;
+  if (diemTrungBinh >= XEP_LOAI.TRUNG_BINH.nguong) return XEP_LOAI.TRUNG_BINH.nhan;
+  return XEP_LOAI.YEU.nhan;
+}
+
+// --- Bước 4: Xuất kết quả ---
+console.log("=".repeat(40));
+console.log("       KẾT QUẢ HỌC TẬP");
+console.log("=".repeat(40));
+
+for (const item of danhSachDiem) {
+  const kieu = item.diem >= DIEM_LIET ? "✓" : "✗ (LIỆT)";
+  const diemHienThi = item.diem.toFixed(1).padStart(4);
+  console.log(`${item.monHoc.padEnd(12)} ${diemHienThi}  ${kieu}`);
+}
+
+console.log("-".repeat(40));
+console.log(`${"ĐIỂM TRUNG BÌNH".padEnd(12)} ${diemTB.toFixed(2).padStart(4)}`);
+
+if (coMonLiet) {
+  console.log(`\n⚠ Cảnh báo: ${monLiet.monHoc} bị điểm liệt (${monLiet.diem})`);
+}
+
+const ketQua = xepLoai(diemTB, coMonLiet);
+console.log(`\nXẾP LOẠI: ${ketQua}`);
+console.log("=".repeat(40));
+
+/* Kết quả mẫu:
+========================================
+       KẾT QUẢ HỌC TẬP
+========================================
+Toán          8.5  ✓
+Ngữ văn       7.5  ✓
+Tiếng Anh     9.0  ✓
+Vật lý        8.0  ✓
+Hóa học       6.5  ✓
+----------------------------------------
+ĐIỂM TRUNG BÌNH  7.90
+XẾP LOẠI: Khá
+========================================
+*/</code></pre>
+
+        <h3>Thử thách thêm:</h3>
+        <ul>
+          <li>Thêm môn Sinh học (điểm 3.0) và kiểm tra kết quả điểm liệt</li>
+          <li>Tìm môn có điểm cao nhất và thấp nhất</li>
+          <li>Đếm số môn đạt và không đạt (ngưỡng 5.0)</li>
+        </ul>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Ôn bài — 5 câu hỏi tự kiểm tra</h2>
+
+        <div class="quiz-item">
+          <p><strong>Câu 1:</strong> Sự khác biệt chính giữa <code>let</code> và <code>const</code> là gì? <code>const</code> có nghĩa là giá trị không bao giờ thay đổi được không?</p>
+          <details>
+            <summary>Xem đáp án</summary>
+            <p><code>let</code> cho phép gán lại giá trị, <code>const</code> thì không. Tuy nhiên, <code>const</code> với object/array chỉ khóa <em>reference</em> (địa chỉ bộ nhớ), không khóa nội dung bên trong. Vẫn có thể thêm/sửa property của object và push phần tử vào array được khai báo bằng <code>const</code>.</p>
+          </details>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>Câu 2:</strong> Kết quả của các phép so sánh sau là gì và tại sao?</p>
+          <pre><code class="language-javascript">console.log(0 == false);
+console.log(0 === false);
+console.log("" == false);
+console.log(null == undefined);</code></pre>
+          <details>
+            <summary>Xem đáp án</summary>
+            <p><code>0 == false</code>: <strong>true</strong> — vì <code>==</code> ép kiểu, false thành 0.<br>
+            <code>0 === false</code>: <strong>false</strong> — khác kiểu (number vs boolean).<br>
+            <code>"" == false</code>: <strong>true</strong> — cả hai đều là falsy, được ép về 0.<br>
+            <code>null == undefined</code>: <strong>true</strong> — đây là trường hợp đặc biệt trong spec JS.</p>
+          </details>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>Câu 3:</strong> Vòng lặp <code>for...of</code> và <code>for...in</code> khác nhau như thế nào? Khi nào dùng cái nào?</p>
+          <details>
+            <summary>Xem đáp án</summary>
+            <p><code>for...of</code> duyệt qua <em>values</em> của iterable (mảng, chuỗi, Map, Set). Dùng khi cần giá trị từng phần tử.<br>
+            <code>for...in</code> duyệt qua <em>keys</em> (tên thuộc tính) của object. Dùng khi cần key của object. Không nên dùng <code>for...in</code> với mảng vì sẽ duyệt cả thuộc tính trên prototype.</p>
+          </details>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>Câu 4:</strong> <code>typeof null</code> trả về gì? Tại sao đây được coi là bug của JavaScript?</p>
+          <details>
+            <summary>Xem đáp án</summary>
+            <p><code>typeof null</code> trả về <code>"object"</code>. Đây là bug từ phiên bản đầu tiên của JavaScript năm 1995. Trong JavaScript, các giá trị được biểu diễn bằng một tag bit, và <code>null</code> vô tình được gán cùng tag với object (000). Bug này không sửa được vì sẽ phá vỡ hàng triệu trang web đang dựa vào hành vi đó. Để kiểm tra null chính xác, dùng <code>value === null</code>.</p>
+          </details>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>Câu 5:</strong> Kết quả của đoạn code sau là gì? Giải thích hoisting.</p>
+          <pre><code class="language-javascript">console.log(x);
+var x = 5;
+console.log(x);</code></pre>
+          <details>
+            <summary>Xem đáp án</summary>
+            <p>Dòng 1: <code>undefined</code> (không phải lỗi!). Dòng 3: <code>5</code>.<br>
+            Hoisting với <code>var</code>: JavaScript đưa khai báo <code>var x</code> lên đầu phạm vi (nhưng không đưa phép gán <code>= 5</code>). Nên ở dòng 1, <code>x</code> đã được khai báo nhưng chưa có giá trị — nên là <code>undefined</code>. Đây là lý do nên dùng <code>let</code>/<code>const</code> thay vì <code>var</code>.</p>
+          </details>
+        </div>
+      </div>
+
+      <!-- Chapter Nav -->
+      <nav class="chapter-nav">
+        <a href="../part1-foundation/chapter-03.html" class="nav-btn nav-prev">
+          ← Chương 3: CSS — Trang điểm
+        </a>
+        <a href="chapter-05.html" class="nav-btn nav-next">
+          Chương 5: Hàm &amp; Phạm vi biến →
+        </a>
+      </nav>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+  <script>
+    // Scroll progress bar
+    window.addEventListener('scroll', function () {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+      document.getElementById('progress').style.width = progress + '%';
+    });
+
+    // Active nav link
+    const links = document.querySelectorAll('.nav-link');
+    const current = window.location.href;
+    links.forEach(l => {
+      if (l.href === current) l.classList.add('active');
+    });
+  </script>
+</body>
+</html>

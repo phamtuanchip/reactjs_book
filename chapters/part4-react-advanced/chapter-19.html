@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 19: Tối ưu Hiệu năng — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="chapter-19.html" class="nav-link active">Ch.19 Tối ưu hiệu năng</a>
+        <a href="chapter-20.html" class="nav-link">Ch.20 Testing</a>
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 19 · Phần 4: React Nâng cao</div>
+        <h1 class="chapter-title">Tối ưu Hiệu năng</h1>
+        <p class="chapter-desc">React đã tự tối ưu rất tốt, nhưng với ứng dụng phức tạp bạn cần biết cách kiểm soát re-renders, code splitting, và xử lý danh sách lớn. Quan trọng: đừng tối ưu sớm — hãy đo lường trước.</p>
+      </div>
+
+      <h2>19.1 React Re-render hoạt động như thế nào?</h2>
+      <div class="mermaid">
+flowchart LR
+    subgraph NM["❌ Không có React.memo"]
+        P1["Parent
+re-render"] --> CA["Child A
+re-render"]
+        P1 --> CB["Child B
+re-render"]
+        P1 --> CC["Child C
+re-render"]
+    end
+    subgraph WM["✅ Với React.memo"]
+        P2["Parent
+re-render"] --> CHK{"Props
+thay đổi?"}
+        CHK -->|"Child A: CÓ"| RA["Child A
+🔄 re-render"]
+        CHK -->|"Child B: KHÔNG"| RB["Child B
+⏭️ Skip"]
+        CHK -->|"Child C: KHÔNG"| RC["Child C
+⏭️ Skip"]
+    end
+    style NM fill:#1e2127,stroke:#e06c75
+    style WM fill:#1e2127,stroke:#98c379
+    style RA fill:#282c34,stroke:#e5c07b
+    style RB fill:#282c34,stroke:#98c379,color:#98c379
+    style RC fill:#282c34,stroke:#98c379,color:#98c379
+</div>
+
+      <h2>19.2 React.memo</h2>
+      <pre><code>import { memo } from 'react';
+
+// Không dùng memo — re-render mỗi khi parent re-render
+function ExpensiveComponent({ data }) {
+  console.log('Rendering ExpensiveComponent');
+  return &lt;div&gt;{/* UI phức tạp */}&lt;/div&gt;;
+}
+
+// Với memo — chỉ re-render khi props thực sự thay đổi
+const ExpensiveComponent = memo(function({ data }) {
+  console.log('Rendering ExpensiveComponent');
+  return &lt;div&gt;{/* UI phức tạp */}&lt;/div&gt;;
+});
+
+// Custom comparison function (khi default shallow compare không đủ)
+const OptimizedList = memo(function({ items, selectedId }) {
+  return &lt;ul&gt;{items.map(...)}&lt;/ul&gt;;
+}, (prevProps, nextProps) =&gt; {
+  // Return true nếu props "bằng nhau" (KHÔNG cần re-render)
+  return prevProps.selectedId === nextProps.selectedId
+    &amp;&amp; prevProps.items.length === nextProps.items.length;
+});
+
+// Ví dụ thực tế — Table với sorting/filtering
+const DataTable = memo(function DataTable({ data, columns, onSort }) {
+  console.log('DataTable render');
+  return (
+    &lt;table&gt;
+      {data.map(row =&gt; (
+        &lt;tr key={row.id}&gt;
+          {columns.map(col =&gt; &lt;td key={col.key}&gt;{row[col.key]}&lt;/td&gt;)}
+        &lt;/tr&gt;
+      ))}
+    &lt;/table&gt;
+  );
+});
+
+// Parent phải dùng useCallback cho onSort!
+function App() {
+  const [data, setData] = useState([]);
+  const [sortKey, setSortKey] = useState('name');
+
+  const handleSort = useCallback((key) =&gt; {
+    setSortKey(key);
+  }, []); // Hàm không đổi → DataTable không re-render
+
+  return &lt;DataTable data={data} onSort={handleSort} /&gt;;
+}</code></pre>
+
+      <h2>19.3 Code Splitting với React.lazy và Suspense</h2>
+      <p>Code splitting chia bundle JavaScript thành nhiều chunk nhỏ, chỉ tải khi cần. Giảm thời gian tải lần đầu đáng kể.</p>
+      <pre><code>import { lazy, Suspense } from 'react';
+
+// Lazy import — component chỉ tải khi được render lần đầu
+const HeavyChart = lazy(() =&gt; import('./components/HeavyChart'));
+const AdminPanel = lazy(() =&gt; import('./pages/AdminPanel'));
+const RichTextEditor = lazy(() =&gt; import('./components/RichTextEditor'));
+
+// Suspense — hiển thị fallback trong khi tải
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;div className="spinner"&gt;Đang tải...&lt;/div&gt;}&gt;
+      &lt;HeavyChart data={chartData} /&gt;
+    &lt;/Suspense&gt;
+  );
+}
+
+// Route-based code splitting — phổ biến nhất
+import { Routes, Route } from 'react-router-dom';
+
+const Home = lazy(() =&gt; import('./pages/Home'));
+const Products = lazy(() =&gt; import('./pages/Products'));
+const Dashboard = lazy(() =&gt; import('./pages/Dashboard'));
+
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;PageLoader /&gt;}&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+        &lt;Route path="/products" element={&lt;Products /&gt;} /&gt;
+        &lt;Route path="/dashboard" element={&lt;Dashboard /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/Suspense&gt;
+  );
+}
+
+// Sau khi build: dist/assets/
+// index.[hash].js      ← code chung (React, Router...)
+// Home.[hash].js       ← tải khi vào trang Home
+// Products.[hash].js   ← tải khi vào trang Products
+// Dashboard.[hash].js  ← tải khi vào trang Dashboard</code></pre>
+
+      <h2>19.4 Virtualization — Render danh sách lớn</h2>
+      <p>Render 10,000 DOM nodes cùng lúc → cực chậm. Virtualization chỉ render các phần tử đang hiển thị trong viewport.</p>
+      <pre><code>npm install @tanstack/react-virtual
+# hoặc: npm install react-window react-virtualized</code></pre>
+
+      <pre><code>// react-window — đơn giản nhất
+import { FixedSizeList, VariableSizeList } from 'react-window';
+
+function VirtualizedList({ items }) {
+  const Row = ({ index, style }) =&gt; (
+    &lt;div style={style}&gt; {/* style chứa vị trí/kích thước — BẮT BUỘC */}
+      {items[index].name}
+    &lt;/div&gt;
+  );
+
+  return (
+    &lt;FixedSizeList
+      height={600}          // Chiều cao container
+      itemCount={items.length}
+      itemSize={50}          // Chiều cao mỗi row (fixed)
+      width="100%"
+    &gt;
+      {Row}
+    &lt;/FixedSizeList&gt;
+  );
+}
+
+// @tanstack/react-virtual — flexible hơn
+import { useVirtualizer } from '@tanstack/react-virtual';
+
+function VirtualTable({ rows }) {
+  const parentRef = useRef(null);
+
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () =&gt; parentRef.current,
+    estimateSize: () =&gt; 50, // estimated row height
+    overscan: 10,            // render thêm 10 rows ngoài viewport
+  });
+
+  return (
+    &lt;div ref={parentRef} style={{ height: '600px', overflow: 'auto' }}&gt;
+      &lt;div style={{ height: rowVirtualizer.getTotalSize() + 'px', position: 'relative' }}&gt;
+        {rowVirtualizer.getVirtualItems().map(virtualRow =&gt; (
+          &lt;div
+            key={virtualRow.index}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: virtualRow.size + 'px',
+              transform: `translateY(${virtualRow.start}px)`,
+            }}
+          &gt;
+            {rows[virtualRow.index].name}
+          &lt;/div&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+      <h2>19.5 React Profiler — Đo lường hiệu năng</h2>
+      <pre><code>import { Profiler } from 'react';
+
+// Bọc component cần đo
+function App() {
+  const onRenderCallback = (
+    id,          // id của Profiler (tên component)
+    phase,       // "mount" | "update"
+    actualDuration,  // Thời gian render thực (ms)
+    baseDuration,    // Thời gian nếu không memo
+    startTime,
+    commitTime
+  ) =&gt; {
+    console.log(`${id} (${phase}): ${actualDuration.toFixed(2)}ms`);
+  };
+
+  return (
+    &lt;Profiler id="ProductList" onRender={onRenderCallback}&gt;
+      &lt;ProductList products={products} /&gt;
+    &lt;/Profiler&gt;
+  );
+}
+
+// Chrome DevTools → React tab → Profiler
+// Record → tương tác → Stop → xem flame graph
+// Tìm component nào render lâu nhất</code></pre>
+
+      <h2>19.6 Các tối ưu khác</h2>
+      <pre><code>// 1. Tránh inline object/array trong JSX (tạo object mới mỗi render)
+// Sai:
+&lt;Component style={{ color: 'red' }} data={[1,2,3]} /&gt;
+// Đúng:
+const style = { color: 'red' };
+const data = [1, 2, 3];
+&lt;Component style={style} data={data} /&gt;
+// Hoặc dùng useMemo nếu phụ thuộc state
+
+// 2. Key trong danh sách — dùng ID, không dùng index
+// Sai: items.map((item, index) =&gt; &lt;Item key={index} /&gt;)
+// Đúng: items.map(item =&gt; &lt;Item key={item.id} /&gt;)
+
+// 3. Tránh anonymous component trong render
+// Sai: {showModal &amp;&amp; &lt;Modal&gt;&lt;div&gt;...&lt;/div&gt;&lt;/Modal&gt;}
+// Đúng: hoist component ra ngoài render function
+
+// 4. Image optimization
+&lt;img
+  src="photo.jpg"
+  loading="lazy"     // Lazy load khi vào viewport
+  decoding="async"   // Decode ảnh bất đồng bộ
+  fetchpriority="high" // Cho hero image
+/&gt;
+
+// 5. Debounce expensive operations
+const debouncedSearch = useCallback(
+  debounce((query) =&gt; fetchResults(query), 300),
+  []
+);
+
+// 6. Web Workers cho tính toán nặng
+const worker = new Worker('./heavy-computation.js');
+worker.onmessage = (e) =&gt; setResult(e.data);
+worker.postMessage(data); // Gửi data để tính toán</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+        <h3>Bài tập 19.1: Tối ưu danh sách 10,000 phần tử</h3>
+        <pre><code>// Tạo 10,000 user objects
+const users = Array.from({ length: 10000 }, (_, i) =&gt; ({
+  id: i + 1,
+  name: `User ${i + 1}`,
+  email: `user${i + 1}@example.com`,
+  age: Math.floor(Math.random() * 50) + 18,
+  score: Math.floor(Math.random() * 100),
+}));
+
+// Bài 1: Render danh sách KHÔNG tối ưu (thấy lag)
+function SlowList() {
+  return &lt;ul&gt;{users.map(u =&gt; &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;)}&lt;/ul&gt;;
+}
+
+// Bài 2: Dùng react-window để virtualize
+// Bài 3: Thêm search/filter với useMemo
+// Bài 4: Dùng React Profiler để so sánh trước/sau
+// Bài 5: Thêm sort (price asc/desc) với useMemo</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> React.memo so sánh props như thế nào để quyết định có re-render không?</p>
+          <ul>
+            <li>A. So sánh sâu (deep comparison) toàn bộ object</li>
+            <li>B. Shallow comparison — so sánh tham chiếu cho objects/arrays</li>
+            <li>C. Không so sánh, luôn re-render</li>
+            <li>D. Serialize thành JSON rồi so sánh string</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — React.memo dùng shallow comparison: primitive values so sánh bằng giá trị, objects/arrays so sánh bằng tham chiếu. Vì vậy cần kết hợp useCallback (cho functions) và useMemo (cho objects/arrays).</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Virtualization giải quyết vấn đề gì?</p>
+          <ul>
+            <li>A. Tải dữ liệu nhanh hơn từ server</li>
+            <li>B. Chỉ render các DOM nodes đang hiển thị trong viewport, giữ DOM nhỏ dù danh sách rất lớn</li>
+            <li>C. Cache dữ liệu trong bộ nhớ</li>
+            <li>D. Tối ưu CSS animations</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Với 10,000 items: render tất cả → 10,000 DOM nodes → chậm. Virtualization: chỉ render ~20 items đang hiển thị → DOM chỉ có 20 nodes → nhanh. Khi scroll → thay đổi items hiển thị.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Tại sao dùng index làm key trong danh sách có thể gây bug?</p>
+          <ul>
+            <li>A. index không hợp lệ làm key</li>
+            <li>B. Khi danh sách thêm/xóa/sắp xếp lại, index không còn là định danh ổn định — React update sai component</li>
+            <li>C. index quá lớn gây tràn bộ nhớ</li>
+            <li>D. Không có bug, index hoạt động tốt</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Ví dụ: items=[A,B,C], keys=[0,1,2]. Xóa A → items=[B,C], keys=[0,1]. React nghĩ key=0 vẫn là item đầu (nhưng giờ là B) → update sai. Dùng ID ổn định từ data.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> Code splitting (lazy loading) cải thiện điều gì?</p>
+          <ul>
+            <li>A. Runtime performance sau khi load</li>
+            <li>B. Initial load time — tải ít JavaScript hơn lần đầu, phần còn lại tải khi cần</li>
+            <li>C. Memory usage</li>
+            <li>D. API response time</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Không có code splitting: tải 5MB JS ngay từ đầu dù user chỉ xem trang Home. Với code splitting: tải 500KB (common + Home), tải thêm khi navigate đến trang khác.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> Nguyên tắc "Don't optimize prematurely" có nghĩa là gì?</p>
+          <ul>
+            <li>A. Không bao giờ tối ưu hiệu năng</li>
+            <li>B. Chỉ tối ưu khi đo lường và xác định được vấn đề thực sự (không đoán mò)</li>
+            <li>C. Tối ưu chỉ khi production</li>
+            <li>D. Dùng useMemo và useCallback ở mọi nơi</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Donald Knuth: "Premature optimization is the root of all evil". Thêm useMemo/useCallback ở mọi nơi thực sự làm code chậm hơn (overhead). Quy trình đúng: (1) Đo lường bằng Profiler, (2) Xác định bottleneck, (3) Tối ưu đúng chỗ.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-18.html">← Chương 18: Form Nâng cao</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-20.html">Chương 20: Testing →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

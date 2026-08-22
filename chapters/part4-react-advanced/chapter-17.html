@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 17: Data Fetching với TanStack Query — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="chapter-17.html" class="nav-link active">Ch.17 Data Fetching</a>
+        <a href="chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="chapter-20.html" class="nav-link">Ch.20 Testing</a>
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 17 · Phần 4: React Nâng cao</div>
+        <h1 class="chapter-title">Tương tác với API và Data Fetching</h1>
+        <p class="chapter-desc">TanStack Query (trước đây là React Query) giải quyết vấn đề "server state" — caching, loading, error, background refresh, pagination. Đây là công cụ biến đổi cách bạn tương tác với API trong React.</p>
+      </div>
+
+      <h2>17.1 Vấn đề với fetch thuần trong useEffect</h2>
+      <pre><code>// Cách làm "naive" — có nhiều vấn đề:
+function PostList() {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    fetch('/api/posts')
+      .then(r =&gt; r.json())
+      .then(setPosts)
+      .catch(setError)
+      .finally(() =&gt; setLoading(false));
+  }, []);
+
+  // Vấn đề:
+  // ❌ Không cache — mỗi lần navigate đến trang này fetch lại từ đầu
+  // ❌ Không background refresh — data cũ khi user quay lại tab
+  // ❌ Không retry khi lỗi
+  // ❌ Không deduplicate — nhiều component fetch cùng URL = nhiều request
+  // ❌ Race conditions
+  // ❌ Boilerplate loading/error lặp đi lặp lại
+}</code></pre>
+
+      <h2>17.2 TanStack Query — Setup</h2>
+      <pre><code>npm install @tanstack/react-query @tanstack/react-query-devtools</code></pre>
+
+      <pre><code>// main.jsx — Setup QueryClient
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,     // 5 phút trước khi data "cũ"
+      cacheTime: 10 * 60 * 1000,    // 10 phút giữ trong cache
+      retry: 3,                      // Retry 3 lần khi lỗi
+      refetchOnWindowFocus: true,    // Refetch khi user quay lại tab
+    }
+  }
+});
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  &lt;QueryClientProvider client={queryClient}&gt;
+    &lt;App /&gt;
+    &lt;ReactQueryDevtools initialIsOpen={false} /&gt; {/* DevTools */}
+  &lt;/QueryClientProvider&gt;
+);</code></pre>
+
+      <h2>17.3 useQuery — Đọc dữ liệu</h2>
+      <pre><code>import { useQuery } from '@tanstack/react-query';
+
+// API function (tách ra file riêng)
+const fetchPosts = async () =&gt; {
+  const response = await fetch('/api/posts');
+  if (!response.ok) throw new Error('Lỗi tải bài viết');
+  return response.json();
+};
+
+function PostList() {
+  const {
+    data: posts,      // Dữ liệu trả về
+    isLoading,        // Lần đầu load, chưa có data
+    isFetching,       // Đang fetch (kể cả background)
+    isError,          // Có lỗi
+    error,            // Đối tượng lỗi
+    refetch,          // Hàm trigger fetch lại
+    status,           // 'loading' | 'error' | 'success'
+  } = useQuery({
+    queryKey: ['posts'],           // Key để cache và deduplicate
+    queryFn: fetchPosts,           // Hàm fetch
+    staleTime: 30 * 1000,         // Override default
+  });
+
+  if (isLoading) return &lt;Spinner /&gt;;
+  if (isError) return &lt;Error message={error.message} onRetry={refetch} /&gt;;
+
+  return (
+    &lt;ul&gt;
+      {posts.map(post =&gt; (
+        &lt;li key={post.id}&gt;{post.title}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}
+
+// Query với parameters — query key thay đổi khi params thay đổi
+function PostDetail({ postId }) {
+  const { data: post } = useQuery({
+    queryKey: ['post', postId],         // postId là dependency
+    queryFn: () =&gt; fetchPost(postId),   // Fetch lại khi postId thay đổi
+    enabled: !!postId,                  // Chỉ fetch khi postId có giá trị
+  });
+}</code></pre>
+
+      <h2>17.4 useMutation — Tạo/Cập nhật/Xóa dữ liệu</h2>
+      <pre><code>import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+function CreatePost() {
+  const queryClient = useQueryClient();
+
+  const createMutation = useMutation({
+    mutationFn: (newPost) =&gt; fetch('/api/posts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newPost)
+    }).then(r =&gt; r.json()),
+
+    onSuccess: () =&gt; {
+      // Invalidate cache để tự động refetch danh sách
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+    },
+
+    onError: (error) =&gt; {
+      console.error('Lỗi tạo bài:', error);
+    }
+  });
+
+  const handleSubmit = (e) =&gt; {
+    e.preventDefault();
+    createMutation.mutate({ title, content });
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      {/* form fields */}
+      &lt;button disabled={createMutation.isPending}&gt;
+        {createMutation.isPending ? 'Đang tạo...' : 'Tạo bài'}
+      &lt;/button&gt;
+      {createMutation.isError &amp;&amp; &lt;p className="error"&gt;{createMutation.error.message}&lt;/p&gt;}
+    &lt;/form&gt;
+  );
+}</code></pre>
+
+      <h2>17.5 Optimistic Updates</h2>
+      <pre><code>// Cập nhật UI ngay lập tức, rollback nếu thất bại
+const toggleLikeMutation = useMutation({
+  mutationFn: (postId) =&gt; likePost(postId),
+
+  onMutate: async (postId) =&gt; {
+    // Hủy bất kỳ refetch nào đang chạy (tránh conflict)
+    await queryClient.cancelQueries({ queryKey: ['post', postId] });
+
+    // Lưu giá trị hiện tại để rollback nếu cần
+    const previousPost = queryClient.getQueryData(['post', postId]);
+
+    // Optimistic update — cập nhật cache ngay lập tức
+    queryClient.setQueryData(['post', postId], old =&gt; ({
+      ...old,
+      liked: !old.liked,
+      likesCount: old.liked ? old.likesCount - 1 : old.likesCount + 1
+    }));
+
+    return { previousPost }; // Context để dùng trong onError
+  },
+
+  onError: (err, postId, context) =&gt; {
+    // Rollback về giá trị cũ khi lỗi
+    queryClient.setQueryData(['post', postId], context.previousPost);
+  },
+
+  onSettled: (data, error, postId) =&gt; {
+    // Sync lại với server dù thành công hay thất bại
+    queryClient.invalidateQueries({ queryKey: ['post', postId] });
+  }
+});</code></pre>
+
+      <h2>17.6 Pagination và Infinite Scroll</h2>
+      <pre><code>// Pagination thông thường
+function PaginatedList() {
+  const [page, setPage] = useState(1);
+
+  const { data } = useQuery({
+    queryKey: ['posts', page],
+    queryFn: () =&gt; fetchPosts(page),
+    placeholderData: keepPreviousData, // Giữ data cũ khi đang tải trang mới
+  });
+
+  return (
+    &lt;div&gt;
+      {data?.posts.map(p =&gt; &lt;PostCard key={p.id} post={p} /&gt;)}
+      &lt;button onClick={() =&gt; setPage(p =&gt; p - 1)} disabled={page === 1}&gt;Trước&lt;/button&gt;
+      &lt;span&gt;Trang {page} / {data?.totalPages}&lt;/span&gt;
+      &lt;button onClick={() =&gt; setPage(p =&gt; p + 1)} disabled={page === data?.totalPages}&gt;Sau&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Infinite scroll
+import { useInfiniteQuery } from '@tanstack/react-query';
+
+function InfinitePostList() {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery({
+    queryKey: ['posts', 'infinite'],
+    queryFn: ({ pageParam = 1 }) =&gt; fetchPosts(pageParam),
+    getNextPageParam: (lastPage) =&gt; lastPage.nextPage ?? undefined,
+  });
+
+  return (
+    &lt;div&gt;
+      {data?.pages.flatMap(page =&gt; page.posts).map(post =&gt; (
+        &lt;PostCard key={post.id} post={post} /&gt;
+      ))}
+      &lt;button onClick={() =&gt; fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}&gt;
+        {isFetchingNextPage ? 'Đang tải...' : 'Tải thêm'}
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+        <h3>Bài tập 17.1: Blog App với TanStack Query</h3>
+        <pre><code>// Xây dựng blog app dùng JSONPlaceholder API:
+// GET https://jsonplaceholder.typicode.com/posts
+// GET https://jsonplaceholder.typicode.com/posts/:id
+// GET https://jsonplaceholder.typicode.com/users/:id
+
+// Yêu cầu:
+// 1. Danh sách bài viết (paginated, 10 bài/trang)
+// 2. Chi tiết bài viết + thông tin tác giả
+// 3. Bình luận của bài viết (lazy load khi click "Xem bình luận")
+// 4. Loading skeleton (không phải spinner)
+// 5. Error boundary + retry button
+// 6. Search realtime (useQuery với searchTerm dependency)
+// 7. Stale time: 5 phút
+// 8. ReactQueryDevtools để xem cache</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> queryKey trong TanStack Query có vai trò gì?</p>
+          <ul>
+            <li>A. Chỉ là một cái tên để đặt cho query</li>
+            <li>B. Định danh duy nhất cho cache entry; khi queryKey thay đổi → fetch lại; cùng queryKey ở nhiều nơi → chia sẻ cache</li>
+            <li>C. Khóa API authentication</li>
+            <li>D. Thứ tự ưu tiên của các queries</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — queryKey là "địa chỉ" của cache entry. <code>['posts']</code> và <code>['posts', 1]</code> là hai cache riêng biệt. Nhiều component dùng cùng queryKey → share cache → không duplicate request.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Sự khác biệt giữa <code>isLoading</code> và <code>isFetching</code>?</p>
+          <ul>
+            <li>A. Chúng hoàn toàn giống nhau</li>
+            <li>B. <code>isLoading</code>: lần đầu, chưa có cache; <code>isFetching</code>: đang fetch kể cả background refetch</li>
+            <li>C. <code>isFetching</code>: chỉ khi user click refresh</li>
+            <li>D. <code>isLoading</code>: fetch từ network; <code>isFetching</code>: fetch từ cache</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>isLoading = isFetching && !data</code>. Dùng <code>isLoading</code> để hiển thị skeleton lần đầu. Dùng <code>isFetching</code> để hiển thị spinner nhỏ khi background refetch.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Optimistic Update giải quyết vấn đề gì?</p>
+          <ul>
+            <li>A. Tối ưu hóa code</li>
+            <li>B. Cập nhật UI ngay lập tức trước khi server phản hồi, tạo trải nghiệm nhanh hơn; rollback nếu thất bại</li>
+            <li>C. Tiết kiệm bandwidth</li>
+            <li>D. Giảm số lần re-render</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Ví dụ: click Like → ngay lập tức UI hiện "đã like" mà không chờ server. Nếu API thành công → giữ nguyên. Nếu thất bại → rollback về "chưa like". UX mượt mà hơn nhiều.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> Tại sao nên dùng <code>queryClient.invalidateQueries</code> sau mutation thành công?</p>
+          <ul>
+            <li>A. Để xóa toàn bộ cache</li>
+            <li>B. Để đánh dấu cache liên quan là "stale" → tự động refetch → UI hiển thị data mới nhất từ server</li>
+            <li>C. Để ngăn người dùng mutation thêm lần nữa</li>
+            <li>D. Bắt buộc phải có nếu không ứng dụng crash</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Sau khi POST/PUT/DELETE thành công, dữ liệu server đã thay đổi nhưng cache vẫn cũ. <code>invalidateQueries</code> đánh dấu stale → TanStack Query tự refetch → list cập nhật.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> <code>staleTime: 5 * 60 * 1000</code> có nghĩa là gì?</p>
+          <ul>
+            <li>A. Cache hết hạn sau 5 phút, bị xóa khỏi bộ nhớ</li>
+            <li>B. Data được coi là "tươi" trong 5 phút — không refetch nếu navigate đi rồi quay lại trong 5 phút</li>
+            <li>C. Đợi 5 phút trước khi fetch lần đầu</li>
+            <li>D. Fetch lại mỗi 5 phút</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>staleTime</code>: khoảng thời gian data được coi là "fresh". Trong thời gian này, navigate đi rồi về → dùng cache, không fetch lại. Sau staleTime, data "stale" → background refetch khi component mount.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-16.html">← Chương 16: Quản lý State Toàn cục</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-18.html">Chương 18: Form Nâng cao →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

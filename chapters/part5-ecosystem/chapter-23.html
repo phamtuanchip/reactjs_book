@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 23: Authentication — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="chapter-23.html" class="nav-link active">Ch.23 Authentication</a>
+        <a href="chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 23 · Phần 5: Thực chiến</div>
+        <h1 class="chapter-title">Authentication &amp; Authorization</h1>
+        <p class="chapter-desc">Authentication (xác thực danh tính) và Authorization (phân quyền) là core của mọi ứng dụng thực tế. Chương này bao gồm JWT, Session, OAuth, bảo mật và RBAC trong React/Next.js.</p>
+      </div>
+
+      <h2>23.1 Authentication vs Authorization</h2>
+      <div class="mermaid">
+sequenceDiagram
+    participant U as 👤 User
+    participant C as 🖥️ Client Browser
+    participant S as 🔐 API Server
+    participant DB as 💾 Database
+    Note over U,DB: Đăng nhập lần đầu
+    U->>C: Nhập email + password
+    C->>S: POST /api/auth/login
+    S->>DB: Tìm user, verify bcrypt hash
+    DB-->>S: User found ✅
+    S->>S: Tạo JWT (userId, role, exp)
+    S-->>C: Set-Cookie: token=JWT; HttpOnly; Secure
+    C-->>U: Redirect → Dashboard ✅
+    Note over U,DB: Request tiếp theo — tự động auth
+    U->>C: Vào /dashboard
+    C->>S: GET /dashboard (cookie tự động kèm)
+    S->>S: Verify JWT signature + expiry
+    S-->>C: 200 OK + data
+    C-->>U: Hiển thị dashboard
+</div>
+
+      <h2>23.2 JWT (JSON Web Token)</h2>
+      <pre><code>// JWT structure: header.payload.signature (base64 encoded)
+// eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIxMjMifQ.abc123...
+//      ↑ header              ↑ payload              ↑ signature
+
+// Payload chứa claims:
+{
+  "userId": "123",
+  "email": "user@example.com",
+  "role": "admin",
+  "iat": 1700000000,  // issued at
+  "exp": 1700086400   // expires (24h sau)
+}
+
+// KHÔNG bao giờ để sensitive data trong JWT (password, credit card...)
+// JWT có thể decode mà không cần secret! Chỉ verify cần secret.
+
+// Flow JWT:
+// 1. User login → server tạo JWT với secret → trả về client
+// 2. Client lưu JWT (localStorage hoặc cookie)
+// 3. Mọi request: gửi JWT trong header Authorization: Bearer TOKEN
+// 4. Server verify JWT (kiểm tra signature + expiry)
+
+// API Route: Login (Next.js)
+// app/api/auth/login/route.ts
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+
+export async function POST(request: Request) {
+  const { email, password } = await request.json();
+
+  const user = await db.user.findUnique({ where: { email } });
+  if (!user) return Response.json({ error: 'Email không tồn tại' }, { status: 401 });
+
+  const isValid = await bcrypt.compare(password, user.passwordHash);
+  if (!isValid) return Response.json({ error: 'Mật khẩu sai' }, { status: 401 });
+
+  const token = jwt.sign(
+    { userId: user.id, email: user.email, role: user.role },
+    process.env.JWT_SECRET!,
+    { expiresIn: '7d' }
+  );
+
+  // Lưu trong httpOnly cookie (bảo mật hơn localStorage!)
+  const response = Response.json({ success: true });
+  response.headers.set('Set-Cookie',
+    `token=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=${7 * 24 * 60 * 60}; Path=/`
+  );
+  return response;
+}</code></pre>
+
+      <h2>23.3 Auth Context trong React</h2>
+      <pre><code>// contexts/AuthContext.tsx
+'use client';
+import { createContext, useContext, useState, useEffect } from 'react';
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'editor' | 'user';
+}
+
+interface AuthContextType {
+  user: User | null;
+  isLoading: boolean;
+  login: (email: string, password: string) =&gt; Promise&lt;void&gt;;
+  logout: () =&gt; Promise&lt;void&gt;;
+  isAuthenticated: boolean;
+}
+
+const AuthContext = createContext&lt;AuthContextType | null&gt;(null);
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState&lt;User | null&gt;(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Kiểm tra session khi load app
+  useEffect(() =&gt; {
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    checkAuth();
+  }, []);
+
+  const login = async (email: string, password: string) =&gt; {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error);
+    }
+    const data = await res.json();
+    setUser(data.user);
+  };
+
+  const logout = async () =&gt; {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    setUser(null);
+  };
+
+  return (
+    &lt;AuthContext.Provider value={{
+      user, isLoading,
+      login, logout,
+      isAuthenticated: !!user
+    }}&gt;
+      {children}
+    &lt;/AuthContext.Provider&gt;
+  );
+}
+
+export function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth phải trong AuthProvider');
+  return ctx;
+}</code></pre>
+
+      <h2>23.4 Protected Routes và RBAC</h2>
+      <pre><code>// components/ProtectedRoute.tsx
+'use client';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
+type Role = 'admin' | 'editor' | 'user';
+
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  requiredRole?: Role;
+  redirectTo?: string;
+}
+
+export function ProtectedRoute({
+  children,
+  requiredRole,
+  redirectTo = '/login'
+}: ProtectedRouteProps) {
+  const { user, isLoading, isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  useEffect(() =&gt; {
+    if (isLoading) return;
+
+    if (!isAuthenticated) {
+      router.push(redirectTo);
+      return;
+    }
+
+    if (requiredRole &amp;&amp; user?.role !== requiredRole) {
+      // Không đủ quyền
+      router.push('/forbidden');
+    }
+  }, [isLoading, isAuthenticated, user, requiredRole]);
+
+  if (isLoading) return &lt;div&gt;Đang kiểm tra quyền...&lt;/div&gt;;
+  if (!isAuthenticated) return null;
+  if (requiredRole &amp;&amp; user?.role !== requiredRole) return null;
+
+  return &lt;&gt;{children}&lt;/&gt;;
+}
+
+// Dùng trong pages
+function AdminDashboard() {
+  return (
+    &lt;ProtectedRoute requiredRole="admin"&gt;
+      &lt;div&gt;Chỉ admin mới thấy trang này&lt;/div&gt;
+    &lt;/ProtectedRoute&gt;
+  );
+}
+
+// RBAC component helper
+interface CanProps {
+  role: Role | Role[];
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
+}
+
+function Can({ role, children, fallback = null }: CanProps) {
+  const { user } = useAuth();
+  const roles = Array.isArray(role) ? role : [role];
+
+  if (!user || !roles.includes(user.role)) return &lt;&gt;{fallback}&lt;/&gt;;
+  return &lt;&gt;{children}&lt;/&gt;;
+}
+
+// Dùng trong component
+function Navbar() {
+  return (
+    &lt;nav&gt;
+      &lt;a href="/"&gt;Trang chủ&lt;/a&gt;
+      &lt;Can role={['admin', 'editor']}&gt;
+        &lt;a href="/admin"&gt;Quản trị&lt;/a&gt;
+      &lt;/Can&gt;
+      &lt;Can role="admin"&gt;
+        &lt;a href="/users"&gt;Quản lý users&lt;/a&gt;
+      &lt;/Can&gt;
+    &lt;/nav&gt;
+  );
+}</code></pre>
+
+      <h2>23.5 Bảo mật — XSS và CSRF</h2>
+      <pre><code>// XSS (Cross-Site Scripting) — Chèn script độc hại
+// React tự động escape JSX — an toàn mặc định
+// NGUY HIỂM: dangerouslySetInnerHTML
+&lt;div dangerouslySetInnerHTML={{ __html: userInput }} /&gt; // ← XSS!
+// Nếu bắt buộc dùng, sanitize với DOMPurify:
+import DOMPurify from 'dompurify';
+&lt;div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }} /&gt;
+
+// CSRF (Cross-Site Request Forgery) — Giả mạo request
+// Cookie SameSite=Strict bảo vệ CSRF tốt nhất:
+// Set-Cookie: token=...; SameSite=Strict; HttpOnly; Secure
+
+// Middleware Next.js — kiểm tra auth cho tất cả protected routes
+// middleware.ts (trong root, không trong app/)
+import { NextRequest, NextResponse } from 'next/server';
+import { verifyToken } from '@/lib/auth';
+
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get('token')?.value;
+  const isProtectedPath = request.nextUrl.pathname.startsWith('/dashboard');
+
+  if (isProtectedPath) {
+    if (!token) {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    try {
+      const payload = verifyToken(token);
+      // Thêm user info vào header để Server Components đọc
+      const response = NextResponse.next();
+      response.headers.set('x-user-id', payload.userId);
+      response.headers.set('x-user-role', payload.role);
+      return response;
+    } catch {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ['/dashboard/:path*', '/admin/:path*'],
+};</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+        <h3>Bài tập 23.1: Hệ thống Auth đầy đủ</h3>
+        <pre><code>// Xây dựng hệ thống auth với:
+// 1. Đăng ký: name, email, password (hash với bcrypt)
+// 2. Đăng nhập: email + password → JWT trong httpOnly cookie
+// 3. Đăng xuất: xóa cookie
+// 4. GET /api/auth/me: trả về user từ token trong cookie
+// 5. AuthContext với useAuth hook
+// 6. Protected routes: /profile, /settings
+// 7. Admin-only routes: /admin
+// 8. Hiển thị user menu khi đã đăng nhập
+// 9. Refresh token tự động khi gần hết hạn
+// Bảo mật:
+// - HttpOnly cookie
+// - bcrypt hash password (saltRounds=12)
+// - Rate limiting cho /api/auth/login (max 5 requests/min)</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Tại sao nên lưu JWT trong httpOnly cookie thay vì localStorage?</p>
+          <ul>
+            <li>A. Cookie nhanh hơn localStorage</li>
+            <li>B. JavaScript không thể đọc httpOnly cookie — bảo vệ khỏi XSS tấn công đánh cắp token</li>
+            <li>C. localStorage bị giới hạn kích thước</li>
+            <li>D. Cookie tự động expire</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — XSS attack: inject JS vào trang → <code>document.cookie</code> không trả về httpOnly cookies → không thể đánh cắp. localStorage: <code>localStorage.getItem('token')</code> hoạt động ngay với JS inject → nguy hiểm.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> JWT có thể decode mà không cần secret không?</p>
+          <ul>
+            <li>A. Không, cần secret để giải mã</li>
+            <li>B. Có — payload là base64 encoded, ai cũng có thể decode. Secret chỉ để VERIFY signature</li>
+            <li>C. Cần secret và public key</li>
+            <li>D. JWT được mã hóa hoàn toàn</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — JWT = base64(header) + "." + base64(payload) + "." + signature. Decode payload không cần secret. Vì vậy ĐỪNG để sensitive data (password, PII) trong JWT. Secret chỉ để kiểm tra token chưa bị giả mạo.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> SameSite=Strict trong cookie bảo vệ khỏi tấn công nào?</p>
+          <ul>
+            <li>A. XSS</li>
+            <li>B. SQL Injection</li>
+            <li>C. CSRF (Cross-Site Request Forgery)</li>
+            <li>D. Man-in-the-middle</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: C</strong> — SameSite=Strict: browser không gửi cookie khi request đến từ site khác. CSRF attack: evil.com gửi request đến bank.com (với cookie của user). Strict ngăn cookie được gửi từ evil.com → request không có auth → thất bại.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> Middleware Next.js (middleware.ts) phù hợp để làm gì?</p>
+          <ul>
+            <li>A. Xử lý business logic phức tạp</li>
+            <li>B. Kiểm tra auth/redirect trước khi routes render — chạy trên Edge, rất nhanh, không cần đến DB</li>
+            <li>C. Kết nối database</li>
+            <li>D. Render component</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Middleware chạy ở Edge (Cloudflare Workers-like) trước khi request đến Server/Client. Phù hợp: auth check, redirect, A/B testing, i18n routing. KHÔNG phù hợp: DB queries (dùng Prisma/Mongoose trong API routes).</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> RBAC là gì và tại sao quan trọng?</p>
+          <ul>
+            <li>A. React Bundle Access Control</li>
+            <li>B. Role-Based Access Control — phân quyền dựa trên vai trò, không kiểm tra từng user riêng lẻ</li>
+            <li>C. Runtime Browser API Check</li>
+            <li>D. Remote Backend API Configuration</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — RBAC: gán roles (admin/editor/user) cho users. Permissions gắn với roles, không với users cụ thể. Dễ quản lý: thay đổi quyền của 1000 editors chỉ cần sửa role "editor". Scalable hơn ACL (Access Control List).</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-22.html">← Chương 22: Next.js</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-24.html">Chương 24: Deployment →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

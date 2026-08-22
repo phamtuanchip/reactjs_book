@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 20: Testing trong React — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="chapter-20.html" class="nav-link active">Ch.20 Testing</a>
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 20 · Phần 4: React Nâng cao</div>
+        <h1 class="chapter-title">Testing trong React</h1>
+        <p class="chapter-desc">Testing là kỹ năng phân biệt developer junior và senior. Chương này hướng dẫn viết tests cho React với Vitest và React Testing Library — test theo cách người dùng thực sự tương tác.</p>
+      </div>
+
+      <h2>20.1 Tại sao cần test?</h2>
+      <div class="mermaid">
+graph TD
+    subgraph PYR["Testing Pyramid"]
+        E2E["🔺 E2E Tests
+Playwright / Cypress
+Ít · Chậm · Tốn kém
+Test toàn bộ user flow"]
+        INT["🔷 Integration Tests
+React Testing Library
+Vừa phải · Test nhiều components"]
+        UNIT["⬛ Unit Tests — Vitest
+Nhiều · Nhanh · Rẻ nhất
+Test hàm / component đơn lẻ"]
+    end
+    UNIT --> INT --> E2E
+    style E2E fill:#e06c75,color:#fff,stroke:#e06c75
+    style INT fill:#e5c07b,color:#333,stroke:#e5c07b
+    style UNIT fill:#98c379,color:#333,stroke:#98c379
+</div>
+
+      <h2>20.2 Cài đặt Vitest và React Testing Library</h2>
+      <pre><code>npm install -D vitest @testing-library/react @testing-library/user-event @testing-library/jest-dom jsdom</code></pre>
+
+      <pre><code>// vite.config.js — thêm test config
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    globals: true,          // Dùng describe/it/expect không cần import
+    environment: 'jsdom',   // Giả lập browser environment
+    setupFiles: './src/test/setup.js',
+  },
+});
+
+// src/test/setup.js
+import '@testing-library/jest-dom'; // Thêm matchers: toBeInTheDocument, etc.
+
+// package.json — thêm scripts
+{
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
+  }
+}</code></pre>
+
+      <h2>20.3 Unit Testing — Hàm thuần</h2>
+      <pre><code>// src/utils/validation.js
+export function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+export function formatCurrency(amount, currency = 'VND') {
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency }).format(amount);
+}
+
+// src/utils/validation.test.js
+import { describe, it, expect } from 'vitest';
+import { validateEmail, formatCurrency } from './validation';
+
+describe('validateEmail', () =&gt; {
+  it('trả về true với email hợp lệ', () =&gt; {
+    expect(validateEmail('user@example.com')).toBe(true);
+    expect(validateEmail('test.name+tag@domain.co')).toBe(true);
+  });
+
+  it('trả về false với email không hợp lệ', () =&gt; {
+    expect(validateEmail('not-an-email')).toBe(false);
+    expect(validateEmail('@nodomain.com')).toBe(false);
+    expect(validateEmail('')).toBe(false);
+    expect(validateEmail('space @email.com')).toBe(false);
+  });
+});
+
+describe('formatCurrency', () =&gt; {
+  it('định dạng tiền VND đúng', () =&gt; {
+    expect(formatCurrency(1000000)).toContain('1.000.000');
+  });
+
+  it('dùng currency mặc định là VND', () =&gt; {
+    expect(formatCurrency(50000)).toContain('₫');
+  });
+});</code></pre>
+
+      <h2>20.4 React Testing Library — Test component</h2>
+      <p>Triết lý RTL: <em>"Test như cách người dùng sử dụng"</em> — không test implementation details.</p>
+      <pre><code>import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi } from 'vitest';
+
+// Component cần test
+function Counter({ initialCount = 0 }) {
+  const [count, setCount] = useState(initialCount);
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Đếm: {count}&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;Tăng&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(c =&gt; c - 1)}&gt;Giảm&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(0)}&gt;Reset&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+
+describe('Counter', () =&gt; {
+  it('hiển thị giá trị ban đầu', () =&gt; {
+    render(&lt;Counter initialCount={5} /&gt;);
+    expect(screen.getByText('Đếm: 5')).toBeInTheDocument();
+  });
+
+  it('tăng khi click nút Tăng', async () =&gt; {
+    const user = userEvent.setup();
+    render(&lt;Counter /&gt;);
+
+    await user.click(screen.getByRole('button', { name: 'Tăng' }));
+    expect(screen.getByText('Đếm: 1')).toBeInTheDocument();
+  });
+
+  it('reset về 0 khi click Reset', async () =&gt; {
+    const user = userEvent.setup();
+    render(&lt;Counter initialCount={10} /&gt;);
+
+    await user.click(screen.getByRole('button', { name: 'Reset' }));
+    expect(screen.getByText('Đếm: 0')).toBeInTheDocument();
+  });
+});</code></pre>
+
+      <h2>20.5 Testing với Async và API Mock</h2>
+      <pre><code>import { render, screen, waitFor } from '@testing-library/react';
+import { vi } from 'vitest';
+
+// Mock global fetch
+vi.stubGlobal('fetch', vi.fn());
+
+describe('UserProfile', () =&gt; {
+  it('hiển thị loading khi đang fetch', () =&gt; {
+    fetch.mockImplementation(() =&gt; new Promise(() =&gt; {})); // Never resolve
+
+    render(&lt;UserProfile userId={1} /&gt;);
+    expect(screen.getByText('Đang tải...')).toBeInTheDocument();
+  });
+
+  it('hiển thị user data khi fetch thành công', async () =&gt; {
+    fetch.mockResolvedValue({
+      ok: true,
+      json: async () =&gt; ({ id: 1, name: 'Nguyễn An', email: 'an@example.com' })
+    });
+
+    render(&lt;UserProfile userId={1} /&gt;);
+
+    // Chờ async render
+    await waitFor(() =&gt; {
+      expect(screen.getByText('Nguyễn An')).toBeInTheDocument();
+    });
+    expect(screen.getByText('an@example.com')).toBeInTheDocument();
+  });
+
+  it('hiển thị error khi fetch thất bại', async () =&gt; {
+    fetch.mockResolvedValue({ ok: false, status: 404 });
+
+    render(&lt;UserProfile userId={999} /&gt;);
+
+    await waitFor(() =&gt; {
+      expect(screen.getByText(/không tìm thấy/i)).toBeInTheDocument();
+    });
+  });
+
+  afterEach(() =&gt; {
+    vi.clearAllMocks(); // Reset mocks sau mỗi test
+  });
+});</code></pre>
+
+      <h2>20.6 Testing Form</h2>
+      <pre><code>describe('LoginForm', () =&gt; {
+  it('hiển thị lỗi khi submit form rỗng', async () =&gt; {
+    const user = userEvent.setup();
+    render(&lt;LoginForm /&gt;);
+
+    await user.click(screen.getByRole('button', { name: 'Đăng nhập' }));
+
+    expect(screen.getByText('Email là bắt buộc')).toBeInTheDocument();
+    expect(screen.getByText('Mật khẩu là bắt buộc')).toBeInTheDocument();
+  });
+
+  it('gọi onSubmit với đúng data khi form hợp lệ', async () =&gt; {
+    const user = userEvent.setup();
+    const mockOnSubmit = vi.fn();
+    render(&lt;LoginForm onSubmit={mockOnSubmit} /&gt;);
+
+    await user.type(screen.getByLabelText('Email'), 'test@example.com');
+    await user.type(screen.getByLabelText('Mật khẩu'), 'password123');
+    await user.click(screen.getByRole('button', { name: 'Đăng nhập' }));
+
+    expect(mockOnSubmit).toHaveBeenCalledWith({
+      email: 'test@example.com',
+      password: 'password123'
+    });
+  });
+
+  it('hiển thị lỗi email không hợp lệ', async () =&gt; {
+    const user = userEvent.setup();
+    render(&lt;LoginForm /&gt;);
+
+    await user.type(screen.getByLabelText('Email'), 'not-an-email');
+    await user.tab(); // Trigger blur validation
+
+    expect(screen.getByText(/email không hợp lệ/i)).toBeInTheDocument();
+  });
+});</code></pre>
+
+      <h2>20.7 Testing Queries — Tìm elements</h2>
+      <pre><code>// Thứ tự ưu tiên của queries (theo RTL docs):
+// Accessible (recommended):
+screen.getByRole('button', { name: 'Submit' });  // ← tốt nhất
+screen.getByLabelText('Email');
+screen.getByPlaceholderText('Nhập email...');
+screen.getByText('Xin chào');
+
+// Semantic:
+screen.getByAltText('Logo');
+screen.getByTitle('Close dialog');
+
+// Test ID (last resort):
+screen.getByTestId('submit-btn'); // Thêm data-testid="submit-btn"
+
+// Variants:
+getBy...     // Fail nếu không tìm thấy
+queryBy...   // Return null nếu không tìm thấy (dùng khi test element KHÔNG tồn tại)
+findBy...    // Async, chờ element xuất hiện
+getAllBy...  // Return array, fail nếu không có phần tử nào
+queryAllBy...
+findAllBy...</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+        <h3>Bài tập 20.1: Test Todo List</h3>
+        <pre><code>// Viết test cho TodoApp từ Chương 11, bao gồm:
+// 1. Render danh sách todos ban đầu
+// 2. Thêm todo mới
+// 3. Toggle done/undone
+// 4. Xóa todo
+// 5. Đếm todos chưa hoàn thành hiển thị đúng
+// 6. Filter (All/Active/Completed) hoạt động đúng
+// 7. "Xóa tất cả đã hoàn thành" hoạt động đúng
+// 8. Input được clear sau khi thêm todo
+
+// Bắt đầu với test này:
+describe('TodoApp', () =&gt; {
+  it('render empty state với message thích hợp', () =&gt; {
+    render(&lt;TodoApp /&gt;);
+    expect(screen.getByText(/chưa có todo nào/i)).toBeInTheDocument();
+  });
+
+  it('thêm todo mới khi submit form', async () =&gt; {
+    const user = userEvent.setup();
+    render(&lt;TodoApp /&gt;);
+
+    await user.type(screen.getByPlaceholderText('Thêm todo...'), 'Học React');
+    await user.keyboard('{Enter}');
+
+    expect(screen.getByText('Học React')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Thêm todo...')).toHaveValue('');
+  });
+});</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Triết lý của React Testing Library là gì?</p>
+          <ul>
+            <li>A. Test mọi implementation detail để đảm bảo code đúng</li>
+            <li>B. Test theo cách người dùng thực sự tương tác với UI, không phải cách component được implement</li>
+            <li>C. Chỉ test pure functions, không test components</li>
+            <li>D. Test 100% coverage mọi dòng code</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Guiding principle của RTL: "The more your tests resemble the way your software is used, the more confidence they can give you." Test cái người dùng thấy và làm, không test internal state hay methods.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Khi nào dùng <code>queryBy</code> thay vì <code>getBy</code>?</p>
+          <ul>
+            <li>A. Khi element có thể null</li>
+            <li>B. Khi muốn assert element KHÔNG tồn tại trong DOM</li>
+            <li>C. queryBy luôn tốt hơn getBy</li>
+            <li>D. Khi element là button</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>getBy</code> throw error nếu không tìm thấy. <code>queryBy</code> return null. Dùng: <code>expect(screen.queryByText('Lỗi')).not.toBeInTheDocument()</code> để test rằng error message KHÔNG hiển thị.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> <code>userEvent</code> khác <code>fireEvent</code> ở điểm gì?</p>
+          <ul>
+            <li>A. userEvent chỉ test mobile, fireEvent test desktop</li>
+            <li>B. userEvent mô phỏng tương tác người dùng thực (click + hover + focus...), fireEvent chỉ trigger event đơn giản</li>
+            <li>C. fireEvent là async, userEvent là sync</li>
+            <li>D. Không có sự khác biệt</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>userEvent.click()</code> = hover → focus → mousedown → mouseup → click (như người dùng thực). <code>fireEvent.click()</code> chỉ dispatch click event. userEvent tạo tests thực tế hơn.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> Tại sao nên mock fetch trong unit/integration tests?</p>
+          <ul>
+            <li>A. Fetch quá chậm</li>
+            <li>B. Tests không nên phụ thuộc vào network/server thực — cần deterministic, nhanh, không phụ thuộc external service</li>
+            <li>C. Fetch không hoạt động trong test environment</li>
+            <li>D. Để tiết kiệm API calls</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Tests phải: (1) Nhanh, (2) Ổn định (không fail ngẫu nhiên do network), (3) Kiểm soát được response. Mock cho phép test cả happy path và error cases một cách nhất quán.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> Query nào được khuyến nghị nhất theo thứ tự ưu tiên của RTL?</p>
+          <ul>
+            <li>A. <code>getByTestId</code></li>
+            <li>B. <code>getByClassName</code></li>
+            <li>C. <code>getByRole</code></li>
+            <li>D. <code>getByText</code></li>
+          </ul>
+          <p class="answer"><strong>Đáp án: C</strong> — <code>getByRole</code> tốt nhất vì: (1) Phản ánh cách assistive technology truy cập UI, (2) Test accessibility, (3) Ổn định — không bị break khi thay đổi CSS hay text. <code>getByTestId</code> là last resort khi không có cách khác.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-19.html">← Chương 19: Tối ưu Hiệu năng</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="../part5-ecosystem/chapter-21.html">Chương 21: TypeScript với React →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

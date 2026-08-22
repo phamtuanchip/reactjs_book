@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 1: Làm quen với Web và Lập trình — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <div class="book-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="chapter-01.html" class="nav-link active">Ch.1 Làm quen với Web</a>
+        <a href="chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 1 · Phần 1: Nền tảng Web</div>
+        <h1 class="chapter-title">Làm quen với Web và Lập trình</h1>
+        <p class="chapter-desc">Trước khi viết một dòng code, hãy cùng hiểu Internet và Web thực sự hoạt động như thế nào. Đây là nền tảng tư duy mà mọi lập trình viên web đều cần có.</p>
+      </div>
+
+      <!-- 1. Web là gì -->
+      <h2>1.1 Web là gì? Lịch sử ngắn gọn của Internet</h2>
+      <p>Khi bạn mở trình duyệt và gõ <code>google.com</code>, trong vòng chưa đến một giây bạn nhận được kết quả. Điều kỳ diệu đó xảy ra như thế nào? Để hiểu được, chúng ta cần biết Web là gì và nó ra đời từ đâu.</p>
+
+      <h3>Internet và World Wide Web — Hai thứ khác nhau</h3>
+      <p>Nhiều người nhầm lẫn <strong>Internet</strong> và <strong>Web (World Wide Web)</strong> là một. Thực ra:</p>
+      <ul>
+        <li><strong>Internet</strong> là hạ tầng vật lý: hàng triệu máy tính, cáp quang, bộ định tuyến (router) kết nối với nhau trên toàn thế giới. Internet là "con đường cao tốc".</li>
+        <li><strong>World Wide Web (Web)</strong> là một dịch vụ chạy trên Internet. Web là hệ thống các trang tài liệu (trang web) liên kết với nhau qua các đường dẫn (hyperlink). Web là "những chiếc xe" chạy trên con đường đó.</li>
+      </ul>
+      <p>Ngoài Web, Internet còn chứa nhiều dịch vụ khác: Email (SMTP/IMAP), truyền file (FTP), nhắn tin tức thời, streaming video, v.v.</p>
+
+      <h3>Lịch sử hình thành</h3>
+      <ul>
+        <li><strong>1969 — ARPANET:</strong> Tiền thân của Internet, được Bộ Quốc phòng Mỹ tạo ra để kết nối các trường đại học và cơ quan nghiên cứu. Ban đầu chỉ có 4 nút mạng.</li>
+        <li><strong>1983 — TCP/IP:</strong> Bộ giao thức chuẩn TCP/IP được thống nhất, đặt nền móng kỹ thuật cho Internet hiện đại.</li>
+        <li><strong>1991 — World Wide Web ra đời:</strong> Tim Berners-Lee, nhà khoa học tại CERN (Thụy Sĩ), phát minh ra Web. Ông tạo ra ba thứ: ngôn ngữ HTML để viết trang web, giao thức HTTP để truyền tải, và URL để định vị tài nguyên.</li>
+        <li><strong>1993 — Mosaic:</strong> Trình duyệt đồ họa đầu tiên ra đời, giúp Web trở nên phổ biến với đại chúng vì có thể hiển thị hình ảnh.</li>
+        <li><strong>1995–2000 — Dot-com Boom:</strong> Hàng nghìn công ty Internet ra đời. Amazon, Google, eBay xuất hiện trong giai đoạn này.</li>
+        <li><strong>2004 — Web 2.0:</strong> Người dùng bắt đầu tạo nội dung (blog, mạng xã hội). Facebook ra đời 2004, YouTube 2005, Twitter 2006.</li>
+        <li><strong>2008 trở đi — Kỷ nguyên di động:</strong> Smartphone bùng nổ, Web phải thích ứng với màn hình nhỏ. Responsive Design trở thành bắt buộc.</li>
+        <li><strong>2010 trở đi — Web App:</strong> Web không chỉ là trang đọc nữa mà là ứng dụng đầy đủ chức năng: Google Docs, Figma, Notion... đều chạy trên trình duyệt.</li>
+      </ul>
+
+      <div class="callout info">
+        <div class="callout-title">💡 Ghi chú</div>
+        <p>Tim Berners-Lee không nhận bằng sáng chế cho phát minh Web của mình. Ông muốn Web là tài sản của toàn nhân loại, miễn phí và mở cho tất cả. Quyết định này đã thay đổi thế giới.</p>
+      </div>
+
+      <!-- 2. Client và Server -->
+      <h2>1.2 Client và Server — Sự phân chia hai phía của ứng dụng web</h2>
+      <p>Mọi tương tác trên Web đều dựa trên mô hình <strong>Client–Server</strong>. Đây là khái niệm cốt lõi mà bạn sẽ dùng hàng ngày khi lập trình web.</p>
+
+      <h3>Client là gì?</h3>
+      <p><strong>Client</strong> (hay "phía khách") là phần mềm hoặc thiết bị gửi yêu cầu đến server để lấy dữ liệu hoặc thực hiện hành động. Thường gặp nhất là <strong>trình duyệt web</strong> (Chrome, Firefox, Safari, Edge). Ngoài ra, ứng dụng mobile, ứng dụng desktop, hay thậm chí script tự động cũng có thể là client.</p>
+
+      <h3>Server là gì?</h3>
+      <p><strong>Server</strong> (hay "phía máy chủ") là máy tính (hoặc chương trình) luôn bật, lắng nghe các yêu cầu từ client, xử lý và trả về kết quả. Server thường nằm trong các trung tâm dữ liệu (data center) với phần cứng mạnh mẽ và kết nối mạng tốc độ cao.</p>
+
+      <h3>Giao tiếp qua HTTP</h3>
+      <p>Client và Server giao tiếp với nhau qua giao thức <strong>HTTP</strong> (HyperText Transfer Protocol) hoặc phiên bản bảo mật hơn là <strong>HTTPS</strong> (HTTP Secure). Mỗi lần giao tiếp gồm hai bước:</p>
+      <ol>
+        <li><strong>HTTP Request</strong>: Client gửi yêu cầu lên Server, nói rõ muốn làm gì (lấy trang, gửi form, xóa dữ liệu...)</li>
+        <li><strong>HTTP Response</strong>: Server xử lý và gửi lại kết quả (HTML, JSON, hình ảnh, lỗi...)</li>
+      </ol>
+
+      <div class="mermaid">
+flowchart LR
+    B(["🖥️ Browser\nClient"]) -->|"HTTP Request"| S(["⚡ Web Server"])
+    S -->|"HTML / CSS / JS"| B
+    S <-->|"SQL Query"| DB[("💾 Database")]
+    style B fill:#282c34,stroke:#61dafb,color:#e6e6e6
+    style S fill:#282c34,stroke:#98c379,color:#e6e6e6
+    style DB fill:#282c34,stroke:#e5c07b,color:#e6e6e6
+</div>
+
+      <h3>Các phương thức HTTP phổ biến</h3>
+      <p>HTTP Request có nhiều "phương thức" (method) khác nhau, mỗi cái có ý nghĩa riêng:</p>
+      <ul>
+        <li><strong>GET</strong>: Lấy dữ liệu. Ví dụ: tải trang web, lấy danh sách sản phẩm.</li>
+        <li><strong>POST</strong>: Gửi dữ liệu mới lên server. Ví dụ: đăng ký tài khoản, đăng bài viết.</li>
+        <li><strong>PUT / PATCH</strong>: Cập nhật dữ liệu đã có. PUT thay toàn bộ, PATCH thay một phần.</li>
+        <li><strong>DELETE</strong>: Xóa dữ liệu.</li>
+      </ul>
+
+      <h3>HTTP Status Code — Mã trạng thái</h3>
+      <p>Server trả về mã số cho biết kết quả của request:</p>
+      <ul>
+        <li><strong>2xx — Thành công:</strong> 200 OK, 201 Created, 204 No Content</li>
+        <li><strong>3xx — Chuyển hướng:</strong> 301 Moved Permanently, 302 Found</li>
+        <li><strong>4xx — Lỗi từ phía Client:</strong> 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found</li>
+        <li><strong>5xx — Lỗi từ phía Server:</strong> 500 Internal Server Error, 502 Bad Gateway, 503 Service Unavailable</li>
+      </ul>
+
+      <!-- 3. Trình duyệt hoạt động -->
+      <h2>1.3 Trình duyệt làm gì khi bạn gõ một URL?</h2>
+      <p>Bạn gõ <code>https://www.google.com</code> và nhấn Enter. Điều gì xảy ra trong vòng chưa đến 1 giây đó? Đây là một trong những câu hỏi phỏng vấn kinh điển nhất trong ngành lập trình web.</p>
+
+      <h3>Bước 1: Phân tích URL</h3>
+      <p>Trình duyệt phân tích URL thành các thành phần:</p>
+      <pre><code>https://www.google.com/search?q=reactjs#results
+│       │               │       │         │
+│       │               │       │         └─ Fragment (cuộn đến phần #results)
+│       │               │       └─ Query string (tham số tìm kiếm)
+│       │               └─ Path (đường dẫn đến tài nguyên)
+│       └─ Domain (tên miền)
+└─ Protocol (giao thức: https)</code></pre>
+
+      <h3>Bước 2: DNS Lookup — Tra cứu địa chỉ IP</h3>
+      <p>Máy tính không hiểu tên miền như <code>google.com</code>. Nó cần địa chỉ IP (như <code>142.250.185.46</code>). DNS (Domain Name System) là "quyển danh bạ điện thoại" của Internet, chuyển đổi tên miền thành địa chỉ IP.</p>
+      <p>Trình tự tra cứu DNS (từ nhanh đến chậm):</p>
+      <ol>
+        <li><strong>Browser cache:</strong> Trình duyệt nhớ các DNS đã tra cứu gần đây.</li>
+        <li><strong>OS cache:</strong> Hệ điều hành cũng có bộ nhớ đệm DNS (file <code>hosts</code>).</li>
+        <li><strong>Router cache:</strong> Bộ định tuyến gia đình cũng cache DNS.</li>
+        <li><strong>DNS Resolver của ISP:</strong> Nhà cung cấp Internet của bạn có server DNS riêng.</li>
+        <li><strong>Root DNS → TLD DNS → Authoritative DNS:</strong> Nếu không ai biết, hỏi từ gốc lên.</li>
+      </ol>
+
+      <h3>Bước 3: Thiết lập kết nối TCP</h3>
+      <p>Sau khi có IP, trình duyệt thiết lập kết nối với server qua giao thức TCP bằng quy trình <strong>Three-Way Handshake</strong>:</p>
+      <div class="mermaid">
+sequenceDiagram
+    participant B as 🖥️ Trình duyệt
+    participant D as 🗂️ DNS Server
+    participant S as 🌐 Web Server
+    B->>D: Tôi cần IP của google.com?
+    D-->>B: IP là 142.250.x.x
+    B->>S: SYN — Tôi muốn kết nối
+    S-->>B: SYN-ACK — OK, sẵn sàng
+    B->>S: ACK — Đã nhận xác nhận
+    Note over B,S: Kết nối TCP thiết lập ✅
+    B->>S: GET /index.html HTTP/1.1
+    S-->>B: 200 OK + HTML + CSS + JS
+</div>
+      <p>Nếu dùng HTTPS, sau TCP handshake còn có thêm <strong>TLS Handshake</strong> để mã hóa kết nối — bảo đảm dữ liệu không bị nghe lén.</p>
+
+      <h3>Bước 4: Gửi HTTP Request</h3>
+      <pre><code>GET / HTTP/1.1
+Host: www.google.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: vi-VN,vi;q=0.9,en-US;q=0.8
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive</code></pre>
+
+      <h3>Bước 5: Server xử lý và trả về Response</h3>
+      <pre><code>HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Content-Length: 14423
+Cache-Control: private, max-age=0
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang="vi"&gt;
+  &lt;head&gt;...&lt;/head&gt;
+  &lt;body&gt;...&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <h3>Bước 6: Trình duyệt phân tích và hiển thị</h3>
+      <p>Đây là bước phức tạp nhất. Trình duyệt thực hiện quy trình <strong>Critical Rendering Path</strong>:</p>
+      <ol>
+        <li><strong>Parse HTML → DOM Tree:</strong> Đọc HTML, tạo cây đối tượng Document Object Model.</li>
+        <li><strong>Parse CSS → CSSOM Tree:</strong> Đọc CSS, tạo CSS Object Model.</li>
+        <li><strong>JavaScript Execution:</strong> Chạy các file JS (có thể thay đổi DOM và CSSOM).</li>
+        <li><strong>Render Tree:</strong> Kết hợp DOM + CSSOM tạo Render Tree (chỉ chứa các phần tử hiển thị).</li>
+        <li><strong>Layout (Reflow):</strong> Tính toán vị trí và kích thước của từng phần tử.</li>
+        <li><strong>Paint:</strong> Vẽ các pixels lên màn hình.</li>
+        <li><strong>Compositing:</strong> Ghép các layer lại thành hình ảnh cuối cùng.</li>
+      </ol>
+
+      <div class="callout info">
+        <div class="callout-title">💡 Tại sao điều này quan trọng?</div>
+        <p>Hiểu quy trình rendering giúp bạn tối ưu hiệu năng web. Ví dụ: đặt CSS ở <code>&lt;head&gt;</code> (không block rendering), đặt JS cuối <code>&lt;body&gt;</code> hoặc dùng <code>defer</code> (không block HTML parsing). Chúng ta sẽ đi sâu vào tối ưu ở các chương sau.</p>
+      </div>
+
+      <!-- 4. Các loại ứng dụng web -->
+      <h2>1.4 Các loại ứng dụng web</h2>
+      <p>Không phải website nào cũng giống nhau. Có nhiều kiến trúc khác nhau, mỗi loại phù hợp với nhu cầu riêng. Hiểu sự khác biệt này giúp bạn chọn đúng công nghệ khi xây dựng sản phẩm.</p>
+
+      <h3>1. Static Site (Trang tĩnh)</h3>
+      <p>Server chỉ phục vụ các file HTML, CSS, JS đã được tạo sẵn. Không có xử lý phía server, không có database.</p>
+      <ul>
+        <li><strong>Ưu điểm:</strong> Cực nhanh, bảo mật cao, chi phí hosting rẻ (thậm chí miễn phí với GitHub Pages, Netlify).</li>
+        <li><strong>Nhược điểm:</strong> Nội dung cố định, không cá nhân hóa được.</li>
+        <li><strong>Ví dụ thực tế:</strong> Blog cá nhân, landing page, tài liệu kỹ thuật, portfolio.</li>
+        <li><strong>Công cụ phổ biến:</strong> Hugo, Jekyll, Gatsby, Eleventy.</li>
+      </ul>
+
+      <h3>2. Dynamic Site (Trang động)</h3>
+      <p>Server tạo ra HTML "on the fly" dựa trên yêu cầu của người dùng và dữ liệu từ database.</p>
+      <ul>
+        <li><strong>Ưu điểm:</strong> Nội dung thay đổi theo người dùng, dữ liệu thời gian thực.</li>
+        <li><strong>Nhược điểm:</strong> Chậm hơn (cần xử lý mỗi request), tốn kém hơn.</li>
+        <li><strong>Ví dụ thực tế:</strong> Các trang web truyền thống viết bằng PHP (WordPress), Ruby on Rails.</li>
+        <li><strong>Luồng hoạt động:</strong> Request → Server xử lý → Truy vấn DB → Tạo HTML → Trả về client.</li>
+      </ul>
+
+      <h3>3. SPA — Single Page Application</h3>
+      <p>Trình duyệt tải về một file HTML duy nhất và ứng dụng chạy hoàn toàn ở phía client. Khi điều hướng giữa các trang, JavaScript thay đổi nội dung mà không cần tải lại trang.</p>
+      <ul>
+        <li><strong>Ưu điểm:</strong> Trải nghiệm người dùng mượt mà như app native, sau lần tải đầu rất nhanh.</li>
+        <li><strong>Nhược điểm:</strong> SEO khó hơn, lần tải đầu tiên chậm, cần JavaScript bật.</li>
+        <li><strong>Ví dụ thực tế:</strong> Gmail, Google Maps, Facebook, Twitter (X), Notion.</li>
+        <li><strong>Công cụ phổ biến:</strong> React, Vue.js, Angular — đây là lý do React quan trọng!</li>
+      </ul>
+
+      <h3>4. SSR — Server-Side Rendering</h3>
+      <p>Kết hợp ưu điểm của Dynamic Site và SPA. Server render HTML đầy đủ cho mỗi request, nhưng sau đó JavaScript "tiếp quản" và làm ứng dụng hoạt động như SPA (quá trình này gọi là <strong>hydration</strong>).</p>
+      <ul>
+        <li><strong>Ưu điểm:</strong> SEO tốt (search engine thấy nội dung đầy đủ), tải trang đầu nhanh.</li>
+        <li><strong>Nhược điểm:</strong> Phức tạp hơn, tốn tài nguyên server hơn.</li>
+        <li><strong>Ví dụ thực tế:</strong> Các trang thương mại điện tử, tin tức.</li>
+        <li><strong>Công cụ phổ biến:</strong> Next.js (với React), Nuxt.js (với Vue), SvelteKit.</li>
+      </ul>
+
+      <h3>5. PWA — Progressive Web App</h3>
+      <p>Web app có khả năng hoạt động như app mobile native. Người dùng có thể "cài đặt" lên màn hình chính điện thoại và dùng offline.</p>
+      <ul>
+        <li><strong>Công nghệ cốt lõi:</strong> Service Worker (chạy nền, cache tài nguyên), Web App Manifest (metadata để cài lên màn hình chính).</li>
+        <li><strong>Ví dụ thực tế:</strong> Twitter Lite, Starbucks app, Uber Lite.</li>
+        <li><strong>Ưu điểm:</strong> Không cần lên App Store, tự cập nhật, nhẹ hơn app native nhiều.</li>
+      </ul>
+
+      <div class="mermaid">
+graph TD
+    subgraph ST["📄 Static Site"]
+        S1["HTML files trên CDN"]
+        S2["⚡ Siêu nhanh, SEO tốt"]
+        S3["Blog, Portfolio"]
+    end
+    subgraph DY["⚙️ Dynamic"]
+        D1["Server tạo HTML mỗi request"]
+        D2["PHP, Python, Ruby"]
+        D3["News, E-commerce"]
+    end
+    subgraph SP["⚛️ SPA React"]
+        P1["1 HTML + load JS bundle"]
+        P2["Client-side routing"]
+        P3["Dashboard, Web App"]
+    end
+    subgraph SS["🚀 SSR Next.js"]
+        R1["Server render HTML"]
+        R2["SEO + Interactive"]
+        R3["Best of both worlds"]
+    end
+</div>
+
+      <!-- 5. Công cụ cần thiết -->
+      <h2>1.5 Công cụ cần thiết để học ReactJS</h2>
+      <p>Lập trình cần công cụ tốt. Đây là bộ công cụ chuẩn mà hầu hết lập trình viên React sử dụng.</p>
+
+      <h3>VS Code — Trình soạn thảo code</h3>
+      <p><strong>Visual Studio Code</strong> (VS Code) là trình soạn thảo code miễn phí, mã nguồn mở của Microsoft. Nó hiện là editor phổ biến nhất thế giới (theo khảo sát Stack Overflow 2023, hơn 73% lập trình viên dùng VS Code).</p>
+      <p>Tải về tại: <code>https://code.visualstudio.com</code></p>
+
+      <h4>Extensions cần cài ngay:</h4>
+
+      <p><strong>1. ESLint</strong></p>
+      <p>Phân tích code JavaScript/React của bạn và cảnh báo các lỗi tiềm ẩn hoặc vi phạm coding style <em>ngay khi bạn gõ</em>. Giống như "người kiểm tra chính tả" cho code.</p>
+      <pre><code>// Ví dụ lỗi ESLint bắt được:
+const name = "Alice"   // ✗ Missing semicolon
+let unused = 42        // ✗'unused' is assigned but never used
+
+const name = "Alice";  // ✓ Correct
+</code></pre>
+
+      <p><strong>2. Prettier — Code Formatter</strong></p>
+      <p>Tự động format code của bạn theo chuẩn thống nhất. Không cần tốn thời gian tranh luận về tab vs space — Prettier quyết định tất cả.</p>
+      <pre><code>// Trước khi format (bạn gõ tùy tiện):
+const obj={name:'Alice',age:30,city:'HCM'}
+
+// Sau khi Prettier format (tự động):
+const obj = {
+  name: "Alice",
+  age: 30,
+  city: "HCM",
+};
+</code></pre>
+
+      <p><strong>3. ES7+ React/Redux/React-Native Snippets</strong></p>
+      <p>Cung cấp hàng chục "snippet" (đoạn code mẫu) cho React. Gõ vài ký tự và nhấn Tab, VS Code tự điền code đầy đủ.</p>
+      <pre><code>// Gõ "rafce" + Tab sẽ tự tạo:
+import React from 'react';
+
+const ComponentName = () => {
+  return (
+    &lt;div&gt;ComponentName&lt;/div&gt;
+  );
+};
+
+export default ComponentName;
+</code></pre>
+
+      <p><strong>4. GitLens</strong></p>
+      <p>Hiển thị thông tin git (ai sửa dòng này, khi nào, commit message gì) ngay trong editor.</p>
+
+      <p><strong>5. Auto Rename Tag</strong></p>
+      <p>Khi đổi tên thẻ mở, thẻ đóng tự động đổi theo. Rất tiện khi làm việc với JSX.</p>
+
+      <h3>Node.js — JavaScript Runtime</h3>
+      <p>Node.js cho phép chạy JavaScript bên ngoài trình duyệt (trực tiếp trên máy tính). Đây là nền tảng để chạy các công cụ lập trình như npm, Vite, Webpack.</p>
+      <p>Tải về tại: <code>https://nodejs.org</code> — Luôn chọn phiên bản <strong>LTS (Long Term Support)</strong> để đảm bảo ổn định.</p>
+      <pre><code># Kiểm tra đã cài thành công
+node --version   # In ra: v20.x.x
+npm --version    # In ra: 10.x.x</code></pre>
+
+      <p><strong>npm (Node Package Manager)</strong> được cài kèm với Node.js. npm là kho chứa hàng triệu thư viện mã nguồn mở — bạn có thể thêm bất kỳ tính năng nào vào dự án chỉ bằng một lệnh.</p>
+      <pre><code># Cài thư viện lodash
+npm install lodash
+
+# Cài và lưu vào devDependencies (chỉ dùng khi dev)
+npm install --save-dev eslint</code></pre>
+
+      <h3>Chrome DevTools — Công cụ phát triển của trình duyệt</h3>
+      <p>Chrome DevTools là bộ công cụ gỡ lỗi và phân tích tích hợp sẵn trong Chrome. Đây là người bạn tốt nhất của lập trình viên web.</p>
+      <p>Mở DevTools bằng:</p>
+      <ul>
+        <li>Nhấn <strong>F12</strong></li>
+        <li>Hoặc <strong>Ctrl+Shift+I</strong> (Windows/Linux), <strong>Cmd+Option+I</strong> (Mac)</li>
+        <li>Hoặc chuột phải vào trang → "Inspect" (Kiểm tra)</li>
+      </ul>
+
+      <!-- 6. DevTools -->
+      <h2>1.6 Khám phá Chrome DevTools</h2>
+
+      <h3>Tab Elements (Phần tử)</h3>
+      <p>Hiển thị cấu trúc HTML của trang và CSS đang áp dụng. Bạn có thể:</p>
+      <ul>
+        <li>Click vào bất kỳ phần tử HTML nào để xem CSS của nó</li>
+        <li>Chỉnh sửa HTML/CSS trực tiếp trong DevTools để xem kết quả ngay (thay đổi không được lưu)</li>
+        <li>Dùng biểu tượng "mũi tên" ở góc trái để click vào phần tử trên trang và highlight nó trong DOM</li>
+      </ul>
+      <pre><code>/* Trong tab Elements, bạn sẽ thấy CSS như: */
+element.style {
+  color: red;
+}
+
+h1 {
+  font-size: 2rem;  /* Computed: 32px */
+  font-weight: 700;
+}
+</code></pre>
+
+      <h3>Tab Console (Bảng điều khiển)</h3>
+      <p>Nơi hiển thị các thông báo log từ JavaScript và cho phép bạn chạy code JS trực tiếp.</p>
+      <pre><code>// Bạn có thể gõ trực tiếp trong Console:
+console.log("Xin chào thế giới!");   // In ra log thường
+console.warn("Cảnh báo!");           // In ra màu vàng
+console.error("Lỗi rồi!");          // In ra màu đỏ
+console.table([{name: "Alice"}, {name: "Bob"}]); // In dạng bảng
+
+// Thậm chí chạy code phức tạp:
+document.title = "Tôi đã đổi tên trang!";
+document.body.style.background = "lightblue";
+</code></pre>
+
+      <h3>Tab Network (Mạng)</h3>
+      <p>Hiển thị tất cả các request mạng mà trang web thực hiện. Đây là tab bạn dùng nhiều nhất khi debug API.</p>
+      <p>Thông tin quan trọng trong tab Network:</p>
+      <ul>
+        <li><strong>Name:</strong> Tên file hoặc URL của request</li>
+        <li><strong>Status:</strong> Mã trạng thái HTTP (200, 404, 500...)</li>
+        <li><strong>Type:</strong> Loại tài nguyên (document, stylesheet, script, xhr, fetch, img...)</li>
+        <li><strong>Size:</strong> Dung lượng file</li>
+        <li><strong>Time:</strong> Thời gian tải</li>
+        <li><strong>Waterfall:</strong> Biểu đồ thời gian, cho thấy request nào làm chậm trang</li>
+      </ul>
+
+      <h3>Tab Sources (Nguồn)</h3>
+      <p>Cho phép bạn xem và debug code JavaScript với debugger đầy đủ: đặt breakpoint, xem giá trị biến, thực thi từng dòng.</p>
+      <pre><code>// Trong code JS, thêm dòng này để dừng thực thi tại đó:
+debugger;
+
+// Hoặc đặt breakpoint trong tab Sources bằng cách
+// click vào số dòng bên trái
+</code></pre>
+
+      <h3>Tab Performance và Lighthouse</h3>
+      <p><strong>Performance:</strong> Ghi lại và phân tích hiệu năng trang web: FPS, rendering, scripting, layout.<br>
+      <strong>Lighthouse:</strong> Tự động kiểm tra và cho điểm trang web về Performance, Accessibility, SEO, Best Practices.</p>
+
+      <div class="callout info">
+        <div class="callout-title">💡 Mẹo DevTools</div>
+        <p>Nhấn <strong>Ctrl+Shift+P</strong> trong DevTools để mở Command Palette — giống VS Code. Bạn có thể tìm nhanh bất kỳ tính năng nào của DevTools. Thử gõ "dark mode" để bật giao diện tối cho DevTools!</p>
+      </div>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+        <h3>Bài tập 1.1: Khám phá Network Tab</h3>
+        <ol>
+          <li>Mở Chrome và truy cập <strong>https://www.youtube.com</strong></li>
+          <li>Mở DevTools (F12) và chuyển sang tab <strong>Network</strong></li>
+          <li>Reload lại trang (F5)</li>
+          <li>Quan sát và ghi lại:
+            <ul>
+              <li>Có bao nhiêu request được thực hiện?</li>
+              <li>Request đầu tiên (document) có status code gì?</li>
+              <li>Có những loại tài nguyên nào được tải (JS, CSS, Image, XHR...)?</li>
+              <li>Tổng dung lượng trang là bao nhiêu?</li>
+              <li>Tổng thời gian tải là bao nhiêu giây?</li>
+            </ul>
+          </li>
+          <li>Lọc chỉ xem request loại <strong>XHR/Fetch</strong> — đây là các API call của YouTube để lấy dữ liệu video. Click vào một request, xem tab <strong>Response</strong> để thấy dữ liệu JSON trả về.</li>
+        </ol>
+
+        <h3>Bài tập 1.2: Thực hành Console</h3>
+        <p>Mở Console của DevTools và thử các lệnh sau:</p>
+        <pre><code>// Thay đổi title của trang
+document.title = "Tôi đã học DevTools!"
+
+// Đếm số lượng thẻ img trên trang
+document.querySelectorAll("img").length
+
+// Lấy URL hiện tại
+window.location.href
+
+// Thay đổi màu nền trang
+document.body.style.backgroundColor = "#1a1a2e"</code></pre>
+
+        <h3>Bài tập 1.3: Tìm tài nguyên ẩn</h3>
+        <p>Truy cập bất kỳ trang web nào bạn yêu thích. Dùng tab <strong>Elements</strong> để:</p>
+        <ol>
+          <li>Tìm và đọc toàn bộ nội dung meta description của trang (thẻ <code>&lt;meta name="description"&gt;</code>)</li>
+          <li>Tìm màu chính (primary color) mà trang web sử dụng bằng cách inspect phần tử nổi bật nhất</li>
+          <li>Thử thay đổi nội dung text của một đoạn văn bản trên trang (click đôi vào text trong Elements)</li>
+        </ol>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Sự khác biệt cơ bản giữa <em>Internet</em> và <em>World Wide Web</em> là gì?</p>
+          <ul>
+            <li>A. Đây là hai cách gọi khác nhau của cùng một thứ</li>
+            <li>B. Internet là hạ tầng mạng vật lý, còn Web là một dịch vụ chạy trên Internet</li>
+            <li>C. Web ra đời trước Internet</li>
+            <li>D. Internet chỉ dành cho máy tính, Web dành cho điện thoại</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Internet là "con đường cao tốc" (hạ tầng vật lý), còn Web là một trong nhiều "xe" chạy trên đó.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Khi trình duyệt gửi request <code>GET /products HTTP/1.1</code> đến server và nhận được response có status code <code>404</code>, điều đó có nghĩa là?</p>
+          <ul>
+            <li>A. Server gặp lỗi nội bộ</li>
+            <li>B. Yêu cầu thành công và dữ liệu đã được trả về</li>
+            <li>C. Tài nguyên được yêu cầu không tồn tại trên server</li>
+            <li>D. Client chưa được xác thực</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: C</strong> — 404 Not Found có nghĩa là server không tìm thấy tài nguyên mà client yêu cầu tại đường dẫn đó.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Loại ứng dụng web nào phù hợp nhất khi bạn muốn SEO tốt VÀ trải nghiệm người dùng mượt mà như app mobile?</p>
+          <ul>
+            <li>A. Static Site</li>
+            <li>B. SPA (Single Page Application)</li>
+            <li>C. SSR (Server-Side Rendering)</li>
+            <li>D. PWA (Progressive Web App)</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: C</strong> — SSR kết hợp ưu điểm của cả hai: HTML đầy đủ cho SEO (search engine crawl được) và JavaScript tiếp quản sau đó để tạo UX mượt mà.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> Trong Chrome DevTools, bạn muốn xem dữ liệu JSON mà một API trả về khi trang load. Bạn nên dùng tab nào?</p>
+          <ul>
+            <li>A. Elements</li>
+            <li>B. Console</li>
+            <li>C. Network</li>
+            <li>D. Sources</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: C</strong> — Tab Network hiển thị tất cả các request mạng bao gồm API calls. Bạn có thể click vào từng request để xem Response headers và body.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> DNS (Domain Name System) có chức năng chính là?</p>
+          <ul>
+            <li>A. Mã hóa kết nối giữa trình duyệt và server</li>
+            <li>B. Chuyển đổi tên miền (như google.com) thành địa chỉ IP</li>
+            <li>C. Lưu trữ file HTML trên server</li>
+            <li>D. Kiểm soát băng thông mạng</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — DNS là "quyển danh bạ" của Internet, giúp máy tính tìm địa chỉ IP tương ứng với tên miền để có thể kết nối.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <span>← Không có chương trước</span>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-02.html">Chương 2: HTML — Xương sống →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

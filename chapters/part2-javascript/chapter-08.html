@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 8: JavaScript Hiện đại (ES6+) — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="chapter-08.html" class="nav-link active">Ch.8 JavaScript Hiện đại</a>
+
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 8 · Phần 2: JavaScript</div>
+        <h1 class="chapter-title">JavaScript Hiện đại (ES6+)</h1>
+        <p class="chapter-desc">ES6 (ECMAScript 2015) và các phiên bản sau đã cách mạng hóa cách viết JavaScript. Chương này tổng hợp các tính năng hiện đại quan trọng nhất mà bạn sẽ dùng hàng ngày trong React, đồng thời giới thiệu TypeScript.</p>
+      </div>
+
+      <h2>8.1 Template Literals</h2>
+      <p>Template literals dùng backtick (`` ` ``) thay dấu nháy, cho phép nhúng biểu thức và viết chuỗi nhiều dòng.</p>
+      <pre><code>const name = "An";
+const age = 25;
+
+// Cũ: nối chuỗi bằng +
+const greeting1 = "Xin chào, " + name + "! Bạn " + age + " tuổi.";
+
+// Mới: Template literal
+const greeting2 = `Xin chào, ${name}! Bạn ${age} tuổi.`;
+
+// Biểu thức phức tạp
+const price = 15000000;
+const msg = `Giá: ${price.toLocaleString('vi-VN')}đ (${price > 10000000 ? 'cao cấp' : 'tầm trung'})`;
+
+// Chuỗi nhiều dòng
+const html = `
+  &lt;div class="card"&gt;
+    &lt;h2&gt;${name}&lt;/h2&gt;
+    &lt;p&gt;Tuổi: ${age}&lt;/p&gt;
+  &lt;/div&gt;
+`;
+
+// Tagged template literals (nâng cao)
+function highlight(strings, ...values) {
+  return strings.reduce((result, str, i) =>
+    result + str + (values[i] ? `&lt;strong&gt;${values[i]}&lt;/strong&gt;` : ''), '');
+}
+const result = highlight`Tên: ${name}, Tuổi: ${age}`;
+// "Tên: &lt;strong&gt;An&lt;/strong&gt;, Tuổi: &lt;strong&gt;25&lt;/strong&gt;"
+// (Styled-components dùng kỹ thuật này!)</code></pre>
+
+      <h2>8.2 Modules — Import và Export</h2>
+      <p>Modules cho phép chia code thành nhiều file riêng biệt, tái sử dụng và dễ bảo trì. Đây là nền tảng của mọi dự án React.</p>
+
+      <pre><code>// === utils.js ===
+// Named export — có thể export nhiều thứ
+export const PI = 3.14159;
+
+export function add(a, b) {
+  return a + b;
+}
+
+export const multiply = (a, b) => a * b;
+
+// Export class
+export class Calculator {
+  add(a, b) { return a + b; }
+}
+
+// Default export — mỗi file chỉ có 1
+export default function subtract(a, b) {
+  return a - b;
+}
+
+// === main.js ===
+// Import named exports
+import { PI, add, multiply } from './utils.js';
+
+// Import với alias
+import { multiply as mul } from './utils.js';
+
+// Import default
+import subtract from './utils.js';
+
+// Import tất cả
+import * as utils from './utils.js';
+utils.add(1, 2);
+
+// Import cả default và named
+import subtract, { add, PI } from './utils.js';
+
+// === Trong React ===
+// Component files thường dùng default export
+// utils/hooks dùng named export
+
+// Button.jsx
+export default function Button({ children, onClick }) {
+  return &lt;button onClick={onClick}&gt;{children}&lt;/button&gt;;
+}
+
+// hooks/useFetch.js
+export function useFetch(url) { /* ... */ }
+export function useLocalStorage(key) { /* ... */ }
+
+// App.jsx
+import Button from './Button';       // default
+import { useFetch } from './hooks/useFetch'; // named</code></pre>
+
+      <h2>8.3 Optional Chaining và Nullish Coalescing</h2>
+      <p>Hai tính năng ES2020 này giải quyết vấn đề truy cập dữ liệu lồng nhau có thể null/undefined — rất phổ biến khi làm việc với API.</p>
+
+      <pre><code>// === Optional Chaining (?.) ===
+const user = {
+  name: "An",
+  address: {
+    city: "Hà Nội"
+  }
+};
+
+// Cũ: kiểm tra từng cấp
+const city1 = user && user.address && user.address.city;
+
+// Mới: optional chaining
+const city2 = user?.address?.city;  // "Hà Nội"
+
+// Nếu user là null/undefined → trả về undefined (không throw lỗi)
+const noUser = null;
+noUser?.address?.city; // undefined (OK!)
+
+// Với mảng
+const arr = null;
+arr?.[0];          // undefined
+
+// Với method call
+const obj = null;
+obj?.toString();   // undefined
+obj?.method?.();   // undefined
+
+// Ví dụ thực tế (data từ API)
+const response = await fetch('/api/user');
+const data = await response.json();
+const avatarUrl = data?.user?.profile?.avatar?.url ?? '/default-avatar.png';</code></pre>
+
+      <pre><code>// === Nullish Coalescing (??) ===
+// Trả về vế phải nếu vế trái là null hoặc undefined
+// Khác || ở chỗ: không coi 0, "" hay false là "falsy"
+
+const count = 0;
+count || 10;  // 10 (SAI! 0 là falsy)
+count ?? 10;  // 0  (ĐÚNG! 0 không phải null/undefined)
+
+const name = "";
+name || "Anonymous"; // "Anonymous" (SAI nếu muốn giữ "")
+name ?? "Anonymous"; // ""          (ĐÚNG!)
+
+// Ví dụ thực tế
+function displayCount(count) {
+  const display = count ?? 0; // Nếu count là null/undefined → dùng 0
+  return `Có ${display} sản phẩm`;
+}
+displayCount(null);      // "Có 0 sản phẩm"
+displayCount(undefined); // "Có 0 sản phẩm"
+displayCount(0);         // "Có 0 sản phẩm" (đúng!)
+displayCount(5);         // "Có 5 sản phẩm"
+
+// Nullish Assignment (??=)
+let config = { timeout: null };
+config.timeout ??= 5000; // Gán 5000 nếu timeout là null/undefined
+// { timeout: 5000 }</code></pre>
+
+      <h2>8.4 Các tính năng ES6+ khác quan trọng</h2>
+
+      <h3>Class (ES6)</h3>
+      <pre><code>class Animal {
+  #name; // Private field (ES2022)
+
+  constructor(name, sound) {
+    this.#name = name;
+    this.sound = sound;
+  }
+
+  speak() {
+    return `${this.#name} nói: ${this.sound}`;
+  }
+
+  // Static method — gọi trực tiếp trên class
+  static create(name, sound) {
+    return new Animal(name, sound);
+  }
+
+  // Getter/Setter
+  get name() { return this.#name; }
+  set name(value) {
+    if (!value) throw new Error("Tên không được rỗng");
+    this.#name = value;
+  }
+}
+
+class Dog extends Animal {
+  constructor(name) {
+    super(name, "Gâu gâu"); // Gọi constructor cha
+  }
+
+  fetch(item) {
+    return `${this.name} đi lấy ${item}!`;
+  }
+}
+
+const dog = new Dog("Rex");
+dog.speak(); // "Rex nói: Gâu gâu"
+dog.fetch("bóng"); // "Rex đi lấy bóng!"
+
+// Lưu ý: Trong React hiện đại, bạn dùng functional components
+// Không cần class components nữa (nhưng cần hiểu để đọc code cũ)</code></pre>
+
+      <h3>Promise.all, Promise.allSettled, Promise.race</h3>
+      <pre><code>// Promise.all — chạy song song, chờ tất cả hoàn thành
+// Nếu 1 promise fail → tất cả fail
+const [users, posts, comments] = await Promise.all([
+  fetch('/api/users').then(r => r.json()),
+  fetch('/api/posts').then(r => r.json()),
+  fetch('/api/comments').then(r => r.json()),
+]);
+
+// Promise.allSettled — chờ tất cả, không throw khi có lỗi
+const results = await Promise.allSettled([
+  fetch('/api/users'),
+  fetch('/api/nonexistent'), // có thể fail
+]);
+results.forEach(r => {
+  if (r.status === 'fulfilled') console.log(r.value);
+  else console.log('Lỗi:', r.reason);
+});
+
+// Promise.race — lấy kết quả của promise hoàn thành ĐẦU TIÊN
+const fastest = await Promise.race([
+  fetch('/api/server1'),
+  fetch('/api/server2'),
+]);
+
+// Promise.any — lấy kết quả ĐẦU TIÊN thành công (bỏ qua fail)
+const firstSuccess = await Promise.any([
+  fetch('/api/server1'), // có thể fail
+  fetch('/api/server2'), // backup server
+]);</code></pre>
+
+      <h3>Các tính năng nhỏ nhưng hữu ích</h3>
+      <pre><code>// Logical Assignment Operators (ES2021)
+let a = null;
+a ||= "default";  // a = a || "default" → "default"
+a &&= a.toUpperCase(); // a = a && a.toUpperCase()
+a ??= "fallback"; // a = a ?? "fallback"
+
+// Array destructuring
+const [first, second, ...rest] = [1, 2, 3, 4, 5];
+// first=1, second=2, rest=[3,4,5]
+
+// Swap biến
+let x = 1, y = 2;
+[x, y] = [y, x]; // x=2, y=1
+
+// String methods mới
+"  hello  ".trimStart();  // "hello  "
+"  hello  ".trimEnd();    // "  hello"
+"hello".padStart(8, "*"); // "***hello"
+"hello".padEnd(8, "*");   // "hello***"
+"ha".repeat(3);           // "hahaha"
+"abc".replaceAll("a", "x"); // "xbc"
+
+// Array methods mới
+Array.from({ length: 5 }, (_, i) => i + 1); // [1, 2, 3, 4, 5]
+[1, [2, [3, [4]]]].flat(Infinity); // [1, 2, 3, 4]
+[1, 2, 3].at(-1);  // 3 (index âm)
+[1, 2, 3].at(-2);  // 2
+
+// Object.hasOwn (thay hasOwnProperty)
+Object.hasOwn({ name: "An" }, "name"); // true
+
+// globalThis — truy cập global object trong mọi môi trường
+globalThis.setTimeout; // hoạt động trong browser và Node.js</code></pre>
+
+      <h2>8.5 Giới thiệu TypeScript</h2>
+      <p><strong>TypeScript</strong> là ngôn ngữ mở rộng của JavaScript, thêm vào hệ thống kiểu (type system) tĩnh. TypeScript compile xuống JavaScript thuần trước khi chạy.</p>
+
+      <h3>Tại sao cần TypeScript?</h3>
+      <pre><code>// JavaScript — không có kiểu tĩnh
+function add(a, b) {
+  return a + b;
+}
+add(1, 2);        // 3 (đúng)
+add("1", 2);      // "12" (sai! Không có lỗi nào)
+add(1, "2");      // "12" (sai!)
+add(true, false); // 1 (đúng về mặt kỹ thuật nhưng kỳ lạ)
+
+// TypeScript — phát hiện lỗi ngay lúc viết code
+function add(a: number, b: number): number {
+  return a + b;
+}
+add(1, 2);        // OK
+add("1", 2);      // ❌ Error: Argument of type 'string' is not assignable to parameter of type 'number'</code></pre>
+
+      <h3>TypeScript cơ bản</h3>
+      <pre><code>// Kiểu nguyên thủy
+let name: string = "An";
+let age: number = 25;
+let active: boolean = true;
+let nothing: null = null;
+let undef: undefined = undefined;
+
+// Mảng
+let numbers: number[] = [1, 2, 3];
+let names: Array&lt;string&gt; = ["An", "Bình"];
+
+// Object type
+let user: { name: string; age: number } = { name: "An", age: 25 };
+
+// Interface — định nghĩa "hình dạng" của object
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role?: string; // ? = optional (có thể không có)
+  readonly createdAt: Date; // không thể thay đổi
+}
+
+// Type alias
+type Point = { x: number; y: number };
+type Status = "pending" | "active" | "inactive"; // Union type
+type ID = string | number;
+
+// Generic types
+function identity&lt;T&gt;(arg: T): T {
+  return arg;
+}
+identity&lt;string&gt;("hello"); // T = string
+identity&lt;number&gt;(42);       // T = number
+
+// TypeScript với React
+interface ButtonProps {
+  children: React.ReactNode;
+  onClick: () => void;
+  variant?: "primary" | "secondary";
+  disabled?: boolean;
+}
+
+const Button = ({ children, onClick, variant = "primary", disabled = false }: ButtonProps) => {
+  return &lt;button onClick={onClick} className={variant} disabled={disabled}&gt;{children}&lt;/button&gt;;
+};</code></pre>
+
+      <div class="callout info">
+        <div class="callout-title">💡 TypeScript trong dự án thực tế</div>
+        <p>Hầu hết dự án React hiện đại dùng TypeScript. Nó giúp: (1) Phát hiện bug sớm ngay khi gõ, (2) IDE autocomplete chính xác hơn, (3) Code dễ đọc và maintain, (4) Refactor an toàn. Chúng ta sẽ đi sâu vào TypeScript với React ở Chương 21.</p>
+      </div>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+
+        <h3>Bài tập 8.1: Tái cấu trúc với ES6+</h3>
+        <p>Chuyển đổi đoạn code sau sang ES6+ hiện đại:</p>
+        <pre><code>// Code cũ — cần cải thiện
+var getUserData = function(userId) {
+  return fetch('/api/users/' + userId)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+      var user = data.user;
+      var name = user ? user.name : 'Unknown';
+      var city = user && user.address ? user.address.city : 'Unknown';
+      return { name: name, city: city };
+    })
+    .catch(function(error) {
+      console.error('Error: ' + error.message);
+    });
+};
+
+// Mục tiêu: dùng arrow function, async/await, optional chaining, ??
+const getUserData = async (userId) => {
+  // ...
+};</code></pre>
+
+        <h3>Bài tập 8.2: Module System</h3>
+        <p>Tạo module <code>math.js</code> với các hàm và import vào <code>main.js</code>:</p>
+        <pre><code>// math.js — export:
+// - PI constant
+// - add, subtract, multiply, divide functions
+// - factorial function (default export)
+// - Stats object với min, max, average methods
+
+// main.js — import và sử dụng tất cả</code></pre>
+
+        <h3>Bài tập 8.3: TypeScript Types</h3>
+        <pre><code>// Định nghĩa TypeScript interfaces cho:
+
+// 1. Product
+interface Product {
+  // id, name, price, category, inStock, tags
+}
+
+// 2. CartItem (Product + quantity)
+
+// 3. Order (user info + items + total + status)
+
+// 4. Hàm calculateTotal nhận CartItem[] và trả về number
+function calculateTotal(items: CartItem[]): number {
+  // ...
+}</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Sự khác biệt giữa <code>??</code> (nullish coalescing) và <code>||</code> (logical OR)?</p>
+          <ul>
+            <li>A. Chúng hoàn toàn giống nhau</li>
+            <li>B. <code>??</code> chỉ trả về vế phải khi vế trái là <code>null</code> hoặc <code>undefined</code>, còn <code>||</code> coi cả <code>0</code>, <code>""</code>, <code>false</code> là falsy</li>
+            <li>C. <code>||</code> nhanh hơn <code>??</code></li>
+            <li>D. <code>??</code> chỉ dùng được trong TypeScript</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>0 ?? "default"</code> trả về <code>0</code>; <code>0 || "default"</code> trả về <code>"default"</code>. Dùng <code>??</code> khi muốn giữ các giá trị "falsy" hợp lệ như 0, "", false.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Kết quả của <code>user?.profile?.avatar ?? '/default.png'</code> khi <code>user = { profile: null }</code>?</p>
+          <ul>
+            <li>A. Lỗi (TypeError)</li>
+            <li>B. <code>null</code></li>
+            <li>C. <code>'/default.png'</code></li>
+            <li>D. <code>undefined</code></li>
+          </ul>
+          <p class="answer"><strong>Đáp án: C</strong> — <code>user?.profile?.avatar</code>: <code>user</code> tồn tại, <code>profile</code> là null → <code>null?.avatar</code> → <code>undefined</code>. Sau đó <code>undefined ?? '/default.png'</code> → <code>'/default.png'</code>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Mỗi file JavaScript/TypeScript có thể có bao nhiêu <code>default export</code>?</p>
+          <ul>
+            <li>A. Không giới hạn</li>
+            <li>B. Tối đa 2</li>
+            <li>C. Chỉ 1</li>
+            <li>D. Không thể dùng default export</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: C</strong> — Mỗi module chỉ có thể có <strong>một</strong> default export, nhưng có thể có nhiều named exports. Khi import default, bạn có thể đặt bất kỳ tên nào.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> TypeScript khác JavaScript ở điểm gì cơ bản nhất?</p>
+          <ul>
+            <li>A. TypeScript chạy nhanh hơn JavaScript</li>
+            <li>B. TypeScript thêm hệ thống kiểu tĩnh, phát hiện lỗi khi viết code thay vì khi chạy</li>
+            <li>C. TypeScript là ngôn ngữ hoàn toàn khác, không liên quan đến JavaScript</li>
+            <li>D. TypeScript chỉ dành cho backend</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — TypeScript là superset của JavaScript: mọi JS hợp lệ đều là TS hợp lệ. TypeScript thêm type annotations, phát hiện lỗi lúc compile (trước khi chạy), sau đó compile xuống JavaScript thuần.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> Kết quả của <code>Promise.all([Promise.resolve(1), Promise.reject('lỗi'), Promise.resolve(3)])</code>?</p>
+          <ul>
+            <li>A. Trả về <code>[1, 'lỗi', 3]</code></li>
+            <li>B. Bị reject với lý do <code>'lỗi'</code></li>
+            <li>C. Trả về <code>[1, undefined, 3]</code></li>
+            <li>D. Bị reject với tất cả lỗi</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>Promise.all</code> "fail fast": nếu bất kỳ promise nào bị reject, toàn bộ bị reject ngay lập tức. Dùng <code>Promise.allSettled</code> nếu muốn nhận kết quả của tất cả dù có lỗi.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-07.html">← Chương 7: Lập trình Bất đồng bộ</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="../part3-react-basic/chapter-09.html">Chương 9: Giới thiệu React →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

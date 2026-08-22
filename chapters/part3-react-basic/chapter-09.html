@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 9: Giới thiệu React — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="chapter-09.html" class="nav-link active">Ch.9 Giới thiệu React</a>
+        <a href="chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="chapter-14.html" class="nav-link">Ch.14 React Router</a>
+
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 9 · Phần 3: React Cơ bản</div>
+        <h1 class="chapter-title">Giới thiệu React</h1>
+        <p class="chapter-desc">Đây là bước ngoặt trong hành trình học của bạn — chúng ta chính thức bước vào thế giới React. Chương này giải thích tại sao React ra đời, cách nó hoạt động, và thiết lập môi trường phát triển đầy đủ.</p>
+      </div>
+
+      <h2>9.1 Tại sao React ra đời?</h2>
+      <p>Trước khi có React, lập trình web tương tác rất phức tạp. Hãy nhìn vào vấn đề thực tế:</p>
+
+      <pre><code>// Cách làm truyền thống — Vanilla JavaScript
+// Tưởng tượng một trang Facebook với hàng trăm component:
+// - Like count cần cập nhật
+// - Comment counter cần cập nhật
+// - Notification badge cần cập nhật
+// - ...
+
+function updateLikeCount(postId, newCount) {
+  document.getElementById(`like-${postId}`).textContent = newCount;
+  document.getElementById(`like-icon-${postId}`).classList.toggle('active');
+  // Còn phải cập nhật analytics, notification, ...
+  // Code trở nên rất phức tạp và dễ bug!
+}
+
+// Mỗi khi state thay đổi → phải tự tay cập nhật DOM
+// Rất dễ quên cập nhật một chỗ nào đó → bug</code></pre>
+
+      <p>Facebook gặp đúng vấn đề này vào năm 2011. Họ tạo ra React để giải quyết: <strong>"Thay vì nói DOM phải thay đổi như thế nào, hãy chỉ mô tả UI trông như thế nào, và để React lo phần còn lại."</strong></p>
+
+      <h3>React giải quyết vấn đề gì?</h3>
+      <ul>
+        <li><strong>Declarative UI:</strong> Bạn mô tả UI theo state hiện tại. React tự cập nhật DOM khi state thay đổi.</li>
+        <li><strong>Component-based:</strong> UI chia thành các component tái sử dụng, dễ test và maintain.</li>
+        <li><strong>Hiệu năng:</strong> Virtual DOM đảm bảo chỉ cập nhật phần DOM thực sự thay đổi.</li>
+        <li><strong>Hệ sinh thái lớn:</strong> Cộng đồng khổng lồ, thư viện phong phú, nhiều việc làm.</li>
+      </ul>
+
+      <h2>9.2 Single Page Application (SPA)</h2>
+      <p>React thường dùng để xây dựng <strong>SPA (Single Page Application)</strong>:</p>
+
+      <div class="mermaid">
+flowchart LR
+    subgraph MPA["📄 Multi-Page App — Truyền thống"]
+        U1(["👤 User"]) -->|"Click link"| S1["⚙️ Server"]
+        S1 -->|"Full HTML
+(page reload)"| U1
+    end
+    subgraph SPA["⚛️ Single Page App — React"]
+        U2(["👤 User"]) -->|"Load lần đầu"| B2["📦 JS Bundle
+(tải 1 lần duy nhất)"]
+        B2 -->|"Client routing"| C2["🔄 Swap Component"]
+        C2 -->|"Fetch khi cần"| API["🔌 REST API"]
+        API -->|"JSON data"| C2
+    end
+    style MPA fill:#1e2127,stroke:#e06c75
+    style SPA fill:#1e2127,stroke:#61dafb
+</div>
+
+      <h2>9.3 Virtual DOM</h2>
+      <p>Đây là "bí quyết" hiệu năng của React. Thao tác DOM thực rất chậm. React tạo ra một bản copy DOM trong bộ nhớ (Virtual DOM) và dùng thuật toán <strong>diffing</strong> để tính toán thay đổi tối thiểu.</p>
+
+      <div class="mermaid">
+flowchart TD
+    SC["🔄 State / Props thay đổi"] --> NV["🆕 Virtual DOM mới
+(JavaScript object — rất nhanh)"]
+    OV["📋 Virtual DOM cũ"] --> DIFF["⚡ Diffing Algorithm
+so sánh 2 cây"]
+    NV --> DIFF
+    DIFF -->|"Chỉ phần khác biệt"| PATCH["🎯 Minimal Patch"]
+    PATCH --> RDOM["🌐 Real DOM — Browser
+(update tối thiểu)"]
+    style SC fill:#282c34,stroke:#e5c07b
+    style DIFF fill:#282c34,stroke:#61dafb
+    style RDOM fill:#282c34,stroke:#98c379
+</div>
+
+      <div class="callout info">
+        <div class="callout-title">💡 Virtual DOM không phải lúc nào cũng nhanh hơn</div>
+        <p>Virtual DOM có overhead tính toán. Nếu UI đơn giản, Vanilla JS có thể nhanh hơn. React tỏa sáng ở ứng dụng phức tạp với nhiều component và state thay đổi thường xuyên — ở đó React batch và tối ưu updates tốt hơn.</p>
+      </div>
+
+      <h2>9.4 Cài đặt môi trường</h2>
+
+      <h3>Bước 1: Cài Node.js</h3>
+      <p>Node.js là runtime JavaScript cho phép chạy JavaScript ngoài trình duyệt. npm (Node Package Manager) đi kèm với Node.js.</p>
+      <pre><code># Kiểm tra đã cài chưa
+node --version   # Nên có v18+ hoặc v20+
+npm --version    # v9+
+
+# Nếu chưa có: tải tại nodejs.org (chọn LTS version)
+# Khuyến nghị: dùng nvm (Node Version Manager) để quản lý nhiều version</code></pre>
+
+      <h3>Bước 2: Chọn package manager</h3>
+      <pre><code># npm — có sẵn khi cài Node.js
+npm install react     # cài package
+npm run dev           # chạy dev server
+
+# yarn — nhanh hơn, cần cài riêng
+npm install -g yarn
+yarn add react
+
+# pnpm — tiết kiệm disk space nhất (khuyến nghị!)
+npm install -g pnpm
+pnpm add react</code></pre>
+
+      <h3>Bước 3: Tạo dự án với Vite</h3>
+      <p><strong>Vite</strong> là build tool hiện đại, nhanh hơn Create React App nhiều lần. Đây là lựa chọn tiêu chuẩn hiện nay.</p>
+      <pre><code># Tạo dự án React mới với Vite
+npm create vite@latest my-react-app -- --template react
+
+# Hoặc với TypeScript (khuyến nghị)
+npm create vite@latest my-react-app -- --template react-ts
+
+# Chạy dự án
+cd my-react-app
+npm install
+npm run dev
+
+# → Mở http://localhost:5173 trên trình duyệt</code></pre>
+
+      <h2>9.5 Cấu trúc thư mục dự án React</h2>
+      <pre><code>my-react-app/
+├── public/                   # File tĩnh (favicon, robots.txt...)
+│   └── vite.svg
+├── src/                      # Code nguồn của bạn
+│   ├── assets/               # Hình ảnh, fonts...
+│   ├── components/           # React components
+│   │   ├── Button.jsx
+│   │   └── Header.jsx
+│   ├── pages/                # Các trang (khi dùng React Router)
+│   │   ├── Home.jsx
+│   │   └── About.jsx
+│   ├── hooks/                # Custom hooks
+│   ├── utils/                # Helper functions
+│   ├── App.jsx               # Root component
+│   ├── App.css
+│   ├── main.jsx              # Entry point
+│   └── index.css             # Global styles
+├── index.html                # HTML template duy nhất
+├── package.json              # Dependencies và scripts
+├── vite.config.js            # Cấu hình Vite
+└── .eslintrc.cjs             # Cấu hình ESLint</code></pre>
+
+      <h3>Các file quan trọng</h3>
+      <pre><code>// index.html — HTML duy nhất, React mount vào div#root
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;title&gt;My React App&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id="root"&gt;&lt;/div&gt; &lt;!-- React render vào đây --&gt;
+    &lt;script type="module" src="/src/main.jsx"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <pre><code>// src/main.jsx — Entry point
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  &lt;React.StrictMode&gt;
+    &lt;App /&gt;
+  &lt;/React.StrictMode&gt;
+)</code></pre>
+
+      <pre><code>// src/App.jsx — Root component
+import { useState } from 'react'
+import './App.css'
+
+function App() {
+  const [count, setCount] = useState(0)
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Xin chào React!&lt;/h1&gt;
+      &lt;p&gt;Bạn đã click {count} lần&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;
+        Click tôi
+      &lt;/button&gt;
+    &lt;/div&gt;
+  )
+}
+
+export default App</code></pre>
+
+      <h2>9.6 React Developer Tools</h2>
+      <p>Cài extension <strong>React Developer Tools</strong> cho Chrome/Firefox. Đây là công cụ debug không thể thiếu khi làm việc với React:</p>
+      <ul>
+        <li><strong>Components tab:</strong> Xem cây component, props và state của từng component.</li>
+        <li><strong>Profiler tab:</strong> Đo lường hiệu năng, xem component nào render nhiều nhất.</li>
+        <li>Highlight component khi hover để biết nó render ở đâu trên trang.</li>
+      </ul>
+
+      <div class="callout info">
+        <div class="callout-title">💡 React StrictMode</div>
+        <p><code>&lt;React.StrictMode&gt;</code> trong <code>main.jsx</code> giúp phát hiện các vấn đề tiềm ẩn. Trong development, React sẽ render component <strong>hai lần</strong> để phát hiện side effects không mong muốn. Đừng lo — điều này chỉ xảy ra ở development, không ảnh hưởng production.</p>
+      </div>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+
+        <h3>Bài tập 9.1: Tạo và Khám phá dự án React đầu tiên</h3>
+        <ol>
+          <li>Cài Node.js (nếu chưa có) và kiểm tra: <code>node --version</code></li>
+          <li>Tạo dự án mới: <code>npm create vite@latest hello-react -- --template react</code></li>
+          <li>Cài dependencies và chạy: <code>cd hello-react && npm install && npm run dev</code></li>
+          <li>Mở <code>http://localhost:5173</code> trong trình duyệt</li>
+          <li>Mở <code>src/App.jsx</code> và thay đổi:
+            <ul>
+              <li>Tiêu đề thành tên của bạn</li>
+              <li>Nút "click me" thành "Click tôi"</li>
+              <li>Xem thay đổi tự động cập nhật (Hot Module Replacement)</li>
+            </ul>
+          </li>
+        </ol>
+
+        <h3>Bài tập 9.2: Cài React DevTools và Khám phá</h3>
+        <ol>
+          <li>Cài React Developer Tools cho Chrome từ Chrome Web Store</li>
+          <li>Mở dự án React ở trên</li>
+          <li>Mở DevTools → Tab "Components"</li>
+          <li>Click vào component App → xem state (count) thay đổi khi click nút</li>
+          <li>Thử edit state trực tiếp trong DevTools</li>
+        </ol>
+
+        <h3>Bài tập 9.3: Khám phá cấu trúc build</h3>
+        <pre><code># Chạy build production
+npm run build
+
+# Quan sát thư mục dist/ được tạo ra:
+# - dist/index.html
+# - dist/assets/index-[hash].js  ← code React bundle
+# - dist/assets/index-[hash].css
+
+# Preview build production
+npm run preview
+
+# So sánh kích thước file .js với code gốc trong src/</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Virtual DOM trong React là gì?</p>
+          <ul>
+            <li>A. Một DOM đặc biệt chạy nhanh hơn DOM thực</li>
+            <li>B. Một bản copy của DOM trong bộ nhớ dạng JavaScript object, dùng để tính toán thay đổi tối thiểu</li>
+            <li>C. Một tính năng chỉ có trong React Native</li>
+            <li>D. Một cách để ẩn DOM khỏi người dùng</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Virtual DOM là JavaScript object tree mô phỏng DOM thực. React so sánh Virtual DOM cũ và mới (diffing), sau đó chỉ cập nhật những phần DOM thực thực sự thay đổi (reconciliation).</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Vite khác Create React App (CRA) ở điểm gì quan trọng nhất?</p>
+          <ul>
+            <li>A. Vite chỉ hỗ trợ TypeScript</li>
+            <li>B. Vite nhanh hơn đáng kể vì dùng native ES modules trong development, không bundle toàn bộ</li>
+            <li>C. CRA tốt hơn cho production</li>
+            <li>D. Vite không hỗ trợ React</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Vite dùng native ES modules của trình duyệt trong development mode → không cần bundle → khởi động gần như tức thì. CRA phải bundle toàn bộ app mỗi lần → chậm hơn nhiều với project lớn.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Tại sao React được gọi là "declarative"?</p>
+          <ul>
+            <li>A. Vì bạn phải khai báo (declare) tất cả biến</li>
+            <li>B. Vì bạn mô tả UI trông như thế nào theo state, không cần chỉ định từng bước thay đổi DOM</li>
+            <li>C. Vì React declarate (khai báo) các thư viện cần dùng</li>
+            <li>D. Vì code React rõ ràng (clear) hơn JavaScript thông thường</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Declarative: bạn nói "UI cần trông như thế này" (dựa trên state). Imperative: bạn nói "làm bước 1, bước 2, bước 3 để thay đổi UI". React lo việc "làm như thế nào", bạn chỉ cần lo "kết quả là gì".</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> File nào trong dự án React Vite là điểm vào (entry point) của ứng dụng?</p>
+          <ul>
+            <li>A. <code>src/App.jsx</code></li>
+            <li>B. <code>index.html</code></li>
+            <li>C. <code>src/main.jsx</code></li>
+            <li>D. <code>package.json</code></li>
+          </ul>
+          <p class="answer"><strong>Đáp án: C</strong> — <code>src/main.jsx</code> là nơi React được khởi tạo và mount vào DOM (<code>ReactDOM.createRoot</code>). <code>index.html</code> là HTML template, <code>App.jsx</code> là root component.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> React StrictMode trong development sẽ render component bao nhiêu lần?</p>
+          <ul>
+            <li>A. 1 lần (như bình thường)</li>
+            <li>B. 2 lần (để phát hiện side effects)</li>
+            <li>C. 3 lần</li>
+            <li>D. Không giới hạn</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — StrictMode render component 2 lần trong development để phát hiện side effects không tinh khiết (impure render functions). Chỉ xảy ra trong development, không ảnh hưởng production build.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="../part2-javascript/chapter-08.html">← Chương 8: JavaScript Hiện đại</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-10.html">Chương 10: JSX &amp; Component →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

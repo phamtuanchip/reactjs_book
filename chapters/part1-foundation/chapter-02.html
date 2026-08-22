@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 2: HTML — Xương sống trang web — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="chapter-02.html" class="nav-link active">Ch.2 HTML — Xương sống</a>
+        <a href="chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 2 · Phần 1: Nền tảng Web</div>
+        <h1 class="chapter-title">HTML — Xương sống của trang web</h1>
+        <p class="chapter-desc">HTML là ngôn ngữ đánh dấu định nghĩa cấu trúc và ý nghĩa của nội dung web. Mọi trang web đều bắt đầu từ HTML — từ Google đến Facebook, từ blog cá nhân đến ứng dụng React phức tạp.</p>
+      </div>
+
+      <h2>2.1 HTML là gì?</h2>
+      <p><strong>HTML</strong> (HyperText Markup Language — Ngôn ngữ Đánh dấu Siêu văn bản) không phải là ngôn ngữ lập trình. Nó là <strong>ngôn ngữ đánh dấu</strong> — dùng các "thẻ" (tag) để mô tả cấu trúc và ý nghĩa của nội dung.</p>
+      <p>Hãy nghĩ về HTML như bộ xương của cơ thể người: nó tạo ra cấu trúc, xác định vị trí và vai trò của từng phần. CSS sau này sẽ là "da thịt và quần áo" (giao diện), còn JavaScript là "cơ bắp" (hành vi).</p>
+
+      <h3>Cấu trúc một tài liệu HTML</h3>
+      <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="vi"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Tiêu đề trang — hiển thị trên tab trình duyệt&lt;/title&gt;
+  &lt;!-- CSS, fonts, và meta khác đặt ở đây --&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Toàn bộ nội dung hiển thị đặt ở đây --&gt;
+  &lt;h1&gt;Xin chào thế giới!&lt;/h1&gt;
+  &lt;p&gt;Đây là đoạn văn bản đầu tiên của tôi.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <p>Giải thích từng phần:</p>
+      <ul>
+        <li><code>&lt;!DOCTYPE html&gt;</code> — Khai báo đây là tài liệu HTML5 (phiên bản hiện đại nhất).</li>
+        <li><code>&lt;html lang="vi"&gt;</code> — Phần tử gốc, bao bọc toàn bộ tài liệu. <code>lang="vi"</code> khai báo ngôn ngữ tiếng Việt (giúp SEO và accessibility).</li>
+        <li><code>&lt;head&gt;</code> — Phần "đầu trang" chứa thông tin meta, không hiển thị trực tiếp lên trang.</li>
+        <li><code>&lt;meta charset="UTF-8"&gt;</code> — Khai báo bộ ký tự UTF-8, hỗ trợ tiếng Việt và mọi ngôn ngữ.</li>
+        <li><code>&lt;meta name="viewport"&gt;</code> — Cần thiết cho responsive design trên thiết bị di động.</li>
+        <li><code>&lt;body&gt;</code> — Phần "thân trang" chứa toàn bộ nội dung hiển thị.</li>
+      </ul>
+
+      <div class="callout info">
+        <div class="callout-title">💡 Cú pháp thẻ HTML</div>
+        <p>Hầu hết thẻ HTML có dạng: <code>&lt;tên-thẻ&gt;nội dung&lt;/tên-thẻ&gt;</code> (mở và đóng). Một số thẻ "tự đóng" không có nội dung: <code>&lt;img&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;br&gt;</code>, <code>&lt;hr&gt;</code>.</p>
+      </div>
+
+      <h2>2.2 Các thẻ HTML phổ biến</h2>
+
+      <h3>Tiêu đề (Headings)</h3>
+      <p>HTML có 6 cấp tiêu đề, từ <code>h1</code> (quan trọng nhất) đến <code>h6</code>:</p>
+      <pre><code>&lt;h1&gt;Tiêu đề cấp 1 — Thường dùng cho tên trang/bài viết (chỉ dùng 1 lần)&lt;/h1&gt;
+&lt;h2&gt;Tiêu đề cấp 2 — Các phần chính của trang&lt;/h2&gt;
+&lt;h3&gt;Tiêu đề cấp 3 — Các mục nhỏ trong phần&lt;/h3&gt;
+&lt;h4&gt;Tiêu đề cấp 4&lt;/h4&gt;
+&lt;h5&gt;Tiêu đề cấp 5&lt;/h5&gt;
+&lt;h6&gt;Tiêu đề cấp 6 — ít dùng nhất&lt;/h6&gt;</code></pre>
+      <div class="callout warning">
+        <div class="callout-title">⚠️ Quan trọng</div>
+        <p>Đừng chọn thẻ heading vì kích thước chữ — hãy dùng CSS cho việc đó. Chọn heading vì <strong>cấu trúc ngữ nghĩa</strong>. <code>h1</code> là tiêu đề chính của trang, <code>h2</code> là các phần lớn, v.v. Cấu trúc đúng giúp SEO và screen reader.</p>
+      </div>
+
+      <h3>Văn bản</h3>
+      <pre><code>&lt;p&gt;Đây là một đoạn văn bản. Trình duyệt tự thêm khoảng cách
+   phía trên và dưới mỗi thẻ &lt;p&gt;.&lt;/p&gt;
+
+&lt;strong&gt;Chữ in đậm — mang ý nghĩa quan trọng&lt;/strong&gt;
+&lt;em&gt;Chữ in nghiêng — mang ý nghĩa nhấn mạnh&lt;/em&gt;
+&lt;mark&gt;Chữ được đánh dấu/tô sáng&lt;/mark&gt;
+&lt;code&gt;Đoạn code inline như console.log()&lt;/code&gt;
+&lt;del&gt;Chữ bị gạch ngang&lt;/del&gt;
+&lt;br&gt; &lt;!-- Xuống dòng không tạo đoạn mới --&gt;
+&lt;hr&gt; &lt;!-- Đường kẻ ngang phân cách --&gt;</code></pre>
+
+      <h3>Liên kết (Links)</h3>
+      <pre><code>&lt;!-- Link đến URL bên ngoài --&gt;
+&lt;a href="https://reactjs.org"&gt;Trang chủ React&lt;/a&gt;
+
+&lt;!-- Link đến trang trong cùng website --&gt;
+&lt;a href="/about.html"&gt;Về chúng tôi&lt;/a&gt;
+&lt;a href="./chapter-03.html"&gt;Chương tiếp theo&lt;/a&gt;
+
+&lt;!-- Mở trong tab mới --&gt;
+&lt;a href="https://github.com" target="_blank" rel="noopener noreferrer"&gt;
+  GitHub
+&lt;/a&gt;
+
+&lt;!-- Link neo (anchor) — cuộn đến phần trong trang --&gt;
+&lt;a href="#bai-tap"&gt;Đến phần bài tập&lt;/a&gt;
+&lt;div id="bai-tap"&gt;...&lt;/div&gt;
+
+&lt;!-- Link email và điện thoại --&gt;
+&lt;a href="mailto:example@email.com"&gt;Gửi email&lt;/a&gt;
+&lt;a href="tel:+84901234567"&gt;Gọi điện&lt;/a&gt;</code></pre>
+
+      <div class="callout info">
+        <div class="callout-title">💡 rel="noopener noreferrer"</div>
+        <p>Luôn thêm <code>rel="noopener noreferrer"</code> khi dùng <code>target="_blank"</code>. Nếu không, trang mở ra có thể truy cập <code>window.opener</code> và thực hiện tấn công phishing — một lỗ hổng bảo mật phổ biến.</p>
+      </div>
+
+      <h3>Hình ảnh</h3>
+      <pre><code>&lt;!-- Ảnh với đầy đủ thuộc tính --&gt;
+&lt;img
+  src="./images/cat.jpg"
+  alt="Một chú mèo đang ngủ"
+  width="400"
+  height="300"
+  loading="lazy"
+&gt;
+
+&lt;!-- Ảnh từ URL bên ngoài --&gt;
+&lt;img src="https://example.com/image.png" alt="Mô tả ảnh"&gt;
+
+&lt;!-- Figure với caption --&gt;
+&lt;figure&gt;
+  &lt;img src="diagram.png" alt="Sơ đồ kiến trúc React"&gt;
+  &lt;figcaption&gt;Hình 1: Kiến trúc component trong React&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+      <p>Thuộc tính <code>alt</code> cực kỳ quan trọng: nó mô tả ảnh cho người dùng mù (dùng screen reader) và hiện ra khi ảnh không tải được. Đây cũng là yếu tố SEO.</p>
+
+      <h3>Danh sách (Lists)</h3>
+      <pre><code>&lt;!-- Danh sách không thứ tự (unordered) — dùng dấu chấm --&gt;
+&lt;ul&gt;
+  &lt;li&gt;HTML&lt;/li&gt;
+  &lt;li&gt;CSS&lt;/li&gt;
+  &lt;li&gt;JavaScript&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- Danh sách có thứ tự (ordered) — dùng số 1, 2, 3... --&gt;
+&lt;ol&gt;
+  &lt;li&gt;Học HTML&lt;/li&gt;
+  &lt;li&gt;Học CSS&lt;/li&gt;
+  &lt;li&gt;Học JavaScript&lt;/li&gt;
+  &lt;li&gt;Học React&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!-- Danh sách định nghĩa (definition list) --&gt;
+&lt;dl&gt;
+  &lt;dt&gt;HTML&lt;/dt&gt;
+  &lt;dd&gt;Ngôn ngữ đánh dấu định nghĩa cấu trúc trang web&lt;/dd&gt;
+  &lt;dt&gt;CSS&lt;/dt&gt;
+  &lt;dd&gt;Ngôn ngữ tạo kiểu dáng và giao diện&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;!-- Danh sách lồng nhau --&gt;
+&lt;ul&gt;
+  &lt;li&gt;Frontend
+    &lt;ul&gt;
+      &lt;li&gt;HTML&lt;/li&gt;
+      &lt;li&gt;CSS&lt;/li&gt;
+      &lt;li&gt;JavaScript&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Backend&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+
+      <h3>Bảng (Tables)</h3>
+      <pre><code>&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Tên&lt;/th&gt;
+      &lt;th&gt;Tuổi&lt;/th&gt;
+      &lt;th&gt;Nghề nghiệp&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Nguyễn An&lt;/td&gt;
+      &lt;td&gt;25&lt;/td&gt;
+      &lt;td&gt;Frontend Developer&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Trần Bình&lt;/td&gt;
+      &lt;td&gt;28&lt;/td&gt;
+      &lt;td&gt;Full-stack Developer&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;td colspan="3"&gt;Tổng cộng: 2 người&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;</code></pre>
+
+      <h2>2.3 Form HTML</h2>
+      <p>Form là cách người dùng nhập dữ liệu và gửi đến server. Đây là thành phần cốt lõi của mọi ứng dụng web — đăng nhập, đăng ký, tìm kiếm, đặt hàng...</p>
+      <pre><code>&lt;form action="/submit" method="POST"&gt;
+  &lt;!-- Text input --&gt;
+  &lt;label for="name"&gt;Họ và tên:&lt;/label&gt;
+  &lt;input type="text" id="name" name="name" placeholder="Nguyễn Văn A" required&gt;
+
+  &lt;!-- Email input --&gt;
+  &lt;label for="email"&gt;Email:&lt;/label&gt;
+  &lt;input type="email" id="email" name="email" required&gt;
+
+  &lt;!-- Password --&gt;
+  &lt;label for="password"&gt;Mật khẩu:&lt;/label&gt;
+  &lt;input type="password" id="password" name="password" minlength="8"&gt;
+
+  &lt;!-- Số --&gt;
+  &lt;input type="number" min="0" max="100" step="1"&gt;
+
+  &lt;!-- Checkbox --&gt;
+  &lt;input type="checkbox" id="terms" name="terms"&gt;
+  &lt;label for="terms"&gt;Tôi đồng ý điều khoản sử dụng&lt;/label&gt;
+
+  &lt;!-- Radio buttons --&gt;
+  &lt;fieldset&gt;
+    &lt;legend&gt;Giới tính:&lt;/legend&gt;
+    &lt;input type="radio" id="male" name="gender" value="male"&gt;
+    &lt;label for="male"&gt;Nam&lt;/label&gt;
+    &lt;input type="radio" id="female" name="gender" value="female"&gt;
+    &lt;label for="female"&gt;Nữ&lt;/label&gt;
+  &lt;/fieldset&gt;
+
+  &lt;!-- Select dropdown --&gt;
+  &lt;label for="city"&gt;Thành phố:&lt;/label&gt;
+  &lt;select id="city" name="city"&gt;
+    &lt;option value=""&gt;-- Chọn thành phố --&lt;/option&gt;
+    &lt;option value="hcm"&gt;TP. Hồ Chí Minh&lt;/option&gt;
+    &lt;option value="hn"&gt;Hà Nội&lt;/option&gt;
+    &lt;option value="dn"&gt;Đà Nẵng&lt;/option&gt;
+  &lt;/select&gt;
+
+  &lt;!-- Textarea --&gt;
+  &lt;label for="bio"&gt;Giới thiệu bản thân:&lt;/label&gt;
+  &lt;textarea id="bio" name="bio" rows="4" cols="50"&gt;&lt;/textarea&gt;
+
+  &lt;!-- File upload --&gt;
+  &lt;input type="file" name="avatar" accept="image/*"&gt;
+
+  &lt;!-- Submit button --&gt;
+  &lt;button type="submit"&gt;Gửi đi&lt;/button&gt;
+  &lt;button type="reset"&gt;Xóa form&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+      <div class="callout info">
+        <div class="callout-title">💡 Tại sao label quan trọng?</div>
+        <p>Luôn dùng <code>&lt;label for="id"&gt;</code> tương ứng với <code>id</code> của input. Khi click vào label, input sẽ được focus — UX tốt hơn. Quan trọng hơn, screen reader đọc label để mô tả input cho người dùng khuyết tật thị giác.</p>
+      </div>
+
+      <h2>2.4 Semantic HTML</h2>
+      <p>Trước HTML5, lập trình viên dùng <code>&lt;div&gt;</code> cho mọi thứ. HTML5 giới thiệu các thẻ <strong>semantic</strong> (có ngữ nghĩa) — mô tả ý nghĩa của nội dung, không chỉ cấu trúc.</p>
+
+      <div class="mermaid">
+graph TD
+    Page["🌐 Trang Web"] --> H["📌 header
+Logo + Navigation"]
+    Page --> M["📄 main
+Nội dung chính"]
+    Page --> F["📎 footer
+Copyright"]
+    M --> AS["🗂️ aside
+Sidebar"]
+    M --> AR["📝 article
+Bài viết chính"]
+    AR --> SC["📦 section
+Các phần nội dung"]
+    style Page fill:#282c34,stroke:#61dafb,color:#e6e6e6
+    style H fill:#21252b,stroke:#98c379,color:#e6e6e6
+    style M fill:#21252b,stroke:#61dafb,color:#e6e6e6
+    style F fill:#21252b,stroke:#56b6c2,color:#e6e6e6
+</div>
+
+      <pre><code>&lt;!-- Thay vì: --&gt;
+&lt;div id="header"&gt;...&lt;/div&gt;
+&lt;div id="nav"&gt;...&lt;/div&gt;
+&lt;div id="main"&gt;...&lt;/div&gt;
+&lt;div id="footer"&gt;...&lt;/div&gt;
+
+&lt;!-- Dùng semantic HTML5: --&gt;
+&lt;header&gt;
+  &lt;nav&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="/"&gt;Trang chủ&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="/blog"&gt;Blog&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="/contact"&gt;Liên hệ&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;
+
+&lt;main&gt;
+  &lt;article&gt;
+    &lt;header&gt;
+      &lt;h1&gt;Tiêu đề bài viết&lt;/h1&gt;
+      &lt;time datetime="2024-01-15"&gt;15 tháng 1, 2024&lt;/time&gt;
+    &lt;/header&gt;
+    &lt;section&gt;
+      &lt;h2&gt;Phần 1: Giới thiệu&lt;/h2&gt;
+      &lt;p&gt;...&lt;/p&gt;
+    &lt;/section&gt;
+  &lt;/article&gt;
+
+  &lt;aside&gt;
+    &lt;h2&gt;Bài viết liên quan&lt;/h2&gt;
+    &lt;!-- sidebar content --&gt;
+  &lt;/aside&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;
+  &lt;p&gt;&amp;copy; 2024 ReactJS Book. All rights reserved.&lt;/p&gt;
+&lt;/footer&gt;</code></pre>
+
+      <p>Lợi ích của semantic HTML:</p>
+      <ul>
+        <li><strong>SEO tốt hơn:</strong> Google hiểu cấu trúc trang, xếp hạng cao hơn.</li>
+        <li><strong>Accessibility:</strong> Screen reader điều hướng được dễ dàng.</li>
+        <li><strong>Code dễ đọc:</strong> Lập trình viên khác hiểu ngay ý nghĩa.</li>
+        <li><strong>CSS dễ hơn:</strong> Có thể target <code>header nav</code> thay vì <code>#header #nav</code>.</li>
+      </ul>
+
+      <h2>2.5 DOM — Document Object Model</h2>
+      <p>Khi trình duyệt đọc HTML, nó tạo ra một cấu trúc dữ liệu trong bộ nhớ gọi là <strong>DOM (Document Object Model)</strong>. DOM biểu diễn tài liệu HTML dưới dạng <strong>cây đối tượng</strong> (tree of objects).</p>
+
+      <div class="mermaid">
+graph TD
+    DOC["document"] --> HTML["&lt;html&gt;"]
+    HTML --> HEAD["&lt;head&gt;"]
+    HTML --> BODY["&lt;body&gt;"]
+    HEAD --> META["&lt;meta charset=UTF-8&gt;"]
+    HEAD --> TITLE["&lt;title&gt; Trang của tôi"]
+    BODY --> HEADER["&lt;header&gt;"]
+    BODY --> MAIN["&lt;main&gt;"]
+    BODY --> FOOTER["&lt;footer&gt;"]
+    HEADER --> H1["&lt;h1&gt; Xin chào!"]
+    MAIN --> P["&lt;p&gt; Nội dung..."]
+    MAIN --> IMG["&lt;img src=photo.jpg&gt;"]
+    style DOC fill:#282c34,stroke:#61dafb,color:#61dafb
+</div>
+
+      <p>Mỗi phần tử HTML trở thành một <strong>node</strong> trong cây DOM. JavaScript có thể đọc và thay đổi bất kỳ node nào:</p>
+      <pre><code>// Lấy phần tử theo ID
+const title = document.getElementById('main-title');
+
+// Lấy phần tử theo CSS selector
+const btn = document.querySelector('.submit-btn');
+const allLinks = document.querySelectorAll('a');
+
+// Thay đổi nội dung
+title.textContent = 'Tiêu đề mới';
+title.innerHTML = '&lt;strong&gt;Tiêu đề in đậm&lt;/strong&gt;';
+
+// Thay đổi style
+btn.style.backgroundColor = '#61dafb';
+btn.style.color = 'white';
+
+// Thêm/xóa CSS class
+btn.classList.add('active');
+btn.classList.remove('disabled');
+btn.classList.toggle('highlight');
+
+// Tạo phần tử mới
+const newDiv = document.createElement('div');
+newDiv.textContent = 'Phần tử mới';
+document.body.appendChild(newDiv);</code></pre>
+
+      <div class="callout info">
+        <div class="callout-title">💡 React và DOM</div>
+        <p>React không thao tác DOM trực tiếp như trên. React dùng <strong>Virtual DOM</strong> — một bản copy của DOM trong bộ nhớ — để tính toán sự thay đổi hiệu quả nhất, rồi mới cập nhật DOM thực. Đây là lý do React nhanh hơn. Chúng ta sẽ tìm hiểu kỹ hơn ở Chương 9.</p>
+      </div>
+
+      <h2>2.6 Các thẻ HTML thường dùng khác</h2>
+      <pre><code>&lt;!-- Container không ngữ nghĩa (dùng khi không có tag phù hợp) --&gt;
+&lt;div&gt;Block-level container&lt;/div&gt;
+&lt;span&gt;Inline container&lt;/span&gt;
+
+&lt;!-- Media --&gt;
+&lt;video controls width="640" height="360"&gt;
+  &lt;source src="video.mp4" type="video/mp4"&gt;
+  Trình duyệt của bạn không hỗ trợ video.
+&lt;/video&gt;
+
+&lt;audio controls&gt;
+  &lt;source src="audio.mp3" type="audio/mpeg"&gt;
+&lt;/audio&gt;
+
+&lt;!-- Iframe nhúng trang khác --&gt;
+&lt;iframe
+  src="https://www.youtube.com/embed/VIDEO_ID"
+  width="560"
+  height="315"
+  allowfullscreen
+&gt;&lt;/iframe&gt;
+
+&lt;!-- Code block nhiều dòng --&gt;
+&lt;pre&gt;&lt;code&gt;
+function hello() {
+  console.log("Xin chào!");
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;!-- Blockquote --&gt;
+&lt;blockquote cite="https://reactjs.org"&gt;
+  &lt;p&gt;"React makes it painless to create interactive UIs."&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- Details/Summary (accordion tự nhiên) --&gt;
+&lt;details&gt;
+  &lt;summary&gt;Click để xem thêm&lt;/summary&gt;
+  &lt;p&gt;Nội dung ẩn sẽ hiện ra khi click.&lt;/p&gt;
+&lt;/details&gt;
+
+&lt;!-- Progress bar --&gt;
+&lt;progress value="70" max="100"&gt;70%&lt;/progress&gt;</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+
+        <h3>Bài tập 2.1: Trang Profile Cá nhân</h3>
+        <p>Xây dựng trang profile cá nhân bằng HTML thuần (chưa cần CSS). Trang cần có:</p>
+        <ol>
+          <li>Phần <code>&lt;header&gt;</code> với tên và chức danh của bạn</li>
+          <li>Ảnh profile (dùng placeholder từ <code>https://picsum.photos/200</code>)</li>
+          <li>Đoạn giới thiệu bản thân (<code>&lt;p&gt;</code>)</li>
+          <li>Danh sách kỹ năng (<code>&lt;ul&gt;</code>)</li>
+          <li>Bảng dự án đã làm (<code>&lt;table&gt;</code> với ít nhất 3 dự án)</li>
+          <li>Form liên hệ với: tên, email, và tin nhắn</li>
+          <li><code>&lt;footer&gt;</code> với thông tin copyright</li>
+        </ol>
+
+        <p>Template bắt đầu:</p>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="vi"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;[Tên bạn] — Frontend Developer&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;[Tên của bạn]&lt;/h1&gt;
+    &lt;p&gt;Frontend Developer | ReactJS Learner&lt;/p&gt;
+    &lt;nav&gt;
+      &lt;a href="#about"&gt;Giới thiệu&lt;/a&gt; |
+      &lt;a href="#skills"&gt;Kỹ năng&lt;/a&gt; |
+      &lt;a href="#projects"&gt;Dự án&lt;/a&gt; |
+      &lt;a href="#contact"&gt;Liên hệ&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;section id="about"&gt;
+      &lt;h2&gt;Giới thiệu&lt;/h2&gt;
+      &lt;img src="https://picsum.photos/200" alt="Ảnh của [tên bạn]"&gt;
+      &lt;p&gt;[Viết về bản thân bạn ở đây...]&lt;/p&gt;
+    &lt;/section&gt;
+
+    &lt;!-- Thêm các section còn lại --&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2024 [Tên bạn]. All rights reserved.&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <h3>Bài tập 2.2: Semantic HTML Audit</h3>
+        <p>Truy cập website yêu thích của bạn, mở DevTools → Elements và trả lời:</p>
+        <ol>
+          <li>Trang có dùng <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;footer&gt;</code> không?</li>
+          <li>Tìm 3 ví dụ về semantic HTML được dùng tốt.</li>
+          <li>Tìm 1 ví dụ về <code>&lt;div&gt;</code> được dùng ở nơi có thể thay bằng thẻ semantic hơn.</li>
+        </ol>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Thẻ nào trong HTML5 được dùng để đánh dấu nội dung độc lập, tự đầy đủ (như bài blog, bình luận, sản phẩm)?</p>
+          <ul>
+            <li>A. <code>&lt;section&gt;</code></li>
+            <li>B. <code>&lt;article&gt;</code></li>
+            <li>C. <code>&lt;div&gt;</code></li>
+            <li>D. <code>&lt;main&gt;</code></li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>&lt;article&gt;</code> dùng cho nội dung độc lập, có thể đứng riêng mà vẫn có nghĩa (bài blog, review, bình luận). <code>&lt;section&gt;</code> dùng để nhóm các nội dung có liên quan.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Tại sao thuộc tính <code>alt</code> trong thẻ <code>&lt;img&gt;</code> lại quan trọng?</p>
+          <ul>
+            <li>A. Chỉ để hiển thị tooltip khi hover chuột vào ảnh</li>
+            <li>B. Giúp accessibility (screen reader) và SEO, hiện ra khi ảnh không tải được</li>
+            <li>C. Bắt buộc phải có nếu không HTML không hợp lệ</li>
+            <li>D. Để trình duyệt tải ảnh nhanh hơn</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>alt</code> có ba tác dụng: (1) Screen reader đọc nó cho người dùng khiếm thị, (2) Google dùng để hiểu nội dung ảnh (SEO), (3) Hiện ra khi ảnh bị lỗi tải.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Sự khác biệt giữa <code>&lt;strong&gt;</code> và <code>&lt;b&gt;</code>?</p>
+          <ul>
+            <li>A. Không có sự khác biệt, cả hai đều in đậm chữ</li>
+            <li>B. <code>&lt;strong&gt;</code> mang ý nghĩa quan trọng (semantic), <code>&lt;b&gt;</code> chỉ in đậm về mặt thị giác</li>
+            <li>C. <code>&lt;b&gt;</code> là HTML5, <code>&lt;strong&gt;</code> là HTML cũ</li>
+            <li>D. <code>&lt;strong&gt;</code> in đậm hơn <code>&lt;b&gt;</code></li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>&lt;strong&gt;</code> mang ngữ nghĩa "nội dung này quan trọng" (screen reader nhấn mạnh khi đọc). <code>&lt;b&gt;</code> chỉ là định dạng thị giác. Tương tự, <code>&lt;em&gt;</code> (nhấn mạnh) khác <code>&lt;i&gt;</code> (nghiêng).</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> DOM là gì?</p>
+          <ul>
+            <li>A. Một ngôn ngữ lập trình để xây dựng website</li>
+            <li>B. Biểu diễn dạng cây đối tượng của tài liệu HTML trong bộ nhớ, cho phép JavaScript thao tác</li>
+            <li>C. Một framework JavaScript như React</li>
+            <li>D. Cơ sở dữ liệu lưu trữ HTML</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — DOM (Document Object Model) là cấu trúc dữ liệu cây mà trình duyệt tạo ra từ HTML. JavaScript có thể đọc và thay đổi DOM để tương tác với trang web.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> Trong form HTML, tại sao nên dùng <code>&lt;label for="id"&gt;</code> thay vì chỉ viết text thông thường?</p>
+          <ul>
+            <li>A. Để trình duyệt nhận diện đây là nhãn của input</li>
+            <li>B. Giúp click vào label sẽ focus vào input tương ứng, và screen reader đọc đúng</li>
+            <li>C. Tạo hiệu ứng animation đẹp hơn</li>
+            <li>D. Bắt buộc theo chuẩn HTML5</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>&lt;label&gt;</code> liên kết với input qua <code>for="id"</code>: click label → focus input (UX tốt hơn, vùng click rộng hơn). Screen reader đọc label khi người dùng điều hướng đến input.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-01.html">← Chương 1: Làm quen với Web</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-03.html">Chương 3: CSS — Trang điểm →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

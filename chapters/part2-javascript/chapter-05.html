@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 5: Hàm và Phạm vi biến — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="chapter-05.html" class="nav-link active">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 5 · Phần 2: JavaScript</div>
+        <h1 class="chapter-title">Hàm và Phạm vi biến</h1>
+        <p class="chapter-desc">Hàm là "viên gạch" xây dựng nên mọi chương trình JavaScript. Hiểu scope, closure và higher-order function là chìa khóa để master React — vì React được xây dựng hoàn toàn trên những khái niệm này.</p>
+      </div>
+
+      <h2>5.1 Khai báo hàm</h2>
+      <p>JavaScript có nhiều cách khai báo hàm. Mỗi cách có đặc điểm và trường hợp sử dụng riêng.</p>
+
+      <h3>Function Declaration (Khai báo hàm truyền thống)</h3>
+      <pre><code>// Function Declaration
+function greet(name) {
+  return "Xin chào, " + name + "!";
+}
+
+console.log(greet("Minh")); // "Xin chào, Minh!"
+
+// Đặc điểm: HOISTING — có thể gọi trước khi khai báo
+sayHello(); // Hoạt động! (không lỗi)
+
+function sayHello() {
+  console.log("Hello!");
+}</code></pre>
+
+      <h3>Function Expression (Biểu thức hàm)</h3>
+      <pre><code>// Gán hàm vào biến
+const greet = function(name) {
+  return "Xin chào, " + name + "!";
+};
+
+// KHÔNG có hoisting — phải khai báo trước khi gọi
+// sayHi(); // Lỗi! Cannot access before initialization
+const sayHi = function() {
+  console.log("Hi!");
+};
+sayHi(); // "Hi!"
+
+// Có thể truyền vào hàm khác (callback)
+setTimeout(function() {
+  console.log("Sau 1 giây");
+}, 1000);</code></pre>
+
+      <h3>Arrow Function — Cú pháp hiện đại (ES6+)</h3>
+      <p>Arrow function là cách viết hàm ngắn gọn hơn và là cú pháp phổ biến nhất trong React.</p>
+      <pre><code>// Cú pháp đầy đủ
+const add = (a, b) => {
+  return a + b;
+};
+
+// Nếu chỉ có 1 expression → bỏ {} và return
+const add = (a, b) => a + b;
+
+// Nếu chỉ có 1 tham số → bỏ dấu ()
+const double = n => n * 2;
+
+// Nếu không có tham số → giữ ()
+const greet = () => "Xin chào!";
+
+// Return object literal → bọc trong ()
+const makeUser = (name, age) => ({ name, age });
+// Nếu không có (), JS tưởng {} là block code!
+
+// Ví dụ thực tế trong React
+const Button = ({ onClick, children }) => (
+  &lt;button onClick={onClick}&gt;{children}&lt;/button&gt;
+);
+
+// Arrow function và 'this'
+// Arrow function KHÔNG có 'this' riêng
+// Nó kế thừa 'this' từ scope bao quanh
+const timer = {
+  count: 0,
+  start() {
+    setInterval(() => {
+      this.count++; // 'this' là timer object (đúng!)
+      console.log(this.count);
+    }, 1000);
+  }
+};</code></pre>
+
+      <div class="callout info">
+        <div class="callout-title">💡 Khi nào dùng arrow function?</div>
+        <p>Trong React, hầu hết bạn sẽ dùng arrow function. Chỉ dùng <code>function</code> declaration khi: (1) cần hoisting, (2) viết method trong object (cần <code>this</code>), (3) viết generator function. Còn lại: arrow function là lựa chọn mặc định.</p>
+      </div>
+
+      <h2>5.2 Tham số hàm</h2>
+      <pre><code>// Tham số mặc định (Default Parameters) — ES6
+function greet(name = "bạn", greeting = "Xin chào") {
+  return `${greeting}, ${name}!`;
+}
+greet();           // "Xin chào, bạn!"
+greet("Minh");     // "Xin chào, Minh!"
+greet("An", "Hi"); // "Hi, An!"
+
+// Rest Parameters — gom nhiều tham số vào mảng
+function sum(...numbers) {
+  return numbers.reduce((total, n) => total + n, 0);
+}
+sum(1, 2, 3);       // 6
+sum(10, 20, 30, 40); // 100
+
+// Spread operator khi GỌI hàm
+const nums = [1, 2, 3, 4, 5];
+Math.max(...nums); // = Math.max(1, 2, 3, 4, 5) = 5
+
+// Destructuring trong tham số
+function displayUser({ name, age, role = "user" }) {
+  console.log(`${name} (${age}) - ${role}`);
+}
+displayUser({ name: "An", age: 25, role: "admin" });
+
+// Trong React — props destructuring
+const Card = ({ title, description, imageUrl }) => {
+  return (/* JSX */);
+};</code></pre>
+
+      <h2>5.3 Scope — Phạm vi biến</h2>
+      <p><strong>Scope</strong> xác định "phần nào của code có thể truy cập biến đó". Hiểu scope giúp tránh bug rất phổ biến.</p>
+
+      <h3>Global Scope</h3>
+      <pre><code>const globalVar = "Tôi là biến toàn cục";
+
+function test() {
+  console.log(globalVar); // Truy cập được từ bên trong hàm
+}
+
+test(); // "Tôi là biến toàn cục"
+console.log(globalVar); // "Tôi là biến toàn cục"</code></pre>
+
+      <h3>Function Scope</h3>
+      <pre><code>function createSecret() {
+  const secret = "Mật khẩu 123"; // Chỉ tồn tại trong hàm này
+  console.log(secret); // OK
+}
+
+createSecret();
+// console.log(secret); // Lỗi! secret is not defined</code></pre>
+
+      <h3>Block Scope (ES6 với let/const)</h3>
+      <pre><code>// let và const có block scope (trong cặp {})
+{
+  let blockVar = "Tôi chỉ sống trong block này";
+  const blockConst = 42;
+  console.log(blockVar); // OK
+}
+// console.log(blockVar); // Lỗi!
+
+// Điều này rất quan trọng với if/for
+for (let i = 0; i < 3; i++) {
+  // i chỉ tồn tại trong vòng lặp
+}
+// console.log(i); // Lỗi!
+
+// var KHÔNG có block scope (chỉ function scope) — BUG kinh điển
+for (var j = 0; j < 3; j++) {}
+console.log(j); // 3 — var "thoát" ra ngoài for! Rất nguy hiểm
+
+// Luôn dùng let/const, tránh var!</code></pre>
+
+      <h3>Scope Chain</h3>
+      <pre><code>const outer = "ngoài";
+
+function outerFn() {
+  const middle = "giữa";
+
+  function innerFn() {
+    const inner = "trong";
+    // innerFn có thể thấy: inner, middle, outer
+    console.log(outer, middle, inner); // OK
+  }
+
+  innerFn();
+  // console.log(inner); // Lỗi! inner chỉ trong innerFn
+}
+
+// JavaScript tìm biến từ scope hiện tại → ra ngoài (scope chain)
+// Không bao giờ tìm vào trong scope con</code></pre>
+
+      <h2>5.4 Closure — Hàm nhớ môi trường</h2>
+      <p><strong>Closure</strong> là khi một hàm bên trong "ghi nhớ" các biến từ scope bên ngoài, ngay cả sau khi hàm bên ngoài đã thực thi xong. Đây là một trong những khái niệm quan trọng nhất của JavaScript.</p>
+
+      <pre><code>// Ví dụ cơ bản
+function makeCounter() {
+  let count = 0; // Biến này được "đóng gói" vào closure
+
+  return function() {
+    count++;
+    return count;
+  };
+}
+
+const counter = makeCounter();
+console.log(counter()); // 1
+console.log(counter()); // 2
+console.log(counter()); // 3
+
+// Mỗi lần gọi makeCounter() tạo ra closure độc lập
+const counter2 = makeCounter();
+console.log(counter2()); // 1 (độc lập với counter)</code></pre>
+
+      <pre><code>// Ví dụ thực tế: tạo hàm với cấu hình (factory function)
+function createMultiplier(factor) {
+  return (number) => number * factor;
+}
+
+const double = createMultiplier(2);
+const triple = createMultiplier(3);
+const tenTimes = createMultiplier(10);
+
+double(5);   // 10
+triple(5);   // 15
+tenTimes(5); // 50
+
+// Ví dụ: private state (module pattern)
+function createBankAccount(initialBalance) {
+  let balance = initialBalance; // "private" — không thể truy cập từ ngoài
+
+  return {
+    deposit(amount) {
+      balance += amount;
+      return balance;
+    },
+    withdraw(amount) {
+      if (amount > balance) throw new Error("Không đủ tiền");
+      balance -= amount;
+      return balance;
+    },
+    getBalance() {
+      return balance;
+    }
+  };
+}
+
+const account = createBankAccount(1000);
+account.deposit(500);   // 1500
+account.withdraw(200);  // 1300
+account.getBalance();   // 1300
+// account.balance;     // undefined — không truy cập được!</code></pre>
+
+      <div class="callout info">
+        <div class="callout-title">💡 Closure trong React</div>
+        <p>React Hooks như <code>useState</code>, <code>useEffect</code> đều dựa vào closure để "nhớ" state và dependencies giữa các lần render. Khi bạn viết <code>() =&gt; setCount(count + 1)</code>, đây là closure — hàm callback nhớ giá trị <code>count</code> tại thời điểm nó được tạo ra.</p>
+      </div>
+
+      <h2>5.5 Higher-Order Functions</h2>
+      <p><strong>Higher-order function (HOF)</strong> là hàm nhận hàm khác làm tham số, hoặc trả về hàm. Đây là pattern cốt lõi của lập trình hàm (functional programming) và React.</p>
+
+      <pre><code>// Hàm nhận callback
+function doTwice(fn) {
+  fn();
+  fn();
+}
+
+doTwice(() => console.log("Xin chào!")); // In 2 lần
+
+// setTimeout, setInterval, addEventListener đều là HOF
+setTimeout(() => console.log("Sau 1 giây"), 1000);
+document.addEventListener('click', (event) => {
+  console.log("Đã click vào", event.target);
+});
+
+// Array methods — HOF phổ biến nhất
+const numbers = [1, 2, 3, 4, 5];
+
+// forEach — duyệt qua từng phần tử
+numbers.forEach((num) => console.log(num));
+
+// map — biến đổi từng phần tử, trả về mảng mới
+const doubled = numbers.map(n => n * 2); // [2, 4, 6, 8, 10]
+
+// filter — lọc phần tử thỏa điều kiện
+const evens = numbers.filter(n => n % 2 === 0); // [2, 4]
+
+// reduce — gộp thành một giá trị
+const sum = numbers.reduce((acc, n) => acc + n, 0); // 15
+
+// Kết hợp các HOF (method chaining)
+const result = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  .filter(n => n % 2 === 0)     // [2, 4, 6, 8, 10]
+  .map(n => n * n)               // [4, 16, 36, 64, 100]
+  .reduce((sum, n) => sum + n, 0); // 220</code></pre>
+
+      <pre><code>// Tự viết HOF
+function compose(f, g) {
+  return (x) => f(g(x));
+}
+
+const addOne = x => x + 1;
+const double = x => x * 2;
+
+const addOneThenDouble = compose(double, addOne);
+addOneThenDouble(5); // double(addOne(5)) = double(6) = 12
+
+// Currying — biến hàm nhiều tham số thành chuỗi hàm 1 tham số
+const add = a => b => a + b;
+const add5 = add(5);
+add5(3); // 8
+add5(10); // 15
+
+// Trong React — currying thường dùng cho event handlers
+const handleChange = (field) => (event) => {
+  setForm(prev => ({ ...prev, [field]: event.target.value }));
+};
+// &lt;input onChange={handleChange('username')} /&gt;</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+
+        <h3>Bài tập 5.1: Bộ công cụ xử lý mảng</h3>
+        <p>Viết các hàm sau không dùng các method có sẵn của Array (tự implement bằng vòng lặp):</p>
+        <pre><code>// Yêu cầu implement:
+function myMap(array, transform) {
+  // Trả về mảng mới với mỗi phần tử được biến đổi bởi transform
+}
+
+function myFilter(array, predicate) {
+  // Trả về mảng mới chỉ gồm các phần tử thỏa predicate(item) === true
+}
+
+function myReduce(array, reducer, initialValue) {
+  // Gộp toàn bộ mảng thành một giá trị
+}
+
+// Test:
+console.log(myMap([1, 2, 3], x => x * 2));     // [2, 4, 6]
+console.log(myFilter([1,2,3,4,5], x => x > 3)); // [4, 5]
+console.log(myReduce([1,2,3,4], (a,b) => a+b, 0)); // 10</code></pre>
+
+        <h3>Bài tập 5.2: Counter với Closure</h3>
+        <pre><code>// Tạo hàm makeCounter có thể tăng, giảm và reset
+function makeCounter(initialValue = 0, step = 1) {
+  // Implement ở đây
+  // Trả về object với 3 method: increment, decrement, reset, getValue
+}
+
+const counter = makeCounter(10, 5);
+counter.increment(); // 15
+counter.increment(); // 20
+counter.decrement(); // 15
+counter.reset();     // 10
+counter.getValue();  // 10</code></pre>
+
+        <h3>Bài tập 5.3: Pipeline xử lý dữ liệu</h3>
+        <pre><code>const students = [
+  { name: "An", grade: 8.5, subject: "Toán" },
+  { name: "Bình", grade: 6.0, subject: "Văn" },
+  { name: "Chi", grade: 9.2, subject: "Toán" },
+  { name: "Dũng", grade: 5.5, subject: "Toán" },
+  { name: "Em", grade: 7.8, subject: "Văn" },
+];
+
+// Dùng filter + map + reduce để:
+// 1. Lấy học sinh môn Toán có điểm >= 7
+// 2. Tính điểm trung bình của nhóm đó
+// 3. Lấy tên các học sinh (mảng tên)
+
+const result1 = /* filter + map + reduce */;
+console.log(result1); // ["An", "Chi"]
+
+const avgGrade = /* ... */;
+console.log(avgGrade); // 8.85</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Sự khác biệt quan trọng nhất giữa <em>function declaration</em> và <em>function expression</em> là?</p>
+          <ul>
+            <li>A. Function declaration chạy nhanh hơn</li>
+            <li>B. Function declaration được "hoisted" (có thể gọi trước khi khai báo), function expression thì không</li>
+            <li>C. Function expression không thể có tên</li>
+            <li>D. Không có sự khác biệt thực tế</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Hoisting là cơ chế JavaScript đưa function declarations lên đầu scope trước khi thực thi. Function expressions (gán vào biến) không được hoisted.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Đoạn code sau in ra gì?</p>
+          <pre><code>function outer() {
+  let x = 10;
+  function inner() {
+    console.log(x);
+  }
+  x = 20;
+  return inner;
+}
+const fn = outer();
+fn();</code></pre>
+          <ul>
+            <li>A. 10</li>
+            <li>B. 20</li>
+            <li>C. undefined</li>
+            <li>D. Lỗi</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B — 20.</strong> Closure ghi nhớ <em>tham chiếu</em> đến biến <code>x</code>, không phải giá trị tại thời điểm tạo closure. Khi <code>fn()</code> được gọi, <code>x</code> đã có giá trị 20.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Arrow function khác function thông thường ở điểm gì liên quan đến <code>this</code>?</p>
+          <ul>
+            <li>A. Arrow function không thể dùng <code>this</code></li>
+            <li>B. Arrow function kế thừa <code>this</code> từ scope bao quanh (lexical this)</li>
+            <li>C. Arrow function tạo ra <code>this</code> mới trong mỗi lần gọi</li>
+            <li>D. Arrow function và function thường có hành vi <code>this</code> giống nhau</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Arrow function có <em>lexical this</em>: nó không có <code>this</code> riêng, mà kế thừa từ scope bao quanh. Đây là lý do arrow function lý tưởng cho callbacks và React event handlers.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> Higher-order function là gì?</p>
+          <ul>
+            <li>A. Hàm có độ phức tạp cao</li>
+            <li>B. Hàm được định nghĩa trong global scope</li>
+            <li>C. Hàm nhận hàm khác làm tham số và/hoặc trả về hàm</li>
+            <li>D. Hàm có hơn 5 tham số</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: C</strong> — Higher-order function nhận và/hoặc trả về hàm. Ví dụ: <code>map</code>, <code>filter</code>, <code>reduce</code>, <code>setTimeout</code>, <code>addEventListener</code>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> Kết quả của đoạn code sau là gì?</p>
+          <pre><code>const result = [1, 2, 3, 4, 5]
+  .filter(n => n % 2 !== 0)
+  .map(n => n ** 2);
+console.log(result);</code></pre>
+          <ul>
+            <li>A. [1, 4, 9, 16, 25]</li>
+            <li>B. [1, 9, 25]</li>
+            <li>C. [2, 4]</li>
+            <li>D. [4, 16]</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B — [1, 9, 25].</strong> filter lấy số lẻ: [1, 3, 5]. map bình phương: [1, 9, 25].</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-04.html">← Chương 4: JavaScript Nhập môn</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-06.html">Chương 6: Object &amp; Array Nâng cao →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

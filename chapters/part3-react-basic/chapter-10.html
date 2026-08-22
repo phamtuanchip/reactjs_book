@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 10 — JSX và Component | Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <!-- PROGRESS BAR -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <div class="book-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="chapter-10.html" class="nav-link active">Ch.10 JSX &amp; Component</a>
+        <a href="chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="chapter-14.html" class="nav-link">Ch.14 React Router</a>
+
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- CHAPTER HEADER -->
+      <div class="chapter-header">
+        <span class="chapter-label">Phần 3 — React Cơ bản · Chương 10</span>
+        <h1 class="chapter-title">JSX và Component</h1>
+        <p class="chapter-intro">
+          JSX là ngôn ngữ template của React — trông giống HTML nhưng thực ra là JavaScript. Trong chương này, bạn sẽ nắm vững cú pháp JSX, cách tạo Component, truyền dữ liệu qua Props, render có điều kiện, và xây dựng UI từ các "mảnh nhỏ" có thể tái sử dụng.
+        </p>
+        <div class="chapter-meta">
+          <span>⏱ 60 phút đọc</span>
+          <span>💻 4 ví dụ thực hành</span>
+          <span>📝 5 câu hỏi ôn bài</span>
+        </div>
+      </div>
+
+      <!-- 1. JSX là gì -->
+      <h2>1. JSX là gì? Tại sao React dùng JSX?</h2>
+      <p>
+        Trước khi React ra đời, để thêm một phần tử HTML vào trang bằng JavaScript, bạn phải viết:
+      </p>
+      <pre><code><span class="cmt">// JavaScript thuần — rất dài dòng</span>
+<span class="kw">const</span> h1 = document.<span class="fn">createElement</span>(<span class="str">'h1'</span>);
+h1.textContent = <span class="str">'Xin chào!'</span>;
+h1.className = <span class="str">'title'</span>;
+document.body.<span class="fn">appendChild</span>(h1);</code></pre>
+      <p>
+        React giải quyết sự dài dòng này bằng <strong>JSX (JavaScript XML)</strong> — một cú pháp mở rộng cho phép bạn viết "HTML" ngay bên trong JavaScript:
+      </p>
+      <pre><code><span class="cmt">// JSX — ngắn gọn và trực quan</span>
+<span class="kw">const</span> element = <span class="jsx">&lt;h1 className="title"&gt;Xin chào!&lt;/h1&gt;</span>;</code></pre>
+      <p>
+        Trình duyệt không hiểu JSX trực tiếp. Babel (hoặc các trình biên dịch hiện đại như esbuild/SWC) sẽ <em>chuyển đổi</em> JSX thành lời gọi hàm JavaScript thuần:
+      </p>
+      <pre><code><span class="cmt">// Sau khi Babel biên dịch:</span>
+<span class="kw">const</span> element = React.<span class="fn">createElement</span>(
+  <span class="str">'h1'</span>,
+  { className: <span class="str">'title'</span> },
+  <span class="str">'Xin chào!'</span>
+);</code></pre>
+      <div class="callout info">
+        <div class="callout-title">ℹ️ JSX không phải HTML</div>
+        <p>JSX trông rất giống HTML nhưng thực chất là JavaScript. Mọi thứ bạn viết trong JSX đều là biểu thức JavaScript, và có một số điểm khác biệt quan trọng bạn cần ghi nhớ.</p>
+      </div>
+
+      <!-- 2. JSX vs HTML -->
+      <h2>2. JSX vs HTML — Các điểm khác biệt quan trọng</h2>
+
+      <h3>2.1. className thay vì class</h3>
+      <p>
+        Vì <code>class</code> là từ khóa dành riêng trong JavaScript, JSX dùng <code>className</code>:
+      </p>
+      <pre><code><span class="cmt">// HTML thông thường:</span>
+&lt;div class="container"&gt;&lt;/div&gt;
+
+<span class="cmt">// JSX:</span>
+<span class="jsx">&lt;div className="container"&gt;&lt;/div&gt;</span></code></pre>
+
+      <h3>2.2. htmlFor thay vì for</h3>
+      <p>Tương tự, <code>for</code> là từ khóa trong JavaScript (dùng cho vòng lặp), nên JSX dùng <code>htmlFor</code>:</p>
+      <pre><code><span class="cmt">// HTML:</span>
+&lt;label for="email"&gt;Email:&lt;/label&gt;
+&lt;input id="email" type="email" /&gt;
+
+<span class="cmt">// JSX:</span>
+<span class="jsx">&lt;label htmlFor="email"&gt;Email:&lt;/label&gt;</span>
+<span class="jsx">&lt;input id="email" type="email" /&gt;</span></code></pre>
+
+      <h3>2.3. Tất cả thẻ phải được đóng</h3>
+      <p>
+        Trong HTML, bạn có thể viết <code>&lt;img&gt;</code> hoặc <code>&lt;br&gt;</code> mà không cần đóng. Trong JSX, <strong>mọi thẻ đều phải được đóng</strong> — dùng self-closing với dấu <code>/&gt;</code>:
+      </p>
+      <pre><code><span class="cmt">// HTML — hợp lệ nhưng...</span>
+&lt;img src="photo.jpg"&gt;
+&lt;br&gt;
+&lt;input type="text"&gt;
+
+<span class="cmt">// JSX — bắt buộc phải tự đóng</span>
+<span class="jsx">&lt;img src="photo.jpg" /&gt;</span>
+<span class="jsx">&lt;br /&gt;</span>
+<span class="jsx">&lt;input type="text" /&gt;</span></code></pre>
+
+      <h3>2.4. Thuộc tính dùng camelCase</h3>
+      <p>Các thuộc tính sự kiện và style đều được viết theo camelCase trong JSX:</p>
+      <table>
+        <thead>
+          <tr><th>HTML</th><th>JSX</th><th>Giải thích</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>onclick</code></td><td><code>onClick</code></td><td>Sự kiện click</td></tr>
+          <tr><td><code>onchange</code></td><td><code>onChange</code></td><td>Thay đổi input</td></tr>
+          <tr><td><code>tabindex</code></td><td><code>tabIndex</code></td><td>Thứ tự tab</td></tr>
+          <tr><td><code>maxlength</code></td><td><code>maxLength</code></td><td>Giới hạn ký tự</td></tr>
+          <tr><td><code>readonly</code></td><td><code>readOnly</code></td><td>Chỉ đọc</td></tr>
+          <tr><td><code>crossorigin</code></td><td><code>crossOrigin</code></td><td>CORS</td></tr>
+        </tbody>
+      </table>
+
+      <h3>2.5. Style là object, không phải chuỗi</h3>
+      <p>
+        Trong HTML, <code>style</code> là chuỗi CSS. Trong JSX, <code>style</code> nhận vào một <strong>object JavaScript</strong> với các property viết theo camelCase:
+      </p>
+      <pre><code><span class="cmt">// HTML:</span>
+&lt;p style="color: red; font-size: 16px; margin-top: 8px;"&gt;...&lt;/p&gt;
+
+<span class="cmt">// JSX — chú ý 2 cặp dấu ngoặc nhọn!</span>
+<span class="cmt">// {} ngoài: chèn biểu thức JS, {} trong: object literal</span>
+<span class="jsx">&lt;p style=<span class="op">{{</span> color: <span class="str">'red'</span>, fontSize: <span class="str">'16px'</span>, marginTop: <span class="str">'8px'</span> <span class="op">}}</span>&gt;...&lt;/p&gt;</span>
+
+<span class="cmt">// Hoặc định nghĩa style trước:</span>
+<span class="kw">const</span> myStyle = {
+  color: <span class="str">'red'</span>,
+  fontSize: <span class="str">'16px'</span>,      <span class="cmt">// font-size → fontSize</span>
+  marginTop: <span class="str">'8px'</span>,     <span class="cmt">// margin-top → marginTop</span>
+  backgroundColor: <span class="str">'#fff'</span>, <span class="cmt">// background-color → backgroundColor</span>
+};
+<span class="jsx">&lt;p style={myStyle}&gt;...&lt;/p&gt;</span></code></pre>
+
+      <h3>2.6. JSX phải có một root element duy nhất</h3>
+      <p>
+        Mỗi component chỉ có thể trả về <strong>một phần tử gốc</strong>. Nếu bạn cần trả về nhiều phần tử liền kề, dùng <strong>Fragment</strong>:
+      </p>
+      <pre><code><span class="cmt">// ❌ Lỗi — hai phần tử ngang hàng ở gốc</span>
+<span class="kw">return</span> (
+  <span class="jsx">&lt;h1&gt;Tiêu đề&lt;/h1&gt;</span>
+  <span class="jsx">&lt;p&gt;Nội dung&lt;/p&gt;</span>
+);
+
+<span class="cmt">// ✅ Đúng — bọc vào div</span>
+<span class="kw">return</span> (
+  <span class="jsx">&lt;div&gt;</span>
+    <span class="jsx">&lt;h1&gt;Tiêu đề&lt;/h1&gt;</span>
+    <span class="jsx">&lt;p&gt;Nội dung&lt;/p&gt;</span>
+  <span class="jsx">&lt;/div&gt;</span>
+);
+
+<span class="cmt">// ✅ Tốt hơn — Fragment không thêm phần tử thừa vào DOM</span>
+<span class="kw">return</span> (
+  <span class="jsx">&lt;&gt;</span>
+    <span class="jsx">&lt;h1&gt;Tiêu đề&lt;/h1&gt;</span>
+    <span class="jsx">&lt;p&gt;Nội dung&lt;/p&gt;</span>
+  <span class="jsx">&lt;/&gt;</span>
+);
+
+<span class="cmt">// Cú pháp đầy đủ của Fragment:</span>
+<span class="kw">import</span> { Fragment } <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">return</span> (
+  <span class="jsx">&lt;Fragment&gt;</span>
+    <span class="jsx">&lt;h1&gt;Tiêu đề&lt;/h1&gt;</span>
+    <span class="jsx">&lt;p&gt;Nội dung&lt;/p&gt;</span>
+  <span class="jsx">&lt;/Fragment&gt;</span>
+);</code></pre>
+
+      <!-- 3. Biểu thức trong JSX -->
+      <h2>3. Biểu thức JavaScript trong JSX</h2>
+      <p>
+        Dùng dấu ngoặc nhọn <code>{}</code> để nhúng bất kỳ <em>biểu thức</em> JavaScript nào vào JSX:
+      </p>
+      <pre><code><span class="kw">function</span> <span class="fn">Greeting</span>() {
+  <span class="kw">const</span> name = <span class="str">'Minh'</span>;
+  <span class="kw">const</span> age = <span class="num">25</span>;
+  <span class="kw">const</span> <span class="fn">greet</span> = (n) => <span class="str">`Xin chào, <span class="op">${n}</span>!`</span>;
+
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div&gt;</span>
+      <span class="cmt">{/* Biến */}</span>
+      <span class="jsx">&lt;h1&gt;{name}&lt;/h1&gt;</span>
+
+      <span class="cmt">{/* Biểu thức tính toán */}</span>
+      <span class="jsx">&lt;p&gt;Năm sinh: {2024 - age}&lt;/p&gt;</span>
+
+      <span class="cmt">{/* Gọi hàm */}</span>
+      <span class="jsx">&lt;p&gt;{greet(name)}&lt;/p&gt;</span>
+
+      <span class="cmt">{/* Ternary operator */}</span>
+      <span class="jsx">&lt;p&gt;{age &gt;= 18 ? <span class="str">'Đã trưởng thành'</span> : <span class="str">'Chưa trưởng thành'</span>}&lt;/p&gt;</span>
+
+      <span class="cmt">{/* Short-circuit — chỉ render khi điều kiện đúng */}</span>
+      <span class="jsx">{age &gt;= 18 &amp;&amp; &lt;span&gt;Có thể mua rượu&lt;/span&gt;}</span>
+
+      <span class="cmt">{/* Template literal */}</span>
+      <span class="jsx">&lt;p className={<span class="str">`user-card <span class="op">${age &gt;= 18 ? 'adult' : 'minor'}</span>`</span>}&gt;...&lt;/p&gt;</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}</code></pre>
+
+      <div class="callout warning">
+        <div class="callout-title">⚠️ Không phải câu lệnh, chỉ là biểu thức</div>
+        <p>Bên trong <code>{}</code> chỉ có thể là <em>biểu thức</em> — thứ có giá trị trả về. Không thể dùng <code>if/else</code>, <code>for</code>, <code>while</code>, hay <code>const/let/var</code> bên trong JSX trực tiếp. Thay vào đó hãy dùng ternary, <code>&&</code>, hoặc gọi hàm.</p>
+      </div>
+
+      <!-- 4. Functional Component -->
+      <h2>4. Functional Component</h2>
+      <p>
+        Component là <strong>khối xây dựng cơ bản</strong> của React. Một Functional Component chỉ đơn giản là một hàm JavaScript trả về JSX.
+      </p>
+
+      <h3>4.1. Định nghĩa và quy ước đặt tên</h3>
+      <pre><code><span class="cmt">// ✅ Đúng — PascalCase cho tên component</span>
+<span class="kw">function</span> <span class="fn">WelcomeMessage</span>() {
+  <span class="kw">return</span> <span class="jsx">&lt;h1&gt;Chào mừng!&lt;/h1&gt;</span>;
+}
+
+<span class="cmt">// ✅ Arrow function cũng được</span>
+<span class="kw">const</span> <span class="fn">WelcomeMessage</span> = () => {
+  <span class="kw">return</span> <span class="jsx">&lt;h1&gt;Chào mừng!&lt;/h1&gt;</span>;
+};
+
+<span class="cmt">// ✅ Implicit return với ngoặc đơn</span>
+<span class="kw">const</span> <span class="fn">WelcomeMessage</span> = () => (
+  <span class="jsx">&lt;h1&gt;Chào mừng!&lt;/h1&gt;</span>
+);
+
+<span class="cmt">// ❌ Sai — tên bắt đầu bằng chữ thường → React coi là HTML tag</span>
+<span class="kw">function</span> <span class="fn">welcomeMessage</span>() { ... }
+
+<span class="cmt">// Export component để dùng ở nơi khác</span>
+<span class="kw">export default</span> WelcomeMessage;</code></pre>
+
+      <h3>4.2. Cây Component (Component Tree)</h3>
+      <p>React apps được tổ chức dạng cây component — component lớn chứa các component nhỏ hơn:</p>
+      <div class="mermaid">
+graph TD
+    App["⚛️ App"] --> Header["Header"]
+    App --> Main["Main"]
+    App --> Footer["Footer"]
+    Header --> Logo["Logo"]
+    Header --> Nav["NavBar"]
+    Main --> Sidebar["Sidebar"]
+    Main --> Content["Content"]
+    Content --> ProductList["ProductList"]
+    ProductList --> C1["&lt;Card /&gt;"]
+    ProductList --> C2["&lt;Card /&gt;"]
+    ProductList --> C3["&lt;Card /&gt;"]
+    style App fill:#282c34,stroke:#61dafb,color:#61dafb
+    style ProductList fill:#282c34,stroke:#98c379,color:#98c379
+</div>
+      <pre><code><span class="cmt">// src/App.jsx</span>
+<span class="kw">import</span> Header <span class="kw">from</span> <span class="str">'./components/Header'</span>;
+<span class="kw">import</span> Main <span class="kw">from</span> <span class="str">'./components/Main'</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div className="app"&gt;</span>
+      <span class="jsx">&lt;Header /&gt;</span>
+      <span class="jsx">&lt;Main /&gt;</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> App;</code></pre>
+
+      <!-- 5. Props -->
+      <h2>5. Props — Truyền dữ liệu giữa các Component</h2>
+      <p>
+        <strong>Props</strong> (viết tắt của <em>properties</em>) là cách truyền dữ liệu từ component cha xuống component con — giống như các tham số của một hàm.
+      </p>
+
+      <h3>5.1. Truyền và nhận Props</h3>
+      <pre><code><span class="cmt">// Component cha truyền dữ liệu qua attributes</span>
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div&gt;</span>
+      <span class="jsx">&lt;UserCard
+        name="Nguyễn Minh"
+        age={25}
+        isAdmin={true}
+        hobbies={[<span class="str">'code'</span>, <span class="str">'đọc sách'</span>]}
+      /&gt;</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}
+
+<span class="cmt">// Cách 1: Nhận props như một object</span>
+<span class="kw">function</span> <span class="fn">UserCard</span>(props) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div className="card"&gt;</span>
+      <span class="jsx">&lt;h2&gt;{props.name}&lt;/h2&gt;</span>
+      <span class="jsx">&lt;p&gt;Tuổi: {props.age}&lt;/p&gt;</span>
+      <span class="jsx">{props.isAdmin &amp;&amp; &lt;span className="badge"&gt;Admin&lt;/span&gt;}</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}
+
+<span class="cmt">// Cách 2: Destructuring — phổ biến và gọn hơn</span>
+<span class="kw">function</span> <span class="fn">UserCard</span>({ name, age, isAdmin, hobbies }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div className="card"&gt;</span>
+      <span class="jsx">&lt;h2&gt;{name}&lt;/h2&gt;</span>
+      <span class="jsx">&lt;p&gt;Tuổi: {age}&lt;/p&gt;</span>
+      <span class="jsx">{isAdmin &amp;&amp; &lt;span className="badge"&gt;Admin&lt;/span&gt;}</span>
+      <span class="jsx">&lt;ul&gt;</span>
+        <span class="jsx">{hobbies.map((h) => &lt;li key={h}&gt;{h}&lt;/li&gt;)}</span>
+      <span class="jsx">&lt;/ul&gt;</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}</code></pre>
+
+      <h3>5.2. Default Props</h3>
+      <pre><code><span class="cmt">// Gán giá trị mặc định ngay trong tham số</span>
+<span class="kw">function</span> <span class="fn">Button</span>({ label = <span class="str">'Nhấn vào đây'</span>, color = <span class="str">'blue'</span>, size = <span class="str">'md'</span> }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;button
+      className={<span class="str">`btn btn-<span class="op">${color}</span> btn-<span class="op">${size}</span>`</span>}
+      style={{ backgroundColor: color }}
+    &gt;</span>
+      {label}
+    <span class="jsx">&lt;/button&gt;</span>
+  );
+}
+
+<span class="cmt">// Sử dụng — không cần truyền label hay color</span>
+<span class="jsx">&lt;Button /&gt;</span>                        <span class="cmt">// Nhấn vào đây, xanh, vừa</span>
+<span class="jsx">&lt;Button label="Đăng ký" /&gt;</span>       <span class="cmt">// Đăng ký, xanh, vừa</span>
+<span class="jsx">&lt;Button label="Xóa" color="red" /&gt;</span> <span class="cmt">// Xóa, đỏ, vừa</span></code></pre>
+
+      <h3>5.3. Các kiểu dữ liệu có thể truyền qua Props</h3>
+      <table>
+        <thead>
+          <tr><th>Kiểu</th><th>Cách viết</th><th>Ví dụ</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>String</td><td>Dùng nháy kép thẳng</td><td><code>name="Minh"</code></td></tr>
+          <tr><td>Number</td><td>Dùng <code>{}</code></td><td><code>age={25}</code></td></tr>
+          <tr><td>Boolean true</td><td>Chỉ cần viết tên prop</td><td><code>isAdmin</code></td></tr>
+          <tr><td>Boolean false</td><td>Dùng <code>{}</code></td><td><code>isAdmin={false}</code></td></tr>
+          <tr><td>Array</td><td>Dùng <code>{[]}</code></td><td><code>items={['a','b']}</code></td></tr>
+          <tr><td>Object</td><td>Dùng <code>{{}}</code></td><td><code>user={{ name: 'x' }}</code></td></tr>
+          <tr><td>Function</td><td>Dùng <code>{}</code></td><td><code>onClick={handleClick}</code></td></tr>
+          <tr><td>JSX</td><td>Dùng <code>{}</code></td><td><code>icon={&lt;Icon /&gt;}</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>5.4. Children Prop — Truyền JSX vào trong Component</h3>
+      <p>
+        Prop đặc biệt <code>children</code> chứa bất kỳ nội dung nào đặt bên trong thẻ mở/đóng của component:
+      </p>
+      <pre><code><span class="cmt">// Component nhận children</span>
+<span class="kw">function</span> <span class="fn">Card</span>({ title, children }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div className="card"&gt;</span>
+      <span class="jsx">&lt;div className="card-header"&gt;&lt;h3&gt;{title}&lt;/h3&gt;&lt;/div&gt;</span>
+      <span class="jsx">&lt;div className="card-body"&gt;</span>
+        {children}  <span class="cmt">{/* Nội dung được truyền vào */}</span>
+      <span class="jsx">&lt;/div&gt;</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}
+
+<span class="cmt">// Sử dụng — nội dung bên trong sẽ là children</span>
+<span class="jsx">&lt;Card title="Thông tin sản phẩm"&gt;</span>
+  <span class="jsx">&lt;p&gt;Giá: 500,000 VNĐ&lt;/p&gt;</span>
+  <span class="jsx">&lt;button&gt;Thêm vào giỏ&lt;/button&gt;</span>
+<span class="jsx">&lt;/Card&gt;</span>
+
+<span class="cmt">// Một ví dụ hay — Layout component</span>
+<span class="kw">function</span> <span class="fn">PageLayout</span>({ children }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div className="page"&gt;</span>
+      <span class="jsx">&lt;header&gt;&lt;nav&gt;...&lt;/nav&gt;&lt;/header&gt;</span>
+      <span class="jsx">&lt;main&gt;{children}&lt;/main&gt;</span>
+      <span class="jsx">&lt;footer&gt;© 2024&lt;/footer&gt;</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}</code></pre>
+
+      <h3>5.5. Props là Read-Only</h3>
+      <div class="callout danger">
+        <div class="callout-title">🚫 Không bao giờ mutate Props</div>
+        <p>Props là <strong>bất biến (immutable)</strong> — component con không được phép thay đổi props nhận từ cha. Đây là quy tắc cơ bản của React. Nếu bạn cần thay đổi dữ liệu, hãy dùng <strong>State</strong> (học ở chương tiếp theo).</p>
+      </div>
+      <pre><code><span class="kw">function</span> <span class="fn">UserCard</span>({ name }) {
+  <span class="cmt">// ❌ Không bao giờ làm thế này!</span>
+  name = <span class="str">'Tên khác'</span>;
+
+  <span class="cmt">// ✅ Nếu cần biến đổi, tạo biến cục bộ mới</span>
+  <span class="kw">const</span> displayName = name.<span class="fn">toUpperCase</span>();
+
+  <span class="kw">return</span> <span class="jsx">&lt;h2&gt;{displayName}&lt;/h2&gt;</span>;
+}</code></pre>
+
+      <!-- 6. Conditional Rendering -->
+      <h2>6. Conditional Rendering — Render có điều kiện</h2>
+
+      <h3>6.1. if/else trước return</h3>
+      <pre><code><span class="kw">function</span> <span class="fn">UserStatus</span>({ isLoggedIn, username }) {
+  <span class="cmt">// Logic điều kiện TRƯỚC khi return</span>
+  <span class="kw">if</span> (!isLoggedIn) {
+    <span class="kw">return</span> (
+      <span class="jsx">&lt;div&gt;</span>
+        <span class="jsx">&lt;p&gt;Bạn chưa đăng nhập.&lt;/p&gt;</span>
+        <span class="jsx">&lt;a href="/login"&gt;Đăng nhập ngay&lt;/a&gt;</span>
+      <span class="jsx">&lt;/div&gt;</span>
+    );
+  }
+
+  <span class="kw">return</span> <span class="jsx">&lt;p&gt;Xin chào, {username}!&lt;/p&gt;</span>;
+}</code></pre>
+
+      <h3>6.2. Ternary Operator trong JSX</h3>
+      <pre><code><span class="kw">function</span> <span class="fn">LoginButton</span>({ isLoggedIn, onLogin, onLogout }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div&gt;</span>
+      {isLoggedIn
+        ? <span class="jsx">&lt;button onClick={onLogout}&gt;Đăng xuất&lt;/button&gt;</span>
+        : <span class="jsx">&lt;button onClick={onLogin}&gt;Đăng nhập&lt;/button&gt;</span>
+      }
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}</code></pre>
+
+      <h3>6.3. Short-circuit &amp;&amp;</h3>
+      <pre><code><span class="kw">function</span> <span class="fn">Notification</span>({ count, message }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div&gt;</span>
+      <span class="cmt">{/* Chỉ render khi count > 0 */}</span>
+      <span class="jsx">{count > 0 &amp;&amp; &lt;span className="badge"&gt;{count}&lt;/span&gt;}</span>
+
+      <span class="cmt">{/* Chú ý: tránh dùng số 0 với && */}</span>
+      <span class="cmt">{/* ❌ Sẽ render số 0 ra màn hình */}</span>
+      <span class="jsx">{count &amp;&amp; &lt;span&gt;{count}&lt;/span&gt;}</span>
+
+      <span class="cmt">{/* ✅ Chuyển sang boolean trước */}</span>
+      <span class="jsx">{count > 0 &amp;&amp; &lt;span&gt;{count}&lt;/span&gt;}</span>
+      <span class="jsx">{!!message &amp;&amp; &lt;p&gt;{message}&lt;/p&gt;}</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}</code></pre>
+
+      <h3>6.4. Nullish check với Optional Chaining</h3>
+      <pre><code><span class="kw">function</span> <span class="fn">UserAvatar</span>({ user }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div&gt;</span>
+      <span class="cmt">{/* Chỉ render ảnh nếu user và user.avatar tồn tại */}</span>
+      <span class="jsx">{user?.avatar &amp;&amp; &lt;img src={user.avatar} alt={user?.name ?? <span class="str">'Ẩn danh'</span>} /&gt;}</span>
+
+      <span class="cmt">{/* Hiện tên hoặc 'Khách' nếu không có tên */}</span>
+      <span class="jsx">&lt;span&gt;{user?.name ?? <span class="str">'Khách'</span>}&lt;/span&gt;</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}</code></pre>
+
+      <!-- 7. Render danh sách -->
+      <h2>7. Render Danh sách với Array.map()</h2>
+
+      <h3>7.1. Cách render một mảng</h3>
+      <pre><code><span class="kw">function</span> <span class="fn">FruitList</span>() {
+  <span class="kw">const</span> fruits = [
+    { id: <span class="num">1</span>, name: <span class="str">'Táo'</span>, color: <span class="str">'đỏ'</span> },
+    { id: <span class="num">2</span>, name: <span class="str">'Chuối'</span>, color: <span class="str">'vàng'</span> },
+    { id: <span class="num">3</span>, name: <span class="str">'Cam'</span>, color: <span class="str">'cam'</span> },
+  ];
+
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;ul&gt;</span>
+      {fruits.<span class="fn">map</span>((fruit) => (
+        <span class="cmt">{/* key là bắt buộc! */}</span>
+        <span class="jsx">&lt;li key={fruit.id}&gt;</span>
+          {fruit.name} — màu {fruit.color}
+        <span class="jsx">&lt;/li&gt;</span>
+      ))}
+    <span class="jsx">&lt;/ul&gt;</span>
+  );
+}</code></pre>
+
+      <h3>7.2. Tại sao cần prop key?</h3>
+      <p>
+        Khi React render một danh sách, nó cần biết phần tử nào thay đổi, được thêm vào, hay bị xóa để cập nhật DOM hiệu quả. Prop <code>key</code> cung cấp thông tin này.
+      </p>
+      <div class="mermaid">
+flowchart LR
+    subgraph OLD["Danh sách cũ"]
+        A1["A
+key=1"] --- B1["B
+key=2"] --- C1["C
+key=3"]
+    end
+    subgraph NEW["Danh sách mới — Chèn D"]
+        A2["A
+key=1"] --- D2["✨ D
+key=4"] --- B2["B
+key=2"] --- C2["C
+key=3"]
+    end
+    OLD -->|"Thêm D vào giữa"| NEW
+    D2 -.->|"Chỉ insert D
+A, B, C không re-render"| NOTE["✅ Hiệu quả"]
+    style D2 fill:#98c379,color:#333
+    style NOTE fill:#282c34,stroke:#98c379,color:#98c379
+</div>
+
+      <h3>7.3. Quy tắc dùng key — những lỗi thường gặp</h3>
+      <pre><code><span class="cmt">// ❌ Dùng index làm key — nguy hiểm khi list thay đổi thứ tự</span>
+{items.<span class="fn">map</span>((item, <span class="type">index</span>) => (
+  <span class="jsx">&lt;Item key={index} data={item} /&gt;</span>
+))}
+
+<span class="cmt">// ❌ Key không unique</span>
+{users.<span class="fn">map</span>((user) => (
+  <span class="jsx">&lt;User key={user.name} /&gt;</span>  <span class="cmt">// Có thể trùng tên!</span>
+))}
+
+<span class="cmt">// ✅ Dùng ID unique từ database</span>
+{users.<span class="fn">map</span>((user) => (
+  <span class="jsx">&lt;User key={user.id} data={user} /&gt;</span>
+))}
+
+<span class="cmt">// ✅ Nếu không có ID — dùng crypto.randomUUID() một lần khi tạo data</span>
+<span class="kw">const</span> items = rawData.<span class="fn">map</span>(item => ({
+  ...item,
+  id: crypto.<span class="fn">randomUUID</span>()
+}));</code></pre>
+
+      <div class="callout warning">
+        <div class="callout-title">⚠️ Key chỉ cần unique trong cùng một danh sách</div>
+        <p>Key không cần phải unique toàn cục. Hai list khác nhau có thể dùng cùng key mà không có vấn đề gì. Key cũng không được truyền vào component con như prop — nếu bạn cần ID, truyền thêm prop <code>id</code> riêng.</p>
+      </div>
+
+      <!-- 8. Component Composition -->
+      <h2>8. Component Composition — Chia nhỏ UI</h2>
+      <p>
+        Nguyên tắc vàng: <strong>mỗi component chỉ làm một việc</strong>. Khi một component trở nên phức tạp, hãy tách nó ra thành các component nhỏ hơn.
+      </p>
+      <pre><code><span class="cmt">// ❌ Component làm quá nhiều việc</span>
+<span class="kw">function</span> <span class="fn">ProductPage</span>({ products }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div&gt;</span>
+      <span class="jsx">&lt;div className="header"&gt;...200 dòng HTML header...&lt;/div&gt;</span>
+      <span class="jsx">&lt;div className="filters"&gt;...100 dòng bộ lọc...&lt;/div&gt;</span>
+      <span class="jsx">&lt;div className="grid"&gt;</span>
+        {products.<span class="fn">map</span>(p => <span class="jsx">&lt;div&gt;...&lt;/div&gt;</span>)}
+      <span class="jsx">&lt;/div&gt;</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}
+
+<span class="cmt">// ✅ Tách thành các component có thể tái sử dụng</span>
+<span class="kw">function</span> <span class="fn">ProductPage</span>({ products }) {
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div&gt;</span>
+      <span class="jsx">&lt;PageHeader /&gt;</span>
+      <span class="jsx">&lt;ProductFilters /&gt;</span>
+      <span class="jsx">&lt;ProductList products={products} /&gt;</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}</code></pre>
+
+      <!-- 9. Exercise -->
+      <div class="exercise">
+        <div class="exercise-header">
+          <div class="exercise-icon">💻</div>
+          <div class="exercise-title">Bài tập — Trang Danh Sách Sản Phẩm</div>
+        </div>
+        <p>Xây dựng một trang danh sách sản phẩm với ba component: <code>ProductList</code>, <code>ProductCard</code>, và <code>Badge</code>.</p>
+        <p><strong>Yêu cầu:</strong></p>
+        <ul>
+          <li>Hiển thị danh sách sản phẩm với tên, giá, và trạng thái</li>
+          <li>Badge hiển thị nhãn "Sale" hoặc "Mới" tùy thuộc vào thuộc tính sản phẩm</li>
+          <li>Render có điều kiện: ẩn sản phẩm hết hàng</li>
+        </ul>
+      </div>
+
+      <div class="code-block">
+        <span class="code-label">src/components/Badge.jsx</span>
+        <pre><code><span class="cmt">// Badge.jsx — component tái sử dụng</span>
+<span class="kw">function</span> <span class="fn">Badge</span>({ type = <span class="str">'info'</span>, children }) {
+  <span class="kw">const</span> colorMap = {
+    sale: <span class="str">'#e06c75'</span>,
+    new: <span class="str">'#98c379'</span>,
+    info: <span class="str">'#56b6c2'</span>,
+    hot: <span class="str">'#e5c07b'</span>,
+  };
+
+  <span class="kw">const</span> style = {
+    display: <span class="str">'inline-block'</span>,
+    background: colorMap[type] ?? colorMap.info,
+    color: <span class="str">'#fff'</span>,
+    padding: <span class="str">'2px 10px'</span>,
+    borderRadius: <span class="str">'12px'</span>,
+    fontSize: <span class="str">'0.75rem'</span>,
+    fontWeight: <span class="str">'700'</span>,
+    marginRight: <span class="str">'6px'</span>,
+  };
+
+  <span class="kw">return</span> <span class="jsx">&lt;span style={style}&gt;{children}&lt;/span&gt;</span>;
+}
+
+<span class="kw">export default</span> Badge;</code></pre>
+      </div>
+
+      <div class="code-block">
+        <span class="code-label">src/components/ProductCard.jsx</span>
+        <pre><code><span class="kw">import</span> Badge <span class="kw">from</span> <span class="str">'./Badge'</span>;
+
+<span class="kw">function</span> <span class="fn">ProductCard</span>({ product }) {
+  <span class="kw">const</span> { name, price, originalPrice, isNew, isSale, stock, image } = product;
+
+  <span class="cmt">// Không render sản phẩm hết hàng</span>
+  <span class="kw">if</span> (stock === <span class="num">0</span>) <span class="kw">return null</span>;
+
+  <span class="kw">const</span> <span class="fn">formatPrice</span> = (amount) =>
+    <span class="kw">new</span> <span class="fn">Intl.NumberFormat</span>(<span class="str">'vi-VN'</span>, {
+      style: <span class="str">'currency'</span>,
+      currency: <span class="str">'VND'</span>
+    }).<span class="fn">format</span>(amount);
+
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div style={{
+      border: <span class="str">'1px solid #3e4451'</span>,
+      borderRadius: <span class="str">'8px'</span>,
+      padding: <span class="str">'20px'</span>,
+      background: <span class="str">'#282c34'</span>,
+    }}&gt;</span>
+      <span class="cmt">{/* Ảnh sản phẩm */}</span>
+      <span class="jsx">{image &amp;&amp; &lt;img src={image} alt={name} style={{ width: <span class="str">'100%'</span>, borderRadius: <span class="str">'4px'</span>, marginBottom: <span class="str">'12px'</span> }} /&gt;}</span>
+
+      <span class="cmt">{/* Badges */}</span>
+      <span class="jsx">&lt;div style={{ marginBottom: <span class="str">'8px'</span> }}&gt;</span>
+        <span class="jsx">{isNew &amp;&amp; &lt;Badge type="new"&gt;Mới&lt;/Badge&gt;}</span>
+        <span class="jsx">{isSale &amp;&amp; &lt;Badge type="sale"&gt;Sale&lt;/Badge&gt;}</span>
+        <span class="jsx">{stock &lt;= 5 &amp;&amp; &lt;Badge type="hot"&gt;Sắp hết&lt;/Badge&gt;}</span>
+      <span class="jsx">&lt;/div&gt;</span>
+
+      <span class="cmt">{/* Tên sản phẩm */}</span>
+      <span class="jsx">&lt;h3 style={{ color: <span class="str">'#e6e6e6'</span>, margin: <span class="str">'0 0 8px'</span>, fontSize: <span class="str">'1rem'</span> }}&gt;</span>
+        {name}
+      <span class="jsx">&lt;/h3&gt;</span>
+
+      <span class="cmt">{/* Giá */}</span>
+      <span class="jsx">&lt;div&gt;</span>
+        <span class="jsx">&lt;span style={{ color: <span class="str">'#61dafb'</span>, fontWeight: <span class="str">'700'</span>, fontSize: <span class="str">'1.1rem'</span> }}&gt;</span>
+          {formatPrice(price)}
+        <span class="jsx">&lt;/span&gt;</span>
+        {isSale &amp;&amp; originalPrice &amp;&amp; (
+          <span class="jsx">&lt;span style={{ color: <span class="str">'#5c6370'</span>, textDecoration: <span class="str">'line-through'</span>, marginLeft: <span class="str">'8px'</span>, fontSize: <span class="str">'0.85rem'</span> }}&gt;</span>
+            {formatPrice(originalPrice)}
+          <span class="jsx">&lt;/span&gt;</span>
+        )}
+      <span class="jsx">&lt;/div&gt;</span>
+
+      <span class="cmt">{/* Tồn kho */}</span>
+      <span class="jsx">&lt;p style={{ color: <span class="str">'#5c6370'</span>, fontSize: <span class="str">'0.8rem'</span>, marginTop: <span class="str">'8px'</span> }}&gt;</span>
+        Còn {stock} sản phẩm
+      <span class="jsx">&lt;/p&gt;</span>
+
+      <span class="jsx">&lt;button style={{
+        width: <span class="str">'100%'</span>,
+        marginTop: <span class="str">'16px'</span>,
+        padding: <span class="str">'10px'</span>,
+        background: <span class="str">'#61dafb'</span>,
+        color: <span class="str">'#282c34'</span>,
+        border: <span class="str">'none'</span>,
+        borderRadius: <span class="str">'6px'</span>,
+        fontWeight: <span class="str">'700'</span>,
+        cursor: <span class="str">'pointer'</span>,
+      }}&gt;</span>
+        Thêm vào giỏ hàng
+      <span class="jsx">&lt;/button&gt;</span>
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> ProductCard;</code></pre>
+      </div>
+
+      <div class="code-block">
+        <span class="code-label">src/components/ProductList.jsx</span>
+        <pre><code><span class="kw">import</span> ProductCard <span class="kw">from</span> <span class="str">'./ProductCard'</span>;
+
+<span class="kw">const</span> PRODUCTS = [
+  {
+    id: <span class="num">1</span>,
+    name: <span class="str">'Áo thun Basic'</span>,
+    price: <span class="num">149000</span>,
+    originalPrice: <span class="num">199000</span>,
+    isNew: <span class="kw">false</span>,
+    isSale: <span class="kw">true</span>,
+    stock: <span class="num">20</span>,
+    image: <span class="kw">null</span>,
+  },
+  {
+    id: <span class="num">2</span>,
+    name: <span class="str">'Quần Jean Slim'</span>,
+    price: <span class="num">450000</span>,
+    originalPrice: <span class="kw">null</span>,
+    isNew: <span class="kw">true</span>,
+    isSale: <span class="kw">false</span>,
+    stock: <span class="num">3</span>,
+    image: <span class="kw">null</span>,
+  },
+  {
+    id: <span class="num">3</span>,
+    name: <span class="str">'Giày Sneaker'</span>,
+    price: <span class="num">890000</span>,
+    originalPrice: <span class="kw">null</span>,
+    isNew: <span class="kw">false</span>,
+    isSale: <span class="kw">false</span>,
+    stock: <span class="num">0</span>, <span class="cmt">// Hết hàng — sẽ không hiển thị</span>
+    image: <span class="kw">null</span>,
+  },
+  {
+    id: <span class="num">4</span>,
+    name: <span class="str">'Túi Tote Canvas'</span>,
+    price: <span class="num">220000</span>,
+    originalPrice: <span class="num">280000</span>,
+    isNew: <span class="kw">true</span>,
+    isSale: <span class="kw">true</span>,
+    stock: <span class="num">15</span>,
+    image: <span class="kw">null</span>,
+  },
+];
+
+<span class="kw">function</span> <span class="fn">ProductList</span>() {
+  <span class="kw">const</span> availableProducts = PRODUCTS.<span class="fn">filter</span>(p => p.stock > <span class="num">0</span>);
+
+  <span class="kw">return</span> (
+    <span class="jsx">&lt;div style={{ maxWidth: <span class="str">'900px'</span>, margin: <span class="str">'0 auto'</span>, padding: <span class="str">'40px 20px'</span> }}&gt;</span>
+      <span class="jsx">&lt;h1 style={{ color: <span class="str">'#e6e6e6'</span>, marginBottom: <span class="str">'8px'</span> }}&gt;Danh sách sản phẩm&lt;/h1&gt;</span>
+      <span class="jsx">&lt;p style={{ color: <span class="str">'#abb2bf'</span>, marginBottom: <span class="str">'32px'</span> }}&gt;</span>
+        Hiển thị {availableProducts.length}/{PRODUCTS.length} sản phẩm (hết hàng đã ẩn)
+      <span class="jsx">&lt;/p&gt;</span>
+
+      {availableProducts.length === <span class="num">0</span> ? (
+        <span class="jsx">&lt;div style={{ textAlign: <span class="str">'center'</span>, padding: <span class="str">'80px'</span>, color: <span class="str">'#5c6370'</span> }}&gt;</span>
+          <span class="jsx">&lt;p&gt;Không có sản phẩm nào.&lt;/p&gt;</span>
+        <span class="jsx">&lt;/div&gt;</span>
+      ) : (
+        <span class="jsx">&lt;div style={{
+          display: <span class="str">'grid'</span>,
+          gridTemplateColumns: <span class="str">'repeat(auto-fill, minmax(240px, 1fr))'</span>,
+          gap: <span class="str">'20px'</span>,
+        }}&gt;</span>
+          {availableProducts.<span class="fn">map</span>((product) => (
+            <span class="jsx">&lt;ProductCard key={product.id} product={product} /&gt;</span>
+          ))}
+        <span class="jsx">&lt;/div&gt;</span>
+      )}
+    <span class="jsx">&lt;/div&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> ProductList;</code></pre>
+      </div>
+
+      <div class="code-block">
+        <span class="code-label">src/App.jsx</span>
+        <pre><code><span class="kw">import</span> ProductList <span class="kw">from</span> <span class="str">'./components/ProductList'</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> <span class="jsx">&lt;ProductList /&gt;</span>;
+}
+
+<span class="kw">export default</span> App;</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h3>Câu hỏi ôn bài — Chương 10</h3>
+        <ol>
+          <li>
+            <strong>JSX khác HTML ở điểm nào? Kể ít nhất 4 điểm khác biệt.</strong><br>
+            <em>Gợi ý: class/className, for/htmlFor, tự đóng thẻ, camelCase attributes, style là object, một root element...</em>
+          </li>
+          <li>
+            <strong>Giải thích tại sao đoạn code sau lại lỗi và sửa lại cho đúng:</strong>
+            <pre><code><span class="kw">function</span> <span class="fn">Info</span>({ count }) {
+  <span class="kw">return</span> {count &gt; <span class="num">0</span> &amp;&amp; <span class="jsx">&lt;p&gt;Có {count} thông báo&lt;/p&gt;</span>};
+}</code></pre>
+          </li>
+          <li>
+            <strong>Sự khác biệt giữa Props và State là gì? Tại sao không được thay đổi Props trực tiếp?</strong>
+          </li>
+          <li>
+            <strong>Tại sao không nên dùng index làm key khi render danh sách? Cho ví dụ về trường hợp nó gây lỗi.</strong>
+          </li>
+          <li>
+            <strong>Viết một component <code>Alert</code> nhận props <code>type</code> ('success', 'error', 'warning') và <code>children</code>, hiển thị nội dung với màu sắc tương ứng.</strong>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <a href="chapter-09.html">
+          <span class="nav-dir">← Chương trước</span>
+          <span class="nav-title">Ch.9 Giới thiệu React</span>
+        </a>
+        <a href="chapter-11.html" class="next">
+          <span class="nav-dir">Chương tiếp →</span>
+          <span class="nav-title">Ch.11 State &amp; Event Handling</span>
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile menu toggle -->
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+  <script>
+    // Scroll progress bar
+    window.addEventListener('scroll', () => {
+      const doc = document.documentElement;
+      const scrollTop = doc.scrollTop || document.body.scrollTop;
+      const scrollHeight = doc.scrollHeight - doc.clientHeight;
+      const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+      document.getElementById('progressBar').style.width = progress + '%';
+    });
+
+    // Active nav link
+    const navLinks = document.querySelectorAll('.nav-link');
+    const currentHref = window.location.href;
+    navLinks.forEach(link => {
+      if (link.href === currentHref) link.classList.add('active');
+    });
+  </script>
+</body>
+</html>

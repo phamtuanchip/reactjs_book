@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 16: Quản lý State Toàn cục — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="chapter-16.html" class="nav-link active">Ch.16 Global State</a>
+        <a href="chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="chapter-20.html" class="nav-link">Ch.20 Testing</a>
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 16 · Phần 4: React Nâng cao</div>
+        <h1 class="chapter-title">Quản lý State Toàn cục</h1>
+        <p class="chapter-desc">Khi ứng dụng lớn lên, props drilling trở thành ác mộng. Chương này so sánh Context API, Zustand và Redux Toolkit — ba giải pháp phổ biến nhất cho global state management.</p>
+      </div>
+
+      <h2>16.1 Vấn đề Props Drilling</h2>
+      <div class="mermaid">
+graph TD
+    APP["⚡ App
+✅ user state"] -->|"truyền user"| LAY["Layout
+🔄 chỉ truyền tiếp"]
+    LAY -->|"truyền user"| HDR["Header
+🔄 chỉ truyền tiếp"]
+    HDR -->|"truyền user"| NAV["Navbar
+🔄 chỉ truyền tiếp"]
+    NAV -->|"truyền user"| AVT["👤 UserAvatar
+✅ DÙNG user ở đây!"]
+    style APP fill:#98c379,color:#333,stroke:#98c379
+    style LAY fill:#e5c07b,color:#333,stroke:#e5c07b
+    style HDR fill:#e5c07b,color:#333,stroke:#e5c07b
+    style NAV fill:#e5c07b,color:#333,stroke:#e5c07b
+    style AVT fill:#e06c75,color:#fff,stroke:#e06c75
+</div>
+
+      <h2>16.2 Context API (Built-in React)</h2>
+      <pre><code>// Tổ chức Context tốt hơn — kết hợp với useReducer
+import { createContext, useContext, useReducer } from 'react';
+
+// State
+const initialState = {
+  user: null,
+  isAuthenticated: false,
+  theme: 'dark',
+};
+
+// Reducer
+function appReducer(state, action) {
+  switch (action.type) {
+    case 'LOGIN':
+      return { ...state, user: action.payload, isAuthenticated: true };
+    case 'LOGOUT':
+      return { ...state, user: null, isAuthenticated: false };
+    case 'SET_THEME':
+      return { ...state, theme: action.payload };
+    default:
+      return state;
+  }
+}
+
+// Context
+const AppContext = createContext(null);
+
+// Provider
+export function AppProvider({ children }) {
+  const [state, dispatch] = useReducer(appReducer, initialState);
+
+  return (
+    &lt;AppContext.Provider value={{ state, dispatch }}&gt;
+      {children}
+    &lt;/AppContext.Provider&gt;
+  );
+}
+
+// Custom hook
+export function useApp() {
+  const context = useContext(AppContext);
+  if (!context) throw new Error('useApp must be used within AppProvider');
+  return context;
+}
+
+// Dùng trong component
+function UserAvatar() {
+  const { state, dispatch } = useApp();
+  return (
+    &lt;div&gt;
+      &lt;img src={state.user?.avatar} /&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'LOGOUT' })}&gt;Logout&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+      <div class="callout warning">
+        <div class="callout-title">⚠️ Hiệu năng Context</div>
+        <p>Khi context value thay đổi, TẤT CẢ component dùng <code>useContext</code> đó đều re-render. Tách context theo chức năng (UserContext, ThemeContext, CartContext riêng biệt) để giảm re-render không cần thiết.</p>
+      </div>
+
+      <h2>16.3 Zustand — State Management nhẹ và đơn giản</h2>
+      <pre><code># Cài đặt
+npm install zustand</code></pre>
+
+      <pre><code>import { create } from 'zustand';
+
+// Tạo store
+const useCartStore = create((set, get) =&gt; ({
+  // State
+  items: [],
+  total: 0,
+
+  // Actions
+  addItem: (product) =&gt; set((state) =&gt; {
+    const existing = state.items.find(i =&gt; i.id === product.id);
+    if (existing) {
+      return {
+        items: state.items.map(i =&gt;
+          i.id === product.id ? { ...i, qty: i.qty + 1 } : i
+        )
+      };
+    }
+    return { items: [...state.items, { ...product, qty: 1 }] };
+  }),
+
+  removeItem: (id) =&gt; set((state) =&gt; ({
+    items: state.items.filter(i =&gt; i.id !== id)
+  })),
+
+  clearCart: () =&gt; set({ items: [], total: 0 }),
+
+  // Computed (dùng get())
+  getTotalPrice: () =&gt; {
+    const { items } = get();
+    return items.reduce((sum, item) =&gt; sum + item.price * item.qty, 0);
+  }
+}));
+
+// Dùng trong component — CỰC ĐƠN GIẢN!
+function CartButton() {
+  const { items, addItem } = useCartStore();
+  return &lt;span&gt;{items.length}&lt;/span&gt;;
+}
+
+function ProductCard({ product }) {
+  const addItem = useCartStore(state =&gt; state.addItem); // Chỉ subscribe addItem
+  return &lt;button onClick={() =&gt; addItem(product)}&gt;Thêm vào giỏ&lt;/button&gt;;
+}
+
+// Zustand với persist (lưu vào localStorage)
+import { persist } from 'zustand/middleware';
+
+const useThemeStore = create(
+  persist(
+    (set) =&gt; ({
+      theme: 'dark',
+      setTheme: (theme) =&gt; set({ theme }),
+    }),
+    { name: 'theme-storage' } // localStorage key
+  )
+);</code></pre>
+
+      <h2>16.4 Redux Toolkit</h2>
+      <pre><code># Cài đặt
+npm install @reduxjs/toolkit react-redux</code></pre>
+
+      <pre><code>// store/cartSlice.js — Slice = reducer + actions
+import { createSlice } from '@reduxjs/toolkit';
+
+const cartSlice = createSlice({
+  name: 'cart',
+  initialState: { items: [] },
+  reducers: {
+    addItem: (state, action) =&gt; {
+      const existing = state.items.find(i =&gt; i.id === action.payload.id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        state.items.push({ ...action.payload, qty: 1 });
+      }
+      // Redux Toolkit dùng Immer → có thể "mutate" trực tiếp!
+    },
+    removeItem: (state, action) =&gt; {
+      state.items = state.items.filter(i =&gt; i.id !== action.payload);
+    },
+    clearCart: (state) =&gt; {
+      state.items = [];
+    }
+  }
+});
+
+export const { addItem, removeItem, clearCart } = cartSlice.actions;
+export default cartSlice.reducer;
+
+// store/index.js
+import { configureStore } from '@reduxjs/toolkit';
+import cartReducer from './cartSlice';
+
+export const store = configureStore({
+  reducer: {
+    cart: cartReducer,
+  }
+});
+
+// main.jsx
+import { Provider } from 'react-redux';
+&lt;Provider store={store}&gt;&lt;App /&gt;&lt;/Provider&gt;
+
+// Dùng trong component
+import { useSelector, useDispatch } from 'react-redux';
+
+function CartButton() {
+  const items = useSelector(state =&gt; state.cart.items);
+  const dispatch = useDispatch();
+
+  return (
+    &lt;div&gt;
+      &lt;span&gt;{items.length}&lt;/span&gt;
+      &lt;button onClick={() =&gt; dispatch(clearCart())}&gt;Xóa giỏ&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+      <h2>16.5 Khi nào dùng giải pháp nào?</h2>
+      <div class="mermaid">
+flowchart TD
+    Q["State chia sẻ ở đâu?"] --> L{"Chỉ 1-2
+component gần nhau?"}
+    L -->|"Có"| US["✅ useState / useReducer"]
+    L -->|"Không"| M{"Ít thay đổi
+(theme, locale)?"}
+    M -->|"Có"| UC["✅ useContext"]
+    M -->|"Không"| S{"App nhỏ-vừa?"}
+    S -->|"Có"| ZS["✅ Zustand
+(nhẹ, đơn giản)"]
+    S -->|"App lớn / team nhiều người"| RD["✅ Redux Toolkit
+(enterprise)"]
+    style US fill:#282c34,stroke:#98c379,color:#98c379
+    style UC fill:#282c34,stroke:#56b6c2,color:#56b6c2
+    style ZS fill:#282c34,stroke:#61dafb,color:#61dafb
+    style RD fill:#282c34,stroke:#e06c75,color:#e06c75
+</div>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+        <h3>Bài tập 16.1: Shopping Cart với Zustand</h3>
+        <pre><code>// Xây dựng shopping cart đầy đủ:
+// Store gồm:
+// - items: CartItem[]
+// - addItem(product)
+// - removeItem(id)
+// - updateQty(id, qty)
+// - clearCart()
+// - totalItems: number (computed)
+// - totalPrice: number (computed)
+
+// UI components:
+// - ProductGrid: hiển thị sản phẩm + nút "Thêm vào giỏ"
+// - CartSidebar: hiển thị giỏ hàng, cập nhật số lượng, xóa
+// - CartIcon: icon với badge số lượng sản phẩm
+// - Checkout: tổng giá, nút đặt hàng
+
+// Bonus: persist cart vào localStorage</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Tại sao Context API có thể gây vấn đề hiệu năng nếu dùng sai?</p>
+          <ul>
+            <li>A. Context chậm hơn useState về tốc độ xử lý</li>
+            <li>B. Khi context value thay đổi, TẤT CẢ consumer đều re-render, kể cả những component không dùng phần thay đổi</li>
+            <li>C. Context không hỗ trợ TypeScript</li>
+            <li>D. Context chỉ hoạt động với class components</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Giải pháp: tách context nhỏ theo chức năng (không để tất cả trong 1 context lớn), hoặc dùng Zustand/Redux vì chúng chỉ re-render component subscribe đúng slice state đó.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Điểm khác biệt lớn nhất giữa Zustand và Redux Toolkit?</p>
+          <ul>
+            <li>A. Zustand là TypeScript, Redux là JavaScript</li>
+            <li>B. Zustand đơn giản hơn, ít boilerplate hơn; Redux Toolkit có nhiều tính năng hơn (DevTools, middleware, RTK Query)</li>
+            <li>C. Redux nhanh hơn Zustand</li>
+            <li>D. Chúng hoàn toàn giống nhau</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Zustand: ~1KB, API đơn giản, không cần Provider. Redux Toolkit: mạnh mẽ hơn, có Redux DevTools, RTK Query cho data fetching, nhưng phức tạp hơn và cần setup nhiều hơn.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Trong Redux Toolkit, tại sao có thể "mutate" state trực tiếp trong reducer?</p>
+          <ul>
+            <li>A. Redux Toolkit thay đổi quy tắc immutability</li>
+            <li>B. Redux Toolkit dùng thư viện Immer bên dưới, tự convert mutations thành immutable updates</li>
+            <li>C. Redux Toolkit chạy trên server nên mutation là OK</li>
+            <li>D. Đây là tính năng của JavaScript mới nhất</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Immer cho phép viết code "mutation style" nhưng bên dưới tạo bản copy immutable. Điều này giúp code dễ đọc hơn so với spread operator liên tục trong Redux thuần.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> Selector trong Zustand (<code>useStore(state =&gt; state.cart.items)</code>) có lợi ích gì?</p>
+          <ul>
+            <li>A. Làm code chạy nhanh hơn</li>
+            <li>B. Component chỉ re-render khi phần state đó thay đổi, không re-render khi phần khác thay đổi</li>
+            <li>C. Tự động cache dữ liệu</li>
+            <li>D. Không có lợi ích đặc biệt</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Selector tối ưu: component chỉ subscribe phần state nó cần. Nếu subscribe toàn bộ store (<code>useStore()</code>), component re-render khi BẤT KỲ phần nào của store thay đổi.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> "Server state" và "client state" khác nhau thế nào?</p>
+          <ul>
+            <li>A. Server state lưu trên server, client state lưu trong localStorage</li>
+            <li>B. Server state: dữ liệu từ API (cache, loading, error); Client state: UI state (modal open, theme, filter). Zustand/Redux cho client state, TanStack Query cho server state</li>
+            <li>C. Không có sự khác biệt, dùng Redux cho cả hai</li>
+            <li>D. Server state là real-time, client state là static</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Phân biệt quan trọng: server state (data từ API) cần caching, background refetch, invalidation → dùng TanStack Query. Client state (UI preferences, form data) → dùng useState/Zustand.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-15.html">← Chương 15: Hooks Nâng cao</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-17.html">Chương 17: Data Fetching →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 6: Object và Array Nâng cao — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="chapter-06.html" class="nav-link active">Ch.6 Object &amp; Array</a>
+        <a href="chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 6 · Phần 2: JavaScript</div>
+        <h1 class="chapter-title">Object và Array Nâng cao</h1>
+        <p class="chapter-desc">Object và Array là hai cấu trúc dữ liệu quan trọng nhất trong JavaScript. Nắm vững destructuring, spread, và các array methods là nền tảng để làm việc hiệu quả với state và props trong React.</p>
+      </div>
+
+      <h2>6.1 Object Nâng cao</h2>
+
+      <h3>Tạo và truy cập Object</h3>
+      <pre><code>// Tạo object
+const user = {
+  name: "Nguyễn An",
+  age: 25,
+  role: "developer",
+  address: {           // Nested object
+    city: "Hà Nội",
+    district: "Cầu Giấy"
+  },
+  skills: ["HTML", "CSS", "JavaScript"] // Array trong object
+};
+
+// Truy cập: dot notation
+user.name;           // "Nguyễn An"
+user.address.city;   // "Hà Nội"
+
+// Truy cập: bracket notation (khi key là biến hoặc có khoảng trắng)
+const field = "name";
+user[field];         // "Nguyễn An"
+user["role"];        // "developer"
+
+// Thêm / sửa / xóa property
+user.email = "an@example.com"; // thêm
+user.age = 26;                  // sửa
+delete user.role;               // xóa</code></pre>
+
+      <h3>Shorthand Properties và Methods</h3>
+      <pre><code>const name = "An";
+const age = 25;
+
+// Cách cũ
+const user1 = { name: name, age: age };
+
+// Shorthand (ES6) — khi tên biến = tên key
+const user2 = { name, age };
+
+// Method shorthand
+const calc = {
+  value: 0,
+  // Cách cũ
+  add: function(n) { this.value += n; },
+  // Shorthand
+  subtract(n) { this.value -= n; },
+  // Arrow (không có this)
+  getDouble: () => calc.value * 2
+};
+
+// Computed property names
+const key = "dynamicKey";
+const obj = {
+  [key]: "value",                    // { dynamicKey: "value" }
+  [`${key}_2`]: "value2",            // { dynamicKey_2: "value2" }
+  [Date.now()]: "timestamp-key"
+};</code></pre>
+
+      <h3>Destructuring Object</h3>
+      <p>Destructuring là cú pháp trích xuất giá trị từ object/array vào các biến riêng — rất phổ biến trong React.</p>
+      <pre><code>const user = { name: "An", age: 25, role: "admin", city: "HCM" };
+
+// Cách cũ
+const name1 = user.name;
+const age1 = user.age;
+
+// Destructuring — gọn hơn nhiều
+const { name, age } = user;
+
+// Đổi tên biến
+const { name: userName, role: userRole } = user;
+console.log(userName); // "An"
+
+// Giá trị mặc định
+const { country = "Việt Nam", name: n } = user;
+console.log(country); // "Việt Nam" (user không có property này)
+
+// Bỏ qua một số property
+const { name: n2, ...rest } = user;
+// rest = { age: 25, role: "admin", city: "HCM" }
+
+// Nested destructuring
+const { address: { city, district } } = {
+  address: { city: "Hà Nội", district: "Cầu Giấy" }
+};
+
+// Destructuring trong tham số hàm
+function displayUser({ name, age, role = "user" }) {
+  console.log(`${name} (${age}) - ${role}`);
+}
+displayUser(user);</code></pre>
+
+      <h3>Spread Operator với Object</h3>
+      <pre><code>const defaults = { theme: "light", lang: "vi", fontSize: 16 };
+const userPrefs = { theme: "dark", fontSize: 18 };
+
+// Merge objects (sau ghi đè trước)
+const settings = { ...defaults, ...userPrefs };
+// { theme: "dark", lang: "vi", fontSize: 18 }
+
+// Clone object (shallow copy)
+const original = { name: "An", scores: [90, 85, 78] };
+const clone = { ...original };
+clone.name = "Bình"; // không ảnh hưởng original
+clone.scores.push(92); // ảnh hưởng! scores là reference
+
+// Deep clone — dùng structuredClone (modern) hoặc JSON trick
+const deepClone = structuredClone(original);
+// Hoặc: JSON.parse(JSON.stringify(original))
+
+// Cập nhật một phần object (pattern quan trọng trong React)
+const state = { user: "An", count: 0, loading: false };
+const newState = { ...state, count: state.count + 1 };
+// { user: "An", count: 1, loading: false }
+
+// Cập nhật nested
+const profile = { name: "An", address: { city: "HN", zip: "10000" } };
+const updatedProfile = {
+  ...profile,
+  address: { ...profile.address, city: "HCM" }
+};</code></pre>
+
+      <h3>Object Methods hữu ích</h3>
+      <pre><code>const user = { name: "An", age: 25, role: "dev" };
+
+// Object.keys() — lấy mảng các key
+Object.keys(user);   // ["name", "age", "role"]
+
+// Object.values() — lấy mảng các value
+Object.values(user); // ["An", 25, "dev"]
+
+// Object.entries() — lấy mảng các [key, value]
+Object.entries(user); // [["name","An"], ["age",25], ["role","dev"]]
+
+// Dùng với destructuring
+for (const [key, value] of Object.entries(user)) {
+  console.log(`${key}: ${value}`);
+}
+
+// Object.fromEntries() — chuyển từ entries về object
+const entries = [["a", 1], ["b", 2]];
+Object.fromEntries(entries); // { a: 1, b: 2 }
+
+// Chuyển đổi object
+const doubled = Object.fromEntries(
+  Object.entries(user).map(([k, v]) =>
+    [k, typeof v === "number" ? v * 2 : v]
+  )
+);
+
+// Object.assign() — merge (tương đương spread)
+const merged = Object.assign({}, defaults, userPrefs);
+
+// Object.freeze() — không thể thay đổi object
+const config = Object.freeze({ api: "https://api.example.com", version: 2 });
+// config.api = "..."; // Silently fail (hoặc throw trong strict mode)
+
+// Kiểm tra property
+"name" in user;              // true
+user.hasOwnProperty("name"); // true</code></pre>
+
+      <h2>6.2 Array Methods Nâng cao</h2>
+      <p>Các array methods dưới đây là những gì bạn dùng hàng ngày trong React để render danh sách, lọc dữ liệu, và cập nhật state.</p>
+
+      <pre><code>const products = [
+  { id: 1, name: "Laptop", price: 15000000, category: "tech", inStock: true },
+  { id: 2, name: "Áo sơ mi", price: 350000, category: "fashion", inStock: false },
+  { id: 3, name: "Điện thoại", price: 8000000, category: "tech", inStock: true },
+  { id: 4, name: "Quần jean", price: 450000, category: "fashion", inStock: true },
+  { id: 5, name: "Tai nghe", price: 2500000, category: "tech", inStock: true },
+];
+
+// map — biến đổi mỗi phần tử
+const names = products.map(p => p.name);
+// ["Laptop", "Áo sơ mi", "Điện thoại", "Quần jean", "Tai nghe"]
+
+const withDiscount = products.map(p => ({
+  ...p,
+  discountedPrice: p.price * 0.9
+}));
+
+// filter — lọc phần tử
+const techProducts = products.filter(p => p.category === "tech");
+const available = products.filter(p => p.inStock);
+const expensive = products.filter(p => p.price > 1000000);
+
+// find — tìm phần tử đầu tiên thỏa điều kiện
+const laptop = products.find(p => p.name === "Laptop");
+const firstTech = products.find(p => p.category === "tech");
+
+// findIndex — tìm INDEX của phần tử đầu tiên
+const laptopIndex = products.findIndex(p => p.id === 1); // 0
+
+// some — có ÍT NHẤT 1 phần tử thỏa điều kiện?
+const hasExpensive = products.some(p => p.price > 10000000); // true
+const hasOutOfStock = products.some(p => !p.inStock);       // true
+
+// every — TẤT CẢ phần tử thỏa điều kiện?
+const allInStock = products.every(p => p.inStock); // false
+const allAffordable = products.every(p => p.price < 20000000); // true
+
+// reduce — gộp thành 1 giá trị
+const totalValue = products.reduce((sum, p) => sum + p.price, 0);
+// 26300000
+
+// Nhóm theo category
+const byCategory = products.reduce((groups, p) => {
+  const category = p.category;
+  return {
+    ...groups,
+    [category]: [...(groups[category] || []), p]
+  };
+}, {});
+// { tech: [...], fashion: [...] }
+
+// sort — sắp xếp (CẦN THẬN: sort thay đổi mảng gốc!)
+const byPrice = [...products].sort((a, b) => a.price - b.price); // tăng dần
+const byPriceDesc = [...products].sort((a, b) => b.price - a.price); // giảm dần
+const byName = [...products].sort((a, b) => a.name.localeCompare(b.name));
+
+// flat và flatMap
+const nested = [[1, 2], [3, 4], [5]];
+nested.flat(); // [1, 2, 3, 4, 5]
+
+const sentences = ["Hello world", "React is great"];
+sentences.flatMap(s => s.split(" ")); // ["Hello", "world", "React", "is", "great"]</code></pre>
+
+      <h3>Cập nhật Array không thay đổi (Immutable Updates)</h3>
+      <p>Trong React, bạn KHÔNG được thay đổi state trực tiếp. Luôn tạo mảng mới:</p>
+      <pre><code>const items = [1, 2, 3, 4, 5];
+
+// Thêm phần tử vào cuối
+const added = [...items, 6]; // [1, 2, 3, 4, 5, 6]
+
+// Thêm vào đầu
+const prepended = [0, ...items]; // [0, 1, 2, 3, 4, 5]
+
+// Thêm vào vị trí bất kỳ (index 2)
+const inserted = [...items.slice(0, 2), 99, ...items.slice(2)];
+// [1, 2, 99, 3, 4, 5]
+
+// Xóa phần tử (theo index)
+const removed = items.filter((_, index) => index !== 2); // [1, 2, 4, 5]
+
+// Xóa theo value
+const removedValue = items.filter(item => item !== 3); // [1, 2, 4, 5]
+
+// Cập nhật phần tử (theo index)
+const updated = items.map((item, index) =>
+  index === 2 ? item * 10 : item
+); // [1, 2, 30, 4, 5]
+
+// Cập nhật object trong array (theo id)
+const todos = [
+  { id: 1, text: "Học HTML", done: false },
+  { id: 2, text: "Học CSS", done: false },
+  { id: 3, text: "Học React", done: false },
+];
+
+const toggleTodo = (id) => todos.map(todo =>
+  todo.id === id ? { ...todo, done: !todo.done } : todo
+);</code></pre>
+
+      <h2>6.3 Immutability — Tại sao không thay đổi trực tiếp?</h2>
+      <p>Immutability nghĩa là không thay đổi dữ liệu gốc mà luôn tạo bản sao mới. Đây là nguyên tắc cốt lõi trong React.</p>
+
+      <pre><code>// VẤN ĐỀ: mutation trực tiếp
+const state = { count: 0, items: [] };
+
+// Sai — thay đổi object gốc
+state.count = 1;  // React không biết state đã thay đổi!
+state.items.push("item"); // Cũng sai!
+
+// React so sánh tham chiếu (reference): state === newState
+// Nếu cùng reference → không re-render → UI không cập nhật!
+
+// Đúng — tạo object mới
+const newState = { ...state, count: 1 };
+// newState !== state → React biết cần re-render
+
+// Đúng — tạo array mới
+const newItems = [...state.items, "item"];
+
+// Tại sao?
+const arr = [1, 2, 3];
+const arr2 = arr;        // arr2 và arr là CÙNG tham chiếu
+arr.push(4);             // Thay đổi arr → arr2 cũng thay đổi!
+console.log(arr2);       // [1, 2, 3, 4]
+
+const arr3 = [...arr];   // arr3 là THAM CHIẾU MỚI
+arr3.push(5);            // Không ảnh hưởng arr
+console.log(arr);        // [1, 2, 3, 4]</code></pre>
+
+      <h2>6.4 JSON — Định dạng trao đổi dữ liệu</h2>
+      <pre><code>// JSON = JavaScript Object Notation
+// Dùng để lưu và truyền dữ liệu (giữa client và server)
+
+// JSON.stringify() — chuyển JavaScript → JSON string
+const user = {
+  name: "An",
+  age: 25,
+  skills: ["HTML", "React"],
+  active: true
+};
+const jsonString = JSON.stringify(user);
+// '{"name":"An","age":25,"skills":["HTML","React"],"active":true}'
+
+// JSON.parse() — chuyển JSON string → JavaScript object
+const parsed = JSON.parse(jsonString);
+parsed.name; // "An"
+
+// Lưu vào localStorage (chỉ lưu được string)
+localStorage.setItem("user", JSON.stringify(user));
+const savedUser = JSON.parse(localStorage.getItem("user"));
+
+// JSON.stringify với indentation (để debug)
+console.log(JSON.stringify(user, null, 2));
+// {
+//   "name": "An",
+//   "age": 25,
+//   ...
+// }
+
+// Giới hạn của JSON:
+// - Không hỗ trợ: undefined, function, Symbol, Date (mất timezone)
+// - Có circular reference → lỗi
+const obj = { fn: () => "hello", undef: undefined };
+JSON.stringify(obj); // "{}" — cả hai bị bỏ qua!</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+
+        <h3>Bài tập 6.1: Xử lý danh sách sản phẩm</h3>
+        <pre><code>const products = [
+  { id: 1, name: "Laptop Dell", price: 18500000, category: "tech", rating: 4.5, stock: 12 },
+  { id: 2, name: "iPhone 15", price: 22000000, category: "tech", rating: 4.8, stock: 5 },
+  { id: 3, name: "Áo thun polo", price: 299000, category: "fashion", rating: 4.2, stock: 50 },
+  { id: 4, name: "Quần jean slim", price: 549000, category: "fashion", rating: 3.9, stock: 30 },
+  { id: 5, name: "Tai nghe Sony", price: 3500000, category: "tech", rating: 4.6, stock: 8 },
+  { id: 6, name: "Chuột Logitech", price: 890000, category: "tech", rating: 4.3, stock: 25 },
+];
+
+// Thực hiện các yêu cầu sau:
+
+// 1. Lấy sản phẩm tech có giá dưới 5 triệu, sắp xếp theo giá tăng dần
+const affordableTech = /* ... */;
+
+// 2. Tính tổng giá trị hàng tồn kho (price * stock)
+const totalInventoryValue = /* ... */;
+
+// 3. Tìm sản phẩm có rating cao nhất
+const bestRated = /* ... */;
+
+// 4. Nhóm sản phẩm theo category, đếm số lượng mỗi loại
+const countByCategory = /* ... */;
+// { tech: 4, fashion: 2 }
+
+// 5. Tạo danh sách tên sản phẩm có stock < 10
+const lowStockNames = /* ... */;
+// ["iPhone 15", "Tai nghe Sony"]</code></pre>
+
+        <h3>Bài tập 6.2: Quản lý Todo List (bất biến)</h3>
+        <pre><code>// Implement các function sau mà KHÔNG thay đổi array gốc
+const todos = [
+  { id: 1, text: "Học HTML", done: true, priority: "low" },
+  { id: 2, text: "Học CSS", done: false, priority: "medium" },
+  { id: 3, text: "Học JavaScript", done: false, priority: "high" },
+];
+
+// Thêm todo mới
+function addTodo(todos, text, priority = "medium") { /* ... */ }
+
+// Xóa todo theo id
+function removeTodo(todos, id) { /* ... */ }
+
+// Toggle done
+function toggleTodo(todos, id) { /* ... */ }
+
+// Cập nhật text
+function updateTodo(todos, id, newText) { /* ... */ }
+
+// Lọc theo priority
+function filterByPriority(todos, priority) { /* ... */ }
+
+// Test:
+const t1 = addTodo(todos, "Học React", "high");
+const t2 = removeTodo(t1, 1);
+const t3 = toggleTodo(t2, 2);
+console.log(t3);</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Kết quả của đoạn code sau?</p>
+          <pre><code>const { a, b = 10, ...rest } = { a: 1, c: 3, d: 4 };
+console.log(a, b, rest);</code></pre>
+          <ul>
+            <li>A. <code>1 undefined { c: 3, d: 4 }</code></li>
+            <li>B. <code>1 10 { c: 3, d: 4 }</code></li>
+            <li>C. <code>1 10 { b: 10, c: 3, d: 4 }</code></li>
+            <li>D. Lỗi</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>a = 1</code> (từ object), <code>b = 10</code> (default vì object không có b), <code>rest = { c: 3, d: 4 }</code> (phần còn lại sau khi lấy a và b).</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Sự khác biệt giữa <code>find()</code> và <code>filter()</code>?</p>
+          <ul>
+            <li>A. <code>find()</code> trả về mảng, <code>filter()</code> trả về phần tử đơn</li>
+            <li>B. <code>find()</code> trả về phần tử đầu tiên thỏa điều kiện, <code>filter()</code> trả về mảng tất cả phần tử thỏa điều kiện</li>
+            <li>C. Chúng hoàn toàn giống nhau</li>
+            <li>D. <code>find()</code> thay đổi mảng gốc</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>find()</code> dừng lại khi tìm thấy phần tử đầu tiên và trả về phần tử đó (hoặc <code>undefined</code>). <code>filter()</code> duyệt toàn bộ mảng và trả về mảng mới chứa tất cả phần tử thỏa điều kiện.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Tại sao trong React, ta không nên gọi <code>array.push()</code> để cập nhật state?</p>
+          <ul>
+            <li>A. <code>push()</code> quá chậm</li>
+            <li>B. <code>push()</code> thay đổi mảng gốc, React không phát hiện được thay đổi và không re-render</li>
+            <li>C. <code>push()</code> không hoạt động trong React</li>
+            <li>D. <code>push()</code> trả về undefined</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — React so sánh tham chiếu để phát hiện thay đổi. <code>push()</code> thay đổi array tại chỗ → tham chiếu không đổi → React không biết cần re-render. Dùng spread: <code>setItems([...items, newItem])</code>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> <code>JSON.stringify({ fn: () => {}, val: undefined })</code> trả về gì?</p>
+          <ul>
+            <li>A. <code>'{"fn":"() => {}","val":"undefined"}'</code></li>
+            <li>B. Lỗi</li>
+            <li>C. <code>'{}'</code></li>
+            <li>D. <code>'{"fn":null,"val":null}'</code></li>
+          </ul>
+          <p class="answer"><strong>Đáp án: C — <code>'{}'</code></strong> — JSON không hỗ trợ functions và <code>undefined</code>. Các property này bị bỏ qua hoàn toàn khi stringify. <code>null</code> thì được hỗ trợ.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> Cách nào đúng để cập nhật <em>một trường</em> trong object state của React?</p>
+          <ul>
+            <li>A. <code>state.name = "Mới";</code></li>
+            <li>B. <code>setState(state.name = "Mới");</code></li>
+            <li>C. <code>setState({ ...state, name: "Mới" });</code></li>
+            <li>D. <code>setState(Object.assign(state, { name: "Mới" }));</code></li>
+          </ul>
+          <p class="answer"><strong>Đáp án: C</strong> — Spread tạo object mới với tất cả property cũ, sau đó override <code>name</code>. A và B đều mutate trực tiếp. D dùng <code>Object.assign</code> mutate đối số đầu tiên (state gốc).</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-05.html">← Chương 5: Hàm &amp; Phạm vi biến</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-07.html">Chương 7: Lập trình Bất đồng bộ →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

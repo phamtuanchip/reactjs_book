@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 3: CSS — Trang điểm cho trang web — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="chapter-03.html" class="nav-link active">Ch.3 CSS — Trang điểm</a>
+
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="../part4-react-advanced/chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="../part4-react-advanced/chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="../part4-react-advanced/chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="../part4-react-advanced/chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="../part4-react-advanced/chapter-20.html" class="nav-link">Ch.20 Testing</a>
+
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 3 · Phần 1: Nền tảng Web</div>
+        <h1 class="chapter-title">CSS — Trang điểm cho trang web</h1>
+        <p class="chapter-desc">CSS (Cascading Style Sheets) biến HTML thô thành giao diện đẹp, chuyên nghiệp. Từ màu sắc, font chữ đến layout phức tạp — CSS kiểm soát tất cả những gì bạn nhìn thấy.</p>
+      </div>
+
+      <h2>3.1 CSS là gì? Cách liên kết với HTML</h2>
+      <p>CSS (Cascading Style Sheets — Bảng biểu định kiểu theo tầng) là ngôn ngữ mô tả <strong>cách trình bày</strong> của tài liệu HTML. CSS tách biệt hoàn toàn giữa nội dung (HTML) và giao diện (CSS) — nguyên tắc quan trọng trong lập trình web.</p>
+
+      <h3>3 cách liên kết CSS với HTML</h3>
+      <pre><code>&lt;!-- 1. External CSS (khuyến nghị) — CSS trong file riêng --&gt;
+&lt;head&gt;
+  &lt;link rel="stylesheet" href="styles.css"&gt;
+&lt;/head&gt;
+
+&lt;!-- 2. Internal CSS — CSS trong thẻ &lt;style&gt; trong &lt;head&gt; --&gt;
+&lt;head&gt;
+  &lt;style&gt;
+    body { background: #f0f0f0; }
+    h1 { color: navy; }
+  &lt;/style&gt;
+&lt;/head&gt;
+
+&lt;!-- 3. Inline CSS — CSS trực tiếp trên phần tử (tránh dùng) --&gt;
+&lt;p style="color: red; font-size: 18px;"&gt;Đoạn văn màu đỏ&lt;/p&gt;</code></pre>
+
+      <div class="callout info">
+        <div class="callout-title">💡 Tại sao External CSS là tốt nhất?</div>
+        <p>External CSS (<code>link href</code>) cho phép bạn: (1) Tái sử dụng một file CSS cho nhiều trang HTML, (2) Trình duyệt cache file CSS (tải trang nhanh hơn), (3) Tách biệt rõ ràng giữa cấu trúc và giao diện.</p>
+      </div>
+
+      <h2>3.2 Selector, Property và Value</h2>
+      <p>Cú pháp CSS gồm 3 phần:</p>
+      <pre><code>/* Cú pháp cơ bản */
+selector {
+  property: value;
+  property: value;
+}
+
+/* Ví dụ */
+h1 {
+  color: #61dafb;     /* màu chữ */
+  font-size: 2rem;    /* cỡ chữ */
+  font-weight: 700;   /* độ đậm */
+  text-align: center; /* căn giữa */
+}</code></pre>
+
+      <h3>Các loại Selector</h3>
+      <pre><code>/* === BASIC SELECTORS === */
+
+/* Element selector — áp dụng cho tất cả thẻ h2 */
+h2 { color: blue; }
+
+/* Class selector — áp dụng cho phần tử có class="btn" */
+.btn { padding: 10px 20px; }
+
+/* ID selector — áp dụng cho phần tử có id="header" */
+#header { background: #282c34; }
+
+/* Universal selector — áp dụng cho tất cả phần tử */
+* { box-sizing: border-box; }
+
+/* === COMBINATOR SELECTORS === */
+
+/* Descendant: tất cả &lt;a&gt; bên trong &lt;nav&gt; */
+nav a { color: white; }
+
+/* Child: chỉ &lt;li&gt; là con trực tiếp của &lt;ul&gt; */
+ul > li { list-style: none; }
+
+/* Adjacent sibling: &lt;p&gt; đứng ngay sau &lt;h2&gt; */
+h2 + p { color: gray; }
+
+/* === PSEUDO-CLASSES === */
+a:hover { text-decoration: underline; }     /* khi hover */
+a:active { opacity: 0.8; }                  /* khi click */
+a:visited { color: purple; }                /* đã thăm */
+input:focus { border-color: #61dafb; }      /* khi focus */
+li:first-child { font-weight: bold; }       /* phần tử đầu */
+li:last-child { border-bottom: none; }      /* phần tử cuối */
+li:nth-child(2n) { background: #f5f5f5; }   /* chẵn */
+p:not(.special) { color: gray; }            /* không có class */
+
+/* === PSEUDO-ELEMENTS === */
+p::first-line { font-weight: bold; }        /* dòng đầu */
+p::first-letter { font-size: 2em; }         /* chữ đầu */
+.btn::before { content: "→ "; }             /* thêm trước */
+.btn::after { content: " ✓"; }              /* thêm sau */
+
+/* === ATTRIBUTE SELECTORS === */
+input[type="email"] { border: 2px solid blue; }
+a[target="_blank"]::after { content: " ↗"; }
+img[alt=""] { border: 3px solid red; }      /* ảnh thiếu alt! */</code></pre>
+
+      <h3>Specificity — Độ ưu tiên</h3>
+      <p>Khi nhiều rule CSS áp dụng cho cùng một phần tử, quy tắc <strong>specificity</strong> quyết định rule nào thắng:</p>
+      <div class="mermaid">
+graph TD
+    A["🚫 !important
+— Luôn thắng, tránh dùng —"] --> B["💡 Inline style
+style=&quot;...&quot; — 1,0,0,0"]
+    B --> C["🔷 ID selector
+#id — 0,1,0,0"]
+    C --> D["🔶 Class / Pseudo-class
+.class :hover — 0,0,1,0"]
+    D --> E["📄 Element
+div p h1 — 0,0,0,1"]
+    style A fill:#e06c75,color:#fff,stroke:#e06c75
+    style B fill:#e5c07b,color:#333,stroke:#e5c07b
+    style C fill:#61dafb,color:#333,stroke:#61dafb
+    style D fill:#98c379,color:#333,stroke:#98c379
+    style E fill:#56b6c2,color:#333,stroke:#56b6c2
+</div>
+
+      <h2>3.3 Box Model</h2>
+      <p>Mọi phần tử HTML đều là một "hộp" (box). Box model mô tả không gian xung quanh phần tử đó:</p>
+
+      <div class="mermaid">
+graph TD
+    subgraph MG["🔲 MARGIN — Khoảng cách bên ngoài"]
+        subgraph BD["🟫 BORDER — Đường viền"]
+            subgraph PD["🟨 PADDING — Đệm bên trong"]
+                CT["📦 CONTENT
+width × height"]
+            end
+        end
+    end
+    style MG fill:#1e2127,stroke:#e06c75,color:#e06c75
+    style BD fill:#282c34,stroke:#e5c07b,color:#e5c07b
+    style PD fill:#21252b,stroke:#98c379,color:#98c379
+    style CT fill:#2c313a,stroke:#61dafb,color:#61dafb
+</div>
+
+      <pre><code>.box {
+  /* Content */
+  width: 300px;
+  height: 200px;
+
+  /* Padding — khoảng cách bên TRONG border */
+  padding: 20px;              /* tất cả 4 phía */
+  padding: 10px 20px;         /* trên/dưới | trái/phải */
+  padding: 10px 20px 15px 25px; /* trên | phải | dưới | trái */
+  padding-top: 10px;
+
+  /* Border — đường viền */
+  border: 2px solid #61dafb;
+  border-radius: 8px;         /* bo góc */
+  border-top: 3px dashed red;
+
+  /* Margin — khoảng cách bên NGOÀI border */
+  margin: 16px;
+  margin: 0 auto;             /* căn giữa theo chiều ngang */
+  margin-bottom: 24px;
+}
+
+/* box-sizing: border-box — QUAN TRỌNG!
+   Mặc định (content-box): width = content only
+   border-box: width bao gồm cả padding và border */
+* {
+  box-sizing: border-box; /* Best practice — luôn thêm dòng này */
+}</code></pre>
+
+      <div class="callout info">
+        <div class="callout-title">💡 box-sizing: border-box</div>
+        <p>Với <code>content-box</code> (mặc định): nếu bạn set <code>width: 300px; padding: 20px; border: 2px solid</code>, phần tử thực sự rộng 344px. Gây nhầm lẫn! Với <code>border-box</code>: tổng chiều rộng luôn là 300px — dễ tính toán hơn nhiều. Luôn đặt <code>* { box-sizing: border-box; }</code> ở đầu file CSS.</p>
+      </div>
+
+      <h2>3.4 Flexbox — Layout 1 chiều</h2>
+      <p>Flexbox (Flexible Box Layout) là công cụ mạnh mẽ để sắp xếp các phần tử theo <strong>một chiều</strong> (hàng hoặc cột). Đây là layout system bạn dùng nhiều nhất trong React.</p>
+
+      <pre><code>/* Container (cha) */
+.container {
+  display: flex;
+
+  /* Hướng sắp xếp */
+  flex-direction: row;           /* → hàng (mặc định) */
+  flex-direction: column;        /* ↓ cột */
+  flex-direction: row-reverse;   /* ← hàng ngược */
+
+  /* Căn chỉnh theo trục chính (main axis) */
+  justify-content: flex-start;   /* dồn về đầu */
+  justify-content: flex-end;     /* dồn về cuối */
+  justify-content: center;       /* căn giữa */
+  justify-content: space-between; /* cách đều, sát mép */
+  justify-content: space-around;  /* cách đều với margin */
+  justify-content: space-evenly;  /* cách đều hoàn toàn */
+
+  /* Căn chỉnh theo trục phụ (cross axis) */
+  align-items: stretch;          /* kéo dài (mặc định) */
+  align-items: flex-start;       /* về đầu */
+  align-items: flex-end;         /* về cuối */
+  align-items: center;           /* căn giữa */
+  align-items: baseline;         /* theo baseline chữ */
+
+  /* Xuống dòng */
+  flex-wrap: nowrap;             /* không xuống dòng (mặc định) */
+  flex-wrap: wrap;               /* cho phép xuống dòng */
+
+  /* Khoảng cách giữa các item */
+  gap: 16px;                     /* khoảng cách đều */
+  gap: 8px 16px;                 /* hàng | cột */
+}
+
+/* Item (con) */
+.item {
+  /* Phân chia không gian */
+  flex-grow: 1;    /* chiếm không gian còn lại */
+  flex-shrink: 0;  /* không co lại khi thiếu chỗ */
+  flex-basis: 200px; /* kích thước cơ sở */
+  flex: 1;         /* shorthand: flex-grow:1, shrink:1, basis:0 */
+  flex: 0 0 200px; /* fixed 200px, không grow/shrink */
+
+  /* Căn chỉnh riêng từng item */
+  align-self: center;
+  order: 2;        /* thứ tự hiển thị */
+}</code></pre>
+
+      <h3>Ví dụ thực tế với Flexbox</h3>
+      <pre><code>/* Navigation bar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  height: 60px;
+  background: #282c34;
+}
+
+/* Card grid */
+.card-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.card {
+  flex: 1 1 300px; /* co giãn, tối thiểu 300px */
+  max-width: 400px;
+}
+
+/* Căn giữa một phần tử */
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* full màn hình */
+}</code></pre>
+
+      <h2>3.5 CSS Grid — Layout 2 chiều</h2>
+      <p>CSS Grid dùng cho layout <strong>hai chiều</strong> (hàng và cột cùng lúc). Phù hợp hơn Flexbox khi cần layout dạng lưới phức tạp.</p>
+
+      <pre><code>.grid-container {
+  display: grid;
+
+  /* Định nghĩa cột */
+  grid-template-columns: 200px 1fr 1fr;     /* 3 cột */
+  grid-template-columns: repeat(3, 1fr);     /* 3 cột bằng nhau */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* responsive */
+
+  /* Định nghĩa hàng */
+  grid-template-rows: 60px 1fr auto;
+  grid-auto-rows: minmax(100px, auto);      /* hàng tự động */
+
+  /* Khoảng cách */
+  gap: 16px;
+  column-gap: 24px;
+  row-gap: 16px;
+
+  /* Areas (đặt tên vùng) */
+  grid-template-areas:
+    "header  header  header"
+    "sidebar content content"
+    "footer  footer  footer";
+}
+
+/* Đặt phần tử vào area */
+.header  { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.content { grid-area: content; }
+.footer  { grid-area: footer; }
+
+/* Hoặc dùng line numbers */
+.item {
+  grid-column: 1 / 3;    /* từ line 1 đến line 3 (chiếm 2 cột) */
+  grid-row: 2 / 4;       /* chiếm 2 hàng */
+  grid-column: span 2;   /* hoặc: span 2 cột */
+}</code></pre>
+
+      <h2>3.6 Responsive Design và Media Query</h2>
+      <p>Responsive design là thiết kế giao diện thích nghi với mọi kích thước màn hình — từ điện thoại nhỏ đến màn hình desktop lớn.</p>
+
+      <pre><code>/* Mobile First — viết CSS cho mobile trước, rồi thêm cho lớn hơn */
+
+/* Mặc định (mobile): 1 cột */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* Tablet (≥ 768px): 2 cột */
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop (≥ 1024px): 3 cột */
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Breakpoints phổ biến */
+/* sm: 640px | md: 768px | lg: 1024px | xl: 1280px | 2xl: 1536px */
+/* (đây cũng là breakpoints của Tailwind CSS) */
+
+/* Media queries khác */
+@media (prefers-color-scheme: dark) {
+  body { background: #1a1a2e; color: white; }
+}
+
+@media print {
+  .sidebar, .nav { display: none; }
+}
+
+@media (max-width: 767px) {
+  /* Desktop-first: ẩn trên mobile */
+  .desktop-only { display: none; }
+}
+
+/* Các phép đo thông dụng */
+/* px: pixel tuyệt đối */
+/* em: tương đối với font-size của phần tử cha */
+/* rem: tương đối với font-size gốc (thường = 16px) */
+/* %: tương đối với phần tử cha */
+/* vw/vh: phần trăm viewport width/height */
+/* fr: fraction (chỉ dùng trong Grid) */</code></pre>
+
+      <h2>3.7 CSS Variables (Custom Properties)</h2>
+      <p>CSS Variables cho phép bạn định nghĩa các giá trị có thể tái sử dụng, dễ thay đổi toàn bộ theme.</p>
+
+      <pre><code>/* Khai báo variables trong :root (global scope) */
+:root {
+  /* Màu sắc */
+  --color-primary: #61dafb;
+  --color-secondary: #282c34;
+  --color-text: #abb2bf;
+  --color-bg: #1e2127;
+
+  /* Typography */
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 48px;
+
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+}
+
+/* Sử dụng variables */
+.button {
+  background: var(--color-primary);
+  color: var(--color-secondary);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+}
+
+/* Dark mode bằng variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0d1117;
+    --color-text: #c9d1d9;
+  }
+}
+
+/* Override variables tại scope hẹp hơn */
+.card {
+  --spacing-md: 12px; /* Chỉ áp dụng trong .card */
+  padding: var(--spacing-md);
+}</code></pre>
+
+      <h2>3.8 Các kỹ thuật CSS quan trọng khác</h2>
+
+      <h3>Transitions và Animations</h3>
+      <pre><code>/* Transition — hiệu ứng chuyển đổi khi property thay đổi */
+.button {
+  background: #61dafb;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.button:hover {
+  background: #21a1c4;
+  transform: translateY(-2px);
+}
+
+/* Transition shorthand */
+transition: all 0.3s ease-in-out;
+
+/* Keyframe Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* Spin animation cho loading spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spinner {
+  width: 40px; height: 40px;
+  border: 4px solid rgba(97,218,251,0.2);
+  border-top-color: #61dafb;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}</code></pre>
+
+      <h3>Position</h3>
+      <pre><code>.element {
+  position: static;    /* mặc định — theo flow thông thường */
+  position: relative;  /* vẫn trong flow, nhưng có thể dùng top/left */
+  position: absolute;  /* ra khỏi flow, relative với positioned ancestor */
+  position: fixed;     /* relative với viewport, không scroll */
+  position: sticky;    /* kết hợp relative và fixed */
+}
+
+/* Ví dụ: overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+}
+
+/* Ví dụ: badge góc */
+.card {
+  position: relative;
+}
+.badge {
+  position: absolute;
+  top: -8px; right: -8px;
+  background: red;
+  border-radius: 50%;
+  width: 20px; height: 20px;
+}</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+
+        <h3>Bài tập 3.1: Style trang Profile từ Chương 2</h3>
+        <p>Lấy file HTML trang profile đã tạo ở Chương 2, tạo file <code>profile.css</code> và style lại với:</p>
+        <ol>
+          <li>Font từ Google Fonts (Inter hoặc Roboto)</li>
+          <li>Màu sắc theo theme nhất quán (dùng CSS Variables)</li>
+          <li>Layout header với Flexbox (logo bên trái, nav bên phải)</li>
+          <li>Card thông tin với padding, border-radius, box-shadow</li>
+          <li>Bảng dự án được style đẹp (alternate row colors)</li>
+          <li>Hover effects cho links và buttons</li>
+          <li>Responsive: 1 cột trên mobile, 2 cột trên tablet+</li>
+        </ol>
+
+        <h3>Bài tập 3.2: Clone giao diện đơn giản</h3>
+        <p>Xây dựng landing page đơn giản với layout:</p>
+        <pre><code>/* Cấu trúc cần tạo */
+&lt;header&gt;  ← navbar với logo + links (flexbox)
+&lt;section class="hero"&gt;  ← căn giữa, full height
+&lt;section class="features"&gt;  ← grid 3 cột
+&lt;footer&gt;  ← flexbox, dark background</code></pre>
+        <p>Yêu cầu: responsive (collapse sang 1 cột trên mobile), transitions khi hover, CSS variables cho colors.</p>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Nếu một phần tử có <code>width: 200px; padding: 20px; border: 5px solid</code>, với <code>box-sizing: content-box</code> (mặc định), phần tử đó thực sự rộng bao nhiêu pixel?</p>
+          <ul>
+            <li>A. 200px</li>
+            <li>B. 240px</li>
+            <li>C. 250px</li>
+            <li>D. 260px</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: C — 250px</strong> = 200 (content) + 20×2 (padding trái/phải) + 5×2 (border trái/phải). Với <code>border-box</code>, tổng sẽ là 200px, content = 150px.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Để căn giữa một <code>div</code> cả theo chiều ngang và dọc trong viewport, cách nào dùng Flexbox là đúng?</p>
+          <ul>
+            <li>A. <code>margin: auto</code> trên div con</li>
+            <li>B. <code>display: flex; justify-content: center; align-items: center</code> trên div cha</li>
+            <li>C. <code>text-align: center; vertical-align: middle</code></li>
+            <li>D. <code>position: absolute; top: 50%; left: 50%</code></li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Trên phần tử cha: <code>display: flex; justify-content: center; align-items: center; min-height: 100vh;</code>. Đây là cách căn giữa phổ biến và clean nhất với Flexbox.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Khi nào nên dùng CSS Grid thay vì Flexbox?</p>
+          <ul>
+            <li>A. Luôn dùng Grid vì nó mạnh hơn</li>
+            <li>B. Khi cần layout hai chiều (hàng VÀ cột cùng lúc), như card grid hoặc page layout</li>
+            <li>C. Chỉ khi layout có nhiều hơn 3 cột</li>
+            <li>D. Grid và Flexbox hoàn toàn giống nhau</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Grid tốt hơn khi cần kiểm soát cả hàng và cột (2D). Flexbox tốt hơn cho 1 chiều (hàng hoặc cột). Trong thực tế, thường dùng cả hai: Grid cho page layout, Flexbox cho component layout.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> "Mobile First" trong responsive design nghĩa là gì?</p>
+          <ul>
+            <li>A. Website chỉ dành cho mobile, không cần desktop</li>
+            <li>B. Viết CSS mặc định cho mobile, dùng <code>min-width</code> media query để thêm cho màn hình lớn hơn</li>
+            <li>C. Load CSS của mobile trước, CSS desktop sau</li>
+            <li>D. Test trên mobile trước, desktop sau</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Mobile First nghĩa là CSS mặc định (không có media query) phục vụ mobile. Sau đó dùng <code>@media (min-width: 768px)</code>, <code>@media (min-width: 1024px)</code> để thêm style cho tablet và desktop.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> CSS Variable <code>--color-primary</code> được khai báo trong <code>:root</code>. Cách sử dụng đúng là?</p>
+          <ul>
+            <li>A. <code>color: --color-primary;</code></li>
+            <li>B. <code>color: $color-primary;</code></li>
+            <li>C. <code>color: var(--color-primary);</code></li>
+            <li>D. <code>color: @color-primary;</code></li>
+          </ul>
+          <p class="answer"><strong>Đáp án: C</strong> — CSS Variables dùng <code>var(--tên-biến)</code>. Cú pháp <code>$variable</code> là của SCSS/Sass (preprocessor), <code>@variable</code> là của Less.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-02.html">← Chương 2: HTML — Xương sống</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="../part2-javascript/chapter-04.html">Chương 4: JavaScript Nhập môn →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 18: Form Nâng cao — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="chapter-15.html" class="nav-link">Ch.15 Hooks Nâng cao</a>
+        <a href="chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="chapter-18.html" class="nav-link active">Ch.18 Form Nâng cao</a>
+        <a href="chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="chapter-20.html" class="nav-link">Ch.20 Testing</a>
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 18 · Phần 4: React Nâng cao</div>
+        <h1 class="chapter-title">Form Nâng cao</h1>
+        <p class="chapter-desc">Form phức tạp với nhiều trường, validation, và multi-step là thách thức lớn trong React. React Hook Form kết hợp Zod giải quyết vấn đề này một cách elegant, performant và type-safe.</p>
+      </div>
+
+      <h2>18.1 Vấn đề với form phức tạp trong React</h2>
+      <pre><code>// Controlled form với nhiều trường — re-render mỗi keystroke!
+function SignupForm() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  // ... 10 trường nữa → mỗi keystroke re-render toàn bộ form!
+
+  // Validation phức tạp
+  const [errors, setErrors] = useState({});
+  // Validate từng trường riêng...
+
+  // Boilerplate quá nhiều!
+}</code></pre>
+
+      <h2>18.2 React Hook Form — Hiệu năng cao</h2>
+      <pre><code>npm install react-hook-form</code></pre>
+
+      <pre><code>import { useForm } from 'react-hook-form';
+
+function LoginForm() {
+  const {
+    register,          // Đăng ký input với form
+    handleSubmit,      // Wrapper cho submit handler
+    formState: { errors, isSubmitting, isValid }, // Trạng thái form
+    watch,             // Theo dõi giá trị field realtime
+    reset,             // Reset form về giá trị ban đầu
+    setValue,          // Set giá trị field bằng code
+    getValues,         // Đọc giá trị hiện tại
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+      rememberMe: false,
+    },
+    mode: 'onBlur',  // Validate khi rời trường (onBlur/onChange/onSubmit)
+  });
+
+  const onSubmit = async (data) =&gt; {
+    // data có đầy đủ giá trị form, đã qua validation
+    console.log(data); // { email: "...", password: "..." }
+    await login(data);
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+      &lt;div&gt;
+        &lt;label&gt;Email&lt;/label&gt;
+        &lt;input
+          {...register('email', {
+            required: 'Email là bắt buộc',
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'Email không hợp lệ'
+            }
+          })}
+        /&gt;
+        {errors.email &amp;&amp; &lt;span className="error"&gt;{errors.email.message}&lt;/span&gt;}
+      &lt;/div&gt;
+
+      &lt;div&gt;
+        &lt;label&gt;Mật khẩu&lt;/label&gt;
+        &lt;input
+          type="password"
+          {...register('password', {
+            required: 'Mật khẩu là bắt buộc',
+            minLength: { value: 8, message: 'Tối thiểu 8 ký tự' }
+          })}
+        /&gt;
+        {errors.password &amp;&amp; &lt;span className="error"&gt;{errors.password.message}&lt;/span&gt;}
+      &lt;/div&gt;
+
+      &lt;input type="checkbox" {...register('rememberMe')} /&gt;
+
+      &lt;button type="submit" disabled={isSubmitting}&gt;
+        {isSubmitting ? 'Đang đăng nhập...' : 'Đăng nhập'}
+      &lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+
+      <h2>18.3 Validation với Zod</h2>
+      <pre><code>npm install zod @hookform/resolvers</code></pre>
+
+      <pre><code>import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+// Định nghĩa schema validation
+const registerSchema = z.object({
+  name: z.string()
+    .min(2, 'Tên phải có ít nhất 2 ký tự')
+    .max(50, 'Tên quá dài'),
+
+  email: z.string()
+    .email('Email không hợp lệ'),
+
+  password: z.string()
+    .min(8, 'Mật khẩu tối thiểu 8 ký tự')
+    .regex(/[A-Z]/, 'Cần ít nhất 1 chữ hoa')
+    .regex(/[0-9]/, 'Cần ít nhất 1 số'),
+
+  confirmPassword: z.string(),
+
+  birthDate: z.string()
+    .refine((date) =&gt; {
+      const age = new Date().getFullYear() - new Date(date).getFullYear();
+      return age &gt;= 18;
+    }, 'Phải đủ 18 tuổi'),
+
+  role: z.enum(['user', 'admin', 'moderator']),
+
+  agreeToTerms: z.literal(true, {
+    errorMap: () =&gt; ({ message: 'Bạn phải đồng ý điều khoản' })
+  }),
+}).refine(data =&gt; data.password === data.confirmPassword, {
+  message: 'Mật khẩu không khớp',
+  path: ['confirmPassword'],
+});
+
+// TypeScript type tự động từ schema
+type RegisterFormData = z.infer&lt;typeof registerSchema&gt;;
+
+// Dùng với React Hook Form
+function RegisterForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(registerSchema),
+  });
+
+  // TypeScript biết chính xác type của data!
+  const onSubmit = (data: RegisterFormData) =&gt; {
+    console.log(data);
+  };
+
+  return &lt;form onSubmit={handleSubmit(onSubmit)}&gt;...&lt;/form&gt;;
+}</code></pre>
+
+      <h2>18.4 Multi-step Form</h2>
+      <pre><code>// Multi-step form với React Hook Form
+const STEPS = ['Thông tin cá nhân', 'Tài khoản', 'Xác nhận'];
+
+const step1Schema = z.object({
+  firstName: z.string().min(2),
+  lastName: z.string().min(2),
+  phone: z.string().regex(/^0\d{9}$/),
+});
+
+const step2Schema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+  confirmPassword: z.string(),
+}).refine(data =&gt; data.password === data.confirmPassword, {
+  message: 'Mật khẩu không khớp',
+  path: ['confirmPassword']
+});
+
+const schemas = [step1Schema, step2Schema];
+
+function MultiStepForm() {
+  const [step, setStep] = useState(0);
+  const [formData, setFormData] = useState({});
+
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(schemas[step]),
+  });
+
+  const handleNext = handleSubmit((data) =&gt; {
+    setFormData(prev =&gt; ({ ...prev, ...data }));
+    if (step &lt; STEPS.length - 1) {
+      setStep(s =&gt; s + 1);
+    } else {
+      // Submit cuối cùng
+      submitForm({ ...formData, ...data });
+    }
+  });
+
+  return (
+    &lt;div&gt;
+      {/* Progress indicator */}
+      &lt;div className="steps"&gt;
+        {STEPS.map((s, i) =&gt; (
+          &lt;div key={i} className={`step ${i &lt;= step ? 'active' : ''}`}&gt;
+            {s}
+          &lt;/div&gt;
+        ))}
+      &lt;/div&gt;
+
+      &lt;form onSubmit={handleNext}&gt;
+        {step === 0 &amp;&amp; (
+          &lt;&gt;
+            &lt;input {...register('firstName')} placeholder="Họ" /&gt;
+            {errors.firstName &amp;&amp; &lt;span&gt;{errors.firstName.message}&lt;/span&gt;}
+            &lt;input {...register('lastName')} placeholder="Tên" /&gt;
+            &lt;input {...register('phone')} placeholder="Số điện thoại" /&gt;
+          &lt;/&gt;
+        )}
+
+        {step === 1 &amp;&amp; (
+          &lt;&gt;
+            &lt;input {...register('email')} type="email" /&gt;
+            &lt;input {...register('password')} type="password" /&gt;
+            &lt;input {...register('confirmPassword')} type="password" /&gt;
+          &lt;/&gt;
+        )}
+
+        {step === 2 &amp;&amp; (
+          &lt;div&gt;
+            &lt;h3&gt;Xác nhận thông tin&lt;/h3&gt;
+            &lt;pre&gt;{JSON.stringify(formData, null, 2)}&lt;/pre&gt;
+          &lt;/div&gt;
+        )}
+
+        &lt;div&gt;
+          {step &gt; 0 &amp;&amp; (
+            &lt;button type="button" onClick={() =&gt; setStep(s =&gt; s - 1)}&gt;
+              Quay lại
+            &lt;/button&gt;
+          )}
+          &lt;button type="submit"&gt;
+            {step === STEPS.length - 1 ? 'Hoàn tất' : 'Tiếp theo'}
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/form&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+        <h3>Bài tập 18.1: Form đăng ký hoàn chỉnh với validation</h3>
+        <pre><code>// Xây dựng form đăng ký với:
+// Schema Zod:
+// - username: 3-20 ký tự, chỉ chữ/số/gạch dưới
+// - email: hợp lệ
+// - password: 8+, có chữ hoa, chữ thường, số, ký tự đặc biệt
+// - confirmPassword: phải khớp
+// - bio: max 200 ký tự (optional)
+// - website: URL hợp lệ hoặc rỗng (optional)
+// - newsletter: boolean
+//
+// Features:
+// - Hiển thị error ngay khi rời trường (onBlur)
+// - Password strength indicator
+// - Character count cho bio
+// - Submit button disabled khi form invalid
+// - Toast notification sau khi submit thành công</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Tại sao React Hook Form hiệu năng hơn controlled components thông thường?</p>
+          <ul>
+            <li>A. Nó chạy trên một thread riêng</li>
+            <li>B. Sử dụng uncontrolled inputs với refs — không re-render component khi user gõ</li>
+            <li>C. Tự động tối ưu code</li>
+            <li>D. Sử dụng Web Workers</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — RHF dùng refs để đọc giá trị (uncontrolled), chỉ re-render khi validation state thay đổi (errors, isValid). Controlled components re-render sau mỗi keystroke, gây lag với form nhiều trường.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> <code>mode: 'onBlur'</code> trong React Hook Form có nghĩa là?</p>
+          <ul>
+            <li>A. Validate khi form bị blur (mất focus)</li>
+            <li>B. Validate khi user rời khỏi từng trường (blur event)</li>
+            <li>C. Validate chỉ khi submit</li>
+            <li>D. Không validate</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>'onBlur'</code>: validate khi user rời trường — UX tốt nhất cho hầu hết form. <code>'onChange'</code>: validate realtime khi gõ. <code>'onSubmit'</code>: chỉ validate khi submit.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Zod khác với việc validate thủ công như thế nào?</p>
+          <ul>
+            <li>A. Zod chậm hơn nhưng chính xác hơn</li>
+            <li>B. Zod cung cấp schema declaration, tự động generate TypeScript types, error messages nhất quán, và composable</li>
+            <li>C. Zod chỉ hoạt động trên server</li>
+            <li>D. Zod chỉ validate string</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Zod: khai báo schema một lần, dùng cho cả validation và TypeScript types (<code>z.infer&lt;typeof schema&gt;</code>). Có thể reuse schema giữa frontend và backend. Error messages nhất quán và có thể customize.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> Trong multi-step form, tại sao không nên reset toàn bộ form khi chuyển step?</p>
+          <ul>
+            <li>A. Reset gây lỗi</li>
+            <li>B. Dữ liệu từ step trước cần được giữ lại để submit ở step cuối</li>
+            <li>C. RHF không hỗ trợ reset</li>
+            <li>D. Reset quá chậm</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Mỗi step thu thập một phần dữ liệu. Khi hoàn thành step, merge data vào state chung (<code>setFormData(prev =&gt; ({ ...prev, ...stepData }))</code>). Step cuối submit toàn bộ formData.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> <code>z.refine()</code> trong Zod dùng để làm gì?</p>
+          <ul>
+            <li>A. Định dạng lại dữ liệu</li>
+            <li>B. Thêm validation custom không có sẵn trong Zod (ví dụ: kiểm tra password khớp nhau, tuổi đủ 18)</li>
+            <li>C. Chuyển đổi kiểu dữ liệu</li>
+            <li>D. Tối ưu validation</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — <code>.refine(fn, message)</code> nhận validator function tùy chỉnh, phù hợp cho cross-field validation (password === confirmPassword) hoặc validation phức tạp (gọi API kiểm tra username tồn tại).</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="chapter-17.html">← Chương 17: Data Fetching</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-19.html">Chương 19: Tối ưu Hiệu năng →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

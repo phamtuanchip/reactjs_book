@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chương 15: Hooks Nâng cao — Lập Trình ReactJS</title>
+  <link rel="stylesheet" href="../../styles/main.css">
+  <link rel="stylesheet" href="../../styles/highlight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#282c34',
+        primaryTextColor: '#abb2bf',
+        primaryBorderColor: '#4f46e5',
+        lineColor: '#61dafb',
+        secondaryColor: '#21252b',
+        tertiaryColor: '#1e2127',
+        background: '#1e2127',
+        mainBkg: '#282c34',
+        nodeBorder: '#4f46e5',
+        clusterBkg: '#21252b',
+        titleColor: '#e6e6e6',
+        edgeLabelBackground: '#282c34',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+  <div class="book-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Lập Trình ReactJS</h1>
+        <span>Từ Cơ Bản Đến Nâng Cao</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../index.html" class="nav-link">Trang chủ</a>
+        <div class="nav-part-label">Phần 1 — Nền tảng Web</div>
+        <a href="../part1-foundation/chapter-01.html" class="nav-link">Ch.1 Làm quen với Web</a>
+        <a href="../part1-foundation/chapter-02.html" class="nav-link">Ch.2 HTML — Xương sống</a>
+        <a href="../part1-foundation/chapter-03.html" class="nav-link">Ch.3 CSS — Trang điểm</a>
+        <div class="nav-part-label">Phần 2 — JavaScript</div>
+        <a href="../part2-javascript/chapter-04.html" class="nav-link">Ch.4 JavaScript Nhập môn</a>
+        <a href="../part2-javascript/chapter-05.html" class="nav-link">Ch.5 Hàm &amp; Phạm vi</a>
+        <a href="../part2-javascript/chapter-06.html" class="nav-link">Ch.6 Object &amp; Array</a>
+        <a href="../part2-javascript/chapter-07.html" class="nav-link">Ch.7 Lập trình Async</a>
+        <a href="../part2-javascript/chapter-08.html" class="nav-link">Ch.8 JavaScript Hiện đại</a>
+        <div class="nav-part-label">Phần 3 — React Cơ bản</div>
+        <a href="../part3-react-basic/chapter-09.html" class="nav-link">Ch.9 Giới thiệu React</a>
+        <a href="../part3-react-basic/chapter-10.html" class="nav-link">Ch.10 JSX &amp; Component</a>
+        <a href="../part3-react-basic/chapter-11.html" class="nav-link">Ch.11 State &amp; Event</a>
+        <a href="../part3-react-basic/chapter-12.html" class="nav-link">Ch.12 useEffect</a>
+        <a href="../part3-react-basic/chapter-13.html" class="nav-link">Ch.13 Styling</a>
+        <a href="../part3-react-basic/chapter-14.html" class="nav-link">Ch.14 React Router</a>
+        <div class="nav-part-label">Phần 4 — React Nâng cao</div>
+        <a href="chapter-15.html" class="nav-link active">Ch.15 Hooks Nâng cao</a>
+        <a href="chapter-16.html" class="nav-link">Ch.16 Global State</a>
+        <a href="chapter-17.html" class="nav-link">Ch.17 Data Fetching</a>
+        <a href="chapter-18.html" class="nav-link">Ch.18 Form Nâng cao</a>
+        <a href="chapter-19.html" class="nav-link">Ch.19 Tối ưu hiệu năng</a>
+        <a href="chapter-20.html" class="nav-link">Ch.20 Testing</a>
+        <div class="nav-part-label">Phần 5 — Thực chiến</div>
+        <a href="../part5-ecosystem/chapter-21.html" class="nav-link">Ch.21 TypeScript</a>
+        <a href="../part5-ecosystem/chapter-22.html" class="nav-link">Ch.22 Next.js</a>
+        <a href="../part5-ecosystem/chapter-23.html" class="nav-link">Ch.23 Authentication</a>
+        <a href="../part5-ecosystem/chapter-24.html" class="nav-link">Ch.24 Deployment</a>
+        <a href="../part5-ecosystem/chapter-25.html" class="nav-link">Ch.25 Dự án cuối khóa</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chapter-header">
+        <div class="chapter-label">Chương 15 · Phần 4: React Nâng cao</div>
+        <h1 class="chapter-title">Hooks Nâng cao</h1>
+        <p class="chapter-desc">Ngoài useState và useEffect, React còn cung cấp nhiều hook mạnh mẽ hơn. Chương này khám phá useReducer, useContext, useRef, useMemo, useCallback, và cách tự viết Custom Hooks để tái sử dụng logic.</p>
+      </div>
+
+      <h2>15.1 useReducer — Quản lý state phức tạp</h2>
+      <p><code>useReducer</code> là thay thế cho <code>useState</code> khi state phức tạp hoặc có nhiều hành động liên quan. Lấy cảm hứng từ Redux.</p>
+
+      <pre><code>import { useReducer } from 'react';
+
+// 1. Định nghĩa reducer function
+// Reducer nhận (state hiện tại, action) → trả về state mới
+function todoReducer(state, action) {
+  switch (action.type) {
+    case 'ADD':
+      return [...state, { id: Date.now(), text: action.payload, done: false }];
+    case 'TOGGLE':
+      return state.map(t => t.id === action.payload ? { ...t, done: !t.done } : t);
+    case 'DELETE':
+      return state.filter(t => t.id !== action.payload);
+    case 'CLEAR_DONE':
+      return state.filter(t => !t.done);
+    default:
+      throw new Error('Unknown action: ' + action.type);
+  }
+}
+
+// 2. Dùng useReducer trong component
+function TodoApp() {
+  const [todos, dispatch] = useReducer(todoReducer, []);
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'ADD', payload: 'Học React' })}&gt;
+        Thêm
+      &lt;/button&gt;
+      {todos.map(todo =&gt; (
+        &lt;div key={todo.id}&gt;
+          &lt;span onClick={() =&gt; dispatch({ type: 'TOGGLE', payload: todo.id })}&gt;
+            {todo.text}
+          &lt;/span&gt;
+          &lt;button onClick={() =&gt; dispatch({ type: 'DELETE', payload: todo.id })}&gt;
+            Xóa
+          &lt;/button&gt;
+        &lt;/div&gt;
+      ))}
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+      <div class="callout info">
+        <div class="callout-title">💡 useState vs useReducer</div>
+        <p>Dùng <code>useState</code> khi: state đơn giản, ít action. Dùng <code>useReducer</code> khi: state phức tạp, nhiều sub-values liên quan, nhiều action dẫn đến nhiều state transitions, hoặc state tiếp theo phụ thuộc vào state trước đó theo logic phức tạp.</p>
+      </div>
+
+      <h2>15.2 useContext — Chia sẻ state không cần props drilling</h2>
+      <pre><code>import { createContext, useContext, useState } from 'react';
+
+// 1. Tạo context
+const ThemeContext = createContext({
+  theme: 'light',
+  toggleTheme: () => {}
+});
+
+// 2. Provider — bao bọc các component cần dùng context
+function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState('light');
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
+
+  return (
+    &lt;ThemeContext.Provider value={{ theme, toggleTheme }}&gt;
+      {children}
+    &lt;/ThemeContext.Provider&gt;
+  );
+}
+
+// 3. Dùng context trong bất kỳ component con nào
+function ThemeToggleButton() {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+  return (
+    &lt;button onClick={toggleTheme}&gt;
+      Đang dùng: {theme} — Click để đổi
+    &lt;/button&gt;
+  );
+}
+
+// 4. Wrap app với Provider
+function App() {
+  return (
+    &lt;ThemeProvider&gt;
+      &lt;Header /&gt;
+      &lt;Main /&gt;
+      &lt;Footer /&gt;
+    &lt;/ThemeProvider&gt;
+  );
+}
+
+// Custom hook để dùng context dễ hơn
+function useTheme() {
+  const context = useContext(ThemeContext);
+  if (!context) throw new Error('useTheme phải dùng trong ThemeProvider');
+  return context;
+}</code></pre>
+
+      <h2>15.3 useRef — Tham chiếu không gây re-render</h2>
+      <pre><code>import { useRef, useEffect } from 'react';
+
+// useRef trả về object { current: value }
+// Thay đổi ref.current KHÔNG gây re-render!
+
+// 1. Truy cập DOM element
+function AutoFocusInput() {
+  const inputRef = useRef(null);
+
+  useEffect(() =&gt; {
+    inputRef.current.focus(); // Focus input khi mount
+  }, []);
+
+  return &lt;input ref={inputRef} placeholder="Tự động focus" /&gt;;
+}
+
+// 2. Lưu giá trị persist qua renders mà không gây re-render
+function Timer() {
+  const [count, setCount] = useState(0);
+  const intervalRef = useRef(null); // Lưu interval ID
+
+  const start = () =&gt; {
+    intervalRef.current = setInterval(() =&gt; {
+      setCount(prev =&gt; prev + 1);
+    }, 1000);
+  };
+
+  const stop = () =&gt; {
+    clearInterval(intervalRef.current);
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;{count}&lt;/p&gt;
+      &lt;button onClick={start}&gt;Start&lt;/button&gt;
+      &lt;button onClick={stop}&gt;Stop&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+
+// 3. Lưu giá trị previous
+function usePrevious(value) {
+  const prevRef = useRef();
+  useEffect(() =&gt; {
+    prevRef.current = value;
+  });
+  return prevRef.current; // Giá trị render trước
+}
+
+// 4. forwardRef — truyền ref từ cha xuống con
+import { forwardRef } from 'react';
+const MyInput = forwardRef((props, ref) =&gt; {
+  return &lt;input ref={ref} {...props} /&gt;;
+});
+// Dùng: &lt;MyInput ref={inputRef} /&gt;</code></pre>
+
+      <h2>15.4 useMemo và useCallback — Tối ưu hiệu năng</h2>
+      <pre><code>import { useMemo, useCallback } from 'react';
+
+// useMemo — memoize KẾT QUẢ tính toán tốn kém
+function ProductList({ products, searchQuery, sortBy }) {
+  // Chỉ tính lại khi products, searchQuery, hoặc sortBy thay đổi
+  const filteredAndSorted = useMemo(() =&gt; {
+    console.log('Đang tính toán...');
+    return products
+      .filter(p =&gt; p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+      .sort((a, b) =&gt; {
+        if (sortBy === 'price') return a.price - b.price;
+        return a.name.localeCompare(b.name);
+      });
+  }, [products, searchQuery, sortBy]);
+
+  return (
+    &lt;ul&gt;
+      {filteredAndSorted.map(p =&gt; &lt;li key={p.id}&gt;{p.name}&lt;/li&gt;)}
+    &lt;/ul&gt;
+  );
+}
+
+// useCallback — memoize HÀM để tránh tạo hàm mới mỗi render
+function Parent() {
+  const [count, setCount] = useState(0);
+  const [items, setItems] = useState([]);
+
+  // Hàm này được tạo lại sau mỗi render (kể cả khi count thay đổi)
+  // Gây Child re-render dù items không thay đổi!
+  const addItem = useCallback((name) =&gt; {
+    setItems(prev =&gt; [...prev, { id: Date.now(), name }]);
+  }, []); // Hàm này không cần deps → không bao giờ tạo lại
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Count: {count}&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;+&lt;/button&gt;
+      &lt;Child onAdd={addItem} /&gt; {/* Không re-render khi count thay đổi */}
+    &lt;/div&gt;
+  );
+}
+
+const Child = React.memo(({ onAdd }) =&gt; {
+  console.log('Child render');
+  return &lt;button onClick={() =&gt; onAdd('New Item')}&gt;Add&lt;/button&gt;;
+});</code></pre>
+
+      <div class="callout warning">
+        <div class="callout-title">⚠️ Đừng lạm dụng useMemo/useCallback</div>
+        <p>useMemo và useCallback <strong>có chi phí</strong> (bộ nhớ, overhead so sánh). Chỉ dùng khi: (1) Tính toán thực sự tốn kém (filter/sort list lớn), (2) Truyền hàm xuống component con được bọc <code>React.memo</code>, (3) Hàm là dependency của useEffect. Đừng "tối ưu sớm"!</p>
+      </div>
+
+      <h2>15.5 Custom Hooks</h2>
+      <p>Custom Hook là hàm JavaScript bắt đầu bằng <code>use</code>, có thể gọi các hook khác bên trong. Dùng để tái sử dụng logic stateful.</p>
+
+      <pre><code>// useFetch — fetch dữ liệu từ API
+function useFetch(url) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    let cancelled = false;
+
+    async function fetchData() {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const json = await response.json();
+        if (!cancelled) setData(json);
+      } catch (err) {
+        if (!cancelled) setError(err.message);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    fetchData();
+    return () =&gt; { cancelled = true; };
+  }, [url]);
+
+  return { data, loading, error };
+}
+
+// Dùng:
+function UserList() {
+  const { data: users, loading, error } = useFetch('/api/users');
+  if (loading) return &lt;Spinner /&gt;;
+  if (error) return &lt;Error message={error} /&gt;;
+  return &lt;ul&gt;{users.map(u =&gt; &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;)}&lt;/ul&gt;;
+}</code></pre>
+
+      <pre><code>// useLocalStorage — sync state với localStorage
+function useLocalStorage(key, initialValue) {
+  const [value, setValue] = useState(() =&gt; {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch {
+      return initialValue;
+    }
+  });
+
+  const setStoredValue = useCallback((newValue) =&gt; {
+    setValue(newValue);
+    localStorage.setItem(key, JSON.stringify(newValue));
+  }, [key]);
+
+  return [value, setStoredValue];
+}
+
+// Dùng:
+const [theme, setTheme] = useLocalStorage('theme', 'dark');
+
+// useDebounce
+function useDebounce(value, delay = 300) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(() =&gt; {
+    const timer = setTimeout(() =&gt; setDebouncedValue(value), delay);
+    return () =&gt; clearTimeout(timer);
+  }, [value, delay]);
+  return debouncedValue;
+}
+
+// useWindowSize
+function useWindowSize() {
+  const [size, setSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+  useEffect(() =&gt; {
+    const handler = () =&gt; setSize({ width: window.innerWidth, height: window.innerHeight });
+    window.addEventListener('resize', handler);
+    return () =&gt; window.removeEventListener('resize', handler);
+  }, []);
+  return size;
+}</code></pre>
+
+      <!-- Bài tập -->
+      <div class="exercise">
+        <h2>Bài tập thực hành</h2>
+        <h3>Bài tập 15.1: Custom Hooks bộ sưu tập</h3>
+        <p>Implement các custom hooks:</p>
+        <pre><code>// 1. useToggle(initialValue = false)
+// → trả về [value, toggle, setTrue, setFalse]
+
+// 2. useCounter(initialValue = 0, { min, max, step } = {})
+// → trả về [count, { increment, decrement, reset, set }]
+
+// 3. useClickOutside(ref, callback)
+// → gọi callback khi click ra ngoài ref element
+
+// 4. useMediaQuery(query)
+// → trả về boolean — query có match không
+// → useMediaQuery('(max-width: 768px)') → true nếu mobile
+
+// 5. useCopyToClipboard()
+// → trả về [copied, copyToClipboard]
+// → copied = true trong 2 giây sau khi copy</code></pre>
+      </div>
+
+      <!-- Quiz -->
+      <div class="quiz">
+        <h2>Câu hỏi ôn bài</h2>
+
+        <div class="quiz-item">
+          <p><strong>1.</strong> Khi nào nên dùng useReducer thay vì useState?</p>
+          <ul>
+            <li>A. Luôn luôn — useReducer tốt hơn useState</li>
+            <li>B. Khi state phức tạp với nhiều sub-values, hoặc nhiều actions liên quan đến nhau</li>
+            <li>C. Khi state là string hoặc number</li>
+            <li>D. Khi component có nhiều hơn 3 props</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — useReducer phù hợp khi: state phức tạp (object có nhiều trường), nhiều loại update khác nhau (add/toggle/delete/clear), hoặc khi muốn centralize logic update.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>2.</strong> Sự khác biệt giữa thay đổi <code>ref.current</code> và <code>setState</code>?</p>
+          <ul>
+            <li>A. Không có sự khác biệt</li>
+            <li>B. Thay đổi ref.current KHÔNG gây re-render, setState GÂY re-render</li>
+            <li>C. ref.current chỉ dùng cho DOM elements</li>
+            <li>D. setState đồng bộ, ref.current bất đồng bộ</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Ref là "escape hatch" ra khỏi rendering system. Đổi ref.current = lưu giá trị mà không trigger re-render. Dùng khi cần persist giá trị qua renders nhưng không cần UI cập nhật (interval IDs, timeout IDs, previous values).</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>3.</strong> Quy tắc đặt tên Custom Hook là gì?</p>
+          <ul>
+            <li>A. Bắt đầu bằng <code>use</code> (ví dụ: useFetch, useAuth)</li>
+            <li>B. Bắt đầu bằng <code>hook</code></li>
+            <li>C. Tên phải viết hoa hoàn toàn</li>
+            <li>D. Không có quy tắc đặt tên</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: A</strong> — Custom Hooks bắt buộc bắt đầu bằng <code>use</code>. Lý do: React cần biết đây là hook để kiểm tra "Rules of Hooks" (không gọi trong điều kiện, vòng lặp...). ESLint plugin sẽ cảnh báo nếu vi phạm.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>4.</strong> useMemo phù hợp nhất cho trường hợp nào?</p>
+          <ul>
+            <li>A. Tất cả tính toán trong component</li>
+            <li>B. Tính toán tốn kém mà kết quả phụ thuộc vào dữ liệu ít thay đổi</li>
+            <li>C. Thay thế hoàn toàn useState</li>
+            <li>D. Fetch dữ liệu từ API</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — useMemo cache kết quả tính toán. Phù hợp khi: filter/sort danh sách lớn, tính toán phức tạp, tạo object/array làm dependency của hook khác. Với tính toán đơn giản, overhead của useMemo còn lớn hơn lợi ích.</p>
+        </div>
+
+        <div class="quiz-item">
+          <p><strong>5.</strong> "Props drilling" là vấn đề gì, và Context giải quyết như thế nào?</p>
+          <ul>
+            <li>A. Props quá nhiều làm chậm ứng dụng; Context caching props</li>
+            <li>B. Phải truyền props qua nhiều cấp component trung gian không cần dùng; Context cho phép component con đọc trực tiếp từ provider</li>
+            <li>C. Props không thể là function; Context cho phép truyền function</li>
+            <li>D. Props là string, Context là object</li>
+          </ul>
+          <p class="answer"><strong>Đáp án: B</strong> — Props drilling: A → B → C → D → E, trong đó B, C, D chỉ truyền props mà không dùng. Context: Provider bọc ngoài, E đọc trực tiếp qua useContext. Tuy nhiên, đừng dùng Context cho mọi state — chỉ dùng cho dữ liệu "global" thực sự.</p>
+        </div>
+      </div>
+
+      <!-- Chapter Navigation -->
+      <div class="chapter-nav">
+        <div class="chapter-nav-prev">
+          <a href="../part3-react-basic/chapter-14.html">← Chương 14: React Router</a>
+        </div>
+        <div class="chapter-nav-next">
+          <a href="chapter-16.html">Chương 16: Quản lý State Toàn cục →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+  <script>
+    window.addEventListener('scroll', () => {
+      const p = document.getElementById('progress');
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      p.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>
